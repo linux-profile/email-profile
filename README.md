@@ -1,6 +1,6 @@
 # email-profile
 
-![GitHub Org's stars](https://img.shields.io/github/stars/FernandoCelmer?label=Company&style=flat-square)
+![GitHub Org's stars](https://img.shields.io/github/stars/linux-profile?label=LinuxProfile&style=flat-square)
 
 ---
 
