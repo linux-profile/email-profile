@@ -1,11 +1,11 @@
-# email-lib
+# email-profile
 
 ![GitHub Org's stars](https://img.shields.io/github/stars/FernandoCelmer?label=Company&style=flat-square)
 
 ---
 
-- **Documentation**: [Link](https://github.com/FernandoCelmer/email-lib)
-- **Source Code**: [Link](https://github.com/FernandoCelmer/email-lib)
+- **Documentation**: [Link](https://github.com/FernandoCelmer/email-profile)
+- **Source Code**: [Link](https://github.com/FernandoCelmer/email-profile)
 
 ---
 
