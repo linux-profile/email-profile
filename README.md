@@ -9,6 +9,13 @@
 
 ---
 
+## Check list
+
+- [ ] Application API structure
+- [ ] Data table structure
+- [ ] SQLlite Backup
+- [ ] CLI Email
+
 ## Commit Style
 
 - ⚙️ FEATURE
