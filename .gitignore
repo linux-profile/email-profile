@@ -132,6 +132,8 @@ dmypy.json
 # Others
 *.config
 *.configsite/
+/temp
+*.db
 
 
 # Pypi
