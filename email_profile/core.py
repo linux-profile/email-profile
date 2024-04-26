@@ -1,6 +1,7 @@
 import imaplib
 import email
 
+from functools import partial
 from typing import List, Tuple
 from uuid import uuid4
 
@@ -9,6 +10,7 @@ from email.utils import parsedate_to_datetime
 
 from models.email import Email as EmailModel
 from models.attachment import Attachment as AttachmentModel
+from query import Select
 
 
 class Status:
@@ -34,15 +36,23 @@ class Data:
         self.attachment.append(value)
 
 
+class _Email:
+
+    def __init__(self, server: str, user: str, password: str):
+        self.server = imaplib.IMAP4_SSL(server)
+        self.server.login(user=user, password=password)
+        self.select = partial(Select, server=self.server)
+    
+
 class Email:
 
-    def __init__(self, server: str, username: str, password: str):
+    def __init__(self, server: str, user: str, password: str):
         self.messages = 0
         self.status = Status.NO
         self.server = imaplib.IMAP4_SSL(server)
         self.data = Data()
 
-        self.username = username
+        self.user = user
         self.password = password
 
     def _decode_header(self, header) -> str:
@@ -61,11 +71,11 @@ class Email:
 
     def login(self):
         self.server.login(
-            self.username,
+            self.user,
             self.password
         )
 
-    def select(self, mailbox: str = 'INBOX') -> Tuple[str, int]:
+    def _select(self, mailbox: str = 'INBOX') -> Tuple[str, int]:
         try:
             status, messages = self.server.select(mailbox)
             self.status = status

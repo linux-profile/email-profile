@@ -24,11 +24,13 @@ class Select:
     def __init__(self,
                  mode: Mode = Mode.ALL,
                  mailbox: Mailbox = Mailbox.INBOX,
-                 exception: bool = True
+                 exception: bool = True,
+                 server: any = None
         ) -> None:
         self.mode = mode
         self.mailbox = mailbox
         self.exception = exception
+        self.server = server
 
         self._context = self
     
@@ -43,6 +45,9 @@ class Select:
                     raise Exception(
                         "It is not allowed to include the same functions!"
                     )
+
+    def clear(self) -> None:
+        self._parts.clear()
 
     def where(self, query: str) -> object:
         def _where(query):
@@ -69,12 +74,15 @@ class Select:
         for part in self._parts:
             query[part.func.__name__] = part()
 
-        return query
+        self.server.select(self.mailbox)
+        typ, data = self.server.uid('search', None, self.mode)
+
+        return len(data[0].split())
 
 
-query = Select(
-    mode=Mode.ALL,
-    mailbox=Mailbox.INBOX,
-    exception=False
-).count().where(query="xpto")
-query.execute()
+# query = Select(
+#     mode=Mode.ALL,
+#     mailbox=Mailbox.INBOX,
+#     exception=False
+# ).count().where(query="xpto")
+# query.execute()
