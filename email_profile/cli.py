@@ -1,28 +1,29 @@
-import os
-import email
+"""
+CLI Module
+"""
 
+import os
+
+from datetime import date
 from dotenv import load_dotenv
-from core import _Email
+from email_profile import Email
 
 
 def main():
     """Test"""
     load_dotenv()
 
-    app = _Email(
+    app = Email(
         server=os.getenv("EMAIL_SERVER"),
         user=os.getenv("EMAIL_USERNAME"),
         password=os.getenv("EMAIL_PASSWORD")
     )
 
-    total = app.select(exception=False).count().execute()
-    print(total)
+    # Query instance
+    query = app.select(mailbox="Inbox").where(subject="abc")
 
-    # app.login()
-    # data = app.backup(10)
-
-    # for item in data.email:
-    #     print(item.number, item.subject)
+    # Query result
+    print(query.execute())
 
 
 if __name__ == '__main__':
