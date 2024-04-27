@@ -11,10 +11,51 @@
 
 ## Check list
 
-- [ ] Application API structure
-- [ ] Data table structure
+- [x] Query API Structure
+- [x] Data table structure
 - [ ] SQLlite Backup
 - [ ] CLI Email
+- [ ] Documentation
+
+## How to install?
+
+```python
+pip install email-profile
+```
+
+## Config
+
+```python
+from email_profile import Email
+
+def main():
+    app = Email(
+        server="EMAIL-SERVER"
+        user="EMAIL_USERNAME",
+        password="EMAIL_PASSWORD"
+    )
+```
+
+## Query instance - Test
+
+```python
+from datetime import date
+
+query = app.select(
+    mailbox="Inbox"
+).where(
+    since=date.today(),
+    before=date.today(),
+    subject="abc",
+    from_who="email@abc.com"
+)
+```
+
+## Query result
+
+```python
+print(query.execute())
+```
 
 ## Commit Style
 
