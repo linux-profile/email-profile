@@ -27,7 +27,7 @@ setup(
     install_requires=[
         'pydantic',
         'python-dotenv',
-        'SQLAlchemy>=2.0.29'
+        'SQLAlchemy'
     ],
     project_urls = {
     'Homepage': 'https://github.com/linux-profile/email-profile',
