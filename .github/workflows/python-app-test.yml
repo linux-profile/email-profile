@@ -1,0 +1,37 @@
+name: ❤️️ Unit Testing
+
+on:
+  pull_request:
+    branches: [ "develop" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: ⚙️ Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: ⚙️ Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt --no-cache-dir
+        pip install tox tox-gh-actions
+    - name: 📝️ Code Scan
+      run: |
+        flake8 email_profile/ --count --show-source --statistics --ignore=E501
+        flake8 tests/ --count --show-source --statistics --ignore=E501,E712
+    - name: ❤️️ Test with PyTest
+      run: |
+        pytest
+    - name: ❤️️ Test with Tox
+      run: |
+        tox
