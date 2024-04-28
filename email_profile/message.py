@@ -1,8 +1,7 @@
 from email import message_from_bytes
 from email.header import decode_header
 from email.utils import parsedate_to_datetime
-
-from email_profile.data import DataSqlalchemy as Data
+from email_profile.data import DataClass as Data
 from email_profile.models import (
     AttachmentModel,
     EmailModel

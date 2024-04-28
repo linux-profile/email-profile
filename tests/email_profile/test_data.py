@@ -1,18 +1,18 @@
-from email_profile.data import DataSqlalchemy
+from email_profile.data import DataClass
 from email_profile.models import AttachmentModel, EmailModel
 
 
 def test_instance_data_sqlalchemy():
-    data = DataSqlalchemy()
+    data = DataClass()
 
-    assert isinstance(data, DataSqlalchemy)
+    assert isinstance(data, DataClass)
     assert data.email is None
     assert data.attachments == list()
 
 
 def test_data_sqlalchemy_add_email():
     email = EmailModel()
-    data = DataSqlalchemy()
+    data = DataClass()
     data.add_email(model=email)
 
     assert isinstance(data.email, EmailModel)
@@ -21,7 +21,7 @@ def test_data_sqlalchemy_add_email():
 
 def test_data_sqlalchemy_add_attachment():
     attachment = AttachmentModel()
-    data = DataSqlalchemy()
+    data = DataClass()
     data.add_attachment(model=attachment)
 
     assert len(data.attachments) == 1
@@ -33,7 +33,7 @@ def test_data_sqlalchemy_json():
     email = EmailModel(id=1)
     attachment = AttachmentModel(id=42)
 
-    data = DataSqlalchemy()
+    data = DataClass()
     data.add_email(model=email)
     data.add_attachment(model=attachment)
 

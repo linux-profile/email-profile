@@ -1,19 +1,15 @@
-from sqlalchemy import Column, String, Integer, TEXT, ForeignKey
+from typing import Optional
+from datetime import datetime
+from dataclasses import dataclass, field
 
-from email_profile.config.database import Base, engine
-from email_profile.models.email import EmailModel
 
-
-class AttachmentModel(Base):
+@dataclass
+class AttachmentModel:
 
     __tablename__ = "attachment"
-    __table_args__ = {'extend_existing': True}
 
-    id = Column(Integer, primary_key=True, index=True)
-    email_id = Column(Integer, ForeignKey(EmailModel.id), index=True)
-    file_name = Column(String)
-    content_type = Column(String)
-    content_ascii = Column(TEXT)
-
-
-Base.metadata.create_all(bind=engine)
+    id: int = field(default=None)
+    email_id: int = field(default=None)
+    file_name: str = field(default=None)
+    content_type: str = field(default=None)
+    content_ascii: str = field(default=None)

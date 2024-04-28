@@ -26,7 +26,7 @@ class DataAbstract(ABC):
         }
 
 
-class DataSqlalchemy(DataAbstract):
+class DataClass(DataAbstract):
 
     def json(self) -> Dict:
         attachments_temp = []

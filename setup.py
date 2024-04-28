@@ -24,16 +24,11 @@ setup(
     description="📩 Email Profile",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=[
-        'pydantic',
-        'python-dotenv',
-        'SQLAlchemy'
-    ],
     project_urls = {
-    'Homepage': 'https://github.com/linux-profile/email-profile',
-    'Repository': 'https://github.com/linux-profile/email-profile',
-    'Documentation': 'https://github.com/linux-profile/email-profile/blob/master/README.md',
-    'Issues': 'https://github.com/linux-profile/email-profile/issues',
+        'Homepage': 'https://github.com/linux-profile/email-profile',
+        'Repository': 'https://github.com/linux-profile/email-profile',
+        'Documentation': 'https://github.com/linux-profile/email-profile/blob/master/README.md',
+        'Issues': 'https://github.com/linux-profile/email-profile/issues',
     },
     cmdclass={
         'install': CustomInstallCommand,
