@@ -25,7 +25,6 @@ jobs:
         pip install build
     - name: 📦 Build Package
       run: |
-        rm pyproject.toml
         python -m build
     - name: 📦 Publish Package to Test PyPI
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
