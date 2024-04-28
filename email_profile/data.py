@@ -22,7 +22,7 @@ class DataAbstract(ABC):
     def json(self) -> Dict:
         return {
             "email": {},
-            "attachment": [{}]
+            "attachments": [{}]
         }
 
 

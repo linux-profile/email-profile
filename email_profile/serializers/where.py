@@ -8,6 +8,45 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class WhereSerializer(BaseModel):
+    """
+    ------
+    URL: https://www.rfc-editor.org/rfc/rfc3501.html#page-53
+    ------
+
+    SUBJECT <string>
+        Messages that contain the specified string in the envelope
+        structure's SUBJECT field.
+
+    TEXT <string>
+        Messages that contain the specified string in the header or
+        body of the message.
+
+    TO <string>
+        Messages that contain the specified string in the envelope
+        structure's TO field.
+
+    UID <sequence set>
+        Messages with unique identifiers corresponding to the specified
+        unique identifier set.  Sequence set ranges are permitted.
+
+    UNANSWERED
+        Messages that do not have the \Answered flag set.
+
+    UNDELETED
+        Messages that do not have the \Deleted flag set.
+
+    UNDRAFT
+        Messages that do not have the \Draft flag set.
+
+    UNFLAGGED
+        Messages that do not have the \Flagged flag set.
+
+    UNKEYWORD <flag>
+        Messages that do not have the specified keyword flag set.
+
+    UNSEEN
+        Messages that do not have the \Seen flag set.
+    """
 
     since: date = Field(default="")
     before: date = Field(default="")
@@ -32,7 +71,9 @@ class WhereSerializer(BaseModel):
     @classmethod
     def format_subject(cls, value: str) -> str:
         if value:
-            return '(SUBJECT "{}")'.format(value)
+            return '(SUBJECT "{}")'.format(
+                value.encode("ASCII", 'ignore').decode()
+            )
         return ''
 
     @field_validator('from_who')

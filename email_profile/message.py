@@ -43,7 +43,7 @@ class Message:
                 self.body_text_html = part.get_payload(decode=True).decode()
             except Exception as error:
                 self.body_text_html = part.get_payload(decode=True)
-                if isinstance(body_text_html, bytes):
+                if isinstance(self.body_text_html, bytes):
                     self.body_text_html = part.get_payload()
 
         if "attachment" in str(part.get("Content-Disposition")):
@@ -51,8 +51,7 @@ class Message:
             if filename:
                 self.data.add_attachment(
                     AttachmentModel(
-                        id=uuid4().hex,
-                        email_id=hex_id,
+                        email_id=self.id,
                         file_name=filename,
                         content_type=part.get_content_type(),
                         content_ascii=part.get_payload().encode("ascii")

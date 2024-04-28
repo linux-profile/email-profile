@@ -40,12 +40,12 @@ class Where:
                 options[item] = local[item]
 
         status, total = self.server.select(self.mailbox.capitalize())
-        self._status = Status.validate(status)
+        self._status = Status.validate_status(status)
         self._total = int(total[0].decode())
 
         status, data = self.server.search(None, WhereSerializer(**options).result())
-        self._status = Status.validate(status)
-        self._data = data[0].decode().split(' ')
+        self._status = Status.validate_status(status)
+        self._data = Status.validate_data(data)
 
         return self
 
@@ -56,11 +56,12 @@ class Where:
         return self._data
 
     def list_data(self) -> List[any]:
-        status, messages = self.server.fetch(','.join(self._data), '(RFC822)')
-        messages = [message for message in messages if message != b')']
+        if self._data:
+            status, messages = self.server.fetch(','.join(self._data), '(RFC822)')
+            messages = [message for message in messages if message != b')']
 
-        for reference, text in messages:
-            _id = int(reference.split()[0])
-            self._message.append(Message(text, _id).result())
+            for reference, text in messages:
+                _id = int(reference.split()[0])
+                self._message.append(Message(text, _id).result())
 
         return self._message
