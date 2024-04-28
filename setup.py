@@ -25,8 +25,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=[
-        'pydantic>=2.7.0',
-        'python-dotenv>=1.0.1',
+        'pydantic>=2.6.4',
+        'python-dotenv>=1.0.0',
         'SQLAlchemy>=2.0.29'
     ],
     project_urls = {
