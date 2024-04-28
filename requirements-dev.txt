@@ -1,0 +1,6 @@
+coverage==7.5.0 ; python_version >= "3.11" and python_version < "4.0"
+flake8==7.0.0 ; python_version >= "3.11" and python_version < "4.0"
+pytest-cov==5.0.0 ; python_version >= "3.11" and python_version < "4.0"
+pytest==8.2.0 ; python_version >= "3.11" and python_version < "4.0"
+sqlalchemy==2.0.29 ; python_version >= "3.11" and python_version < "4.0"
+tox==4.15.0 ; python_version >= "3.11" and python_version < "4.0"
