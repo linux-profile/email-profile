@@ -1,6 +1,6 @@
 import os
 
-from datetime import date
+from datetime import date, datetime
 from dotenv import load_dotenv
 from email_profile import Email
 
@@ -16,7 +16,11 @@ def main():
     )
 
     # Query instance
-    query = app.select(mailbox="Inbox").where(subject="abc")
+    query = app.select(mailbox="Inbox").where(
+        since=datetime(1996, 5, 31),
+        before=date.today(),
+        subject='abc'
+    )
 
     # Count
     print(query.count())
@@ -30,7 +34,7 @@ def main():
 
     for content in data:
         # Email data model
-        print(content.email)
+        print(content.email.subject)
 
         # Attachments data model
         print(content.attachments)
