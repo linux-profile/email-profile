@@ -30,27 +30,27 @@ class WhereSerializer(BaseModel):
         unique identifier set.  Sequence set ranges are permitted.
 
     UNANSWERED
-        Messages that do not have the \Answered flag set.
+        Messages that do not have the Answered flag set.
 
     UNDELETED
-        Messages that do not have the \Deleted flag set.
+        Messages that do not have the Deleted flag set.
 
     UNDRAFT
-        Messages that do not have the \Draft flag set.
+        Messages that do not have the Draft flag set.
 
     UNFLAGGED
-        Messages that do not have the \Flagged flag set.
+        Messages that do not have the Flagged flag set.
 
     UNKEYWORD <flag>
         Messages that do not have the specified keyword flag set.
 
     UNSEEN
-        Messages that do not have the \Seen flag set.
+        Messages that do not have the Seen flag set.
     """
 
     since: date = Field(default="")
     before: date = Field(default="")
-    subject: str  = Field(default="")
+    subject: str = Field(default="")
     from_who: str = Field(default="")
 
     @field_validator('since')

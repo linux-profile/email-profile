@@ -6,7 +6,7 @@ def test_instance_data_sqlalchemy():
     data = DataSqlalchemy()
 
     assert isinstance(data, DataSqlalchemy)
-    assert data.email == None
+    assert data.email is None
     assert data.attachments == list()
 
 
@@ -32,7 +32,7 @@ def test_data_sqlalchemy_add_attachment():
 def test_data_sqlalchemy_json():
     email = EmailModel(id=1)
     attachment = AttachmentModel(id=42)
-    
+
     data = DataSqlalchemy()
     data.add_email(model=email)
     data.add_attachment(model=attachment)

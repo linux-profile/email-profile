@@ -24,7 +24,7 @@ class Message:
             encoding = sub[1] or "utf-8"
             try:
                 field += sub[0].decode(encoding)
-            except Exception as error:
+            except Exception:
                 field += sub[0]
 
         return field
@@ -35,13 +35,13 @@ class Message:
         if content_type == "text/plain":
             try:
                 self.body_text_plain = part.get_payload(decode=True).decode()
-            except Exception as error:
+            except Exception:
                 self.body_text_plain = part.get_payload(decode=True)
 
         if content_type == "text/html":
             try:
                 self.body_text_html = part.get_payload(decode=True).decode()
-            except Exception as error:
+            except Exception:
                 self.body_text_html = part.get_payload(decode=True)
                 if isinstance(self.body_text_html, bytes):
                     self.body_text_html = part.get_payload()
@@ -59,9 +59,6 @@ class Message:
                 )
 
     def result(self) -> EmailModel:
-        body_text_plain = ""
-        body_text_html = ""
-
         for part in self.message.walk():
             self.get_content(part=part)
 

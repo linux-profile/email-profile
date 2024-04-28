@@ -1,5 +1,5 @@
 from uuid import uuid4
-from sqlalchemy import Column, String, TEXT, ForeignKey
+from sqlalchemy import Column, String
 
 from email_profile.config.database import Base, engine
 
