@@ -1,4 +1,3 @@
-from uuid import uuid4
 from sqlalchemy import Column, String, DateTime, Integer
 
 from email_profile.config.database import Base, engine

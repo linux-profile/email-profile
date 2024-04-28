@@ -2,14 +2,14 @@
 Data Module
 """
 
-from typing import Dict
+from typing import List, Dict
 from abc import abstractmethod, ABC
 
 
 class DataAbstract(ABC):
 
     def __init__(self) -> None:
-        self.email: EmailModel = None
+        self.email: object = None
         self.attachments: List[object] = list()
 
     def add_email(self, model: object):

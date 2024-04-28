@@ -20,8 +20,7 @@ class Where:
     def __init__(self,
                  mode: Mode = Mode.ALL,
                  mailbox: Mailbox = Mailbox.INBOX,
-                 server: any = None
-        ) -> None:
+                 server: any = None) -> None:
         self.mode = mode
         self.mailbox = mailbox
         self.server = server
@@ -30,8 +29,7 @@ class Where:
               since: Optional[date] = None,
               before: Optional[date] = None,
               subject: Optional[str] = None,
-              from_who: Optional[str] = None
-        ) -> object:
+              from_who: Optional[str] = None) -> object:
         local = locals().copy()
         options = {}
 
