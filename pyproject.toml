@@ -34,7 +34,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8"
 pydantic = "^2.7.0"
 sqlalchemy = "^2.0.29"
 python-dotenv = "^1.0.1"
