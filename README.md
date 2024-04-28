@@ -41,13 +41,10 @@ def main():
 ```python
 from datetime import date
 
-query = app.select(
-    mailbox="Inbox"
-).where(
-    since=date.today(),
+query = app.select(mailbox="Inbox").where(
+    since=datetime(1996, 5, 31),
     before=date.today(),
-    subject="abc",
-    from_who="email@abc.com"
+    subject='abc'
 )
 ```
 
@@ -72,7 +69,7 @@ data = query.list_data()
 
 for content in data:
     # Email data model
-    print(content.email)
+    print(content.email.subject)
 
     # Attachments data model
     print(content.attachments)
