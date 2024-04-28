@@ -7,7 +7,7 @@ from datetime import date
 from pydantic import BaseModel, Field, field_validator
 
 
-class WhereDataClass(BaseModel):
+class WhereSerializer(BaseModel):
 
     since: date = Field(default="")
     before: date = Field(default="")

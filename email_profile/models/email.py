@@ -1,9 +1,10 @@
 from uuid import uuid4
 from sqlalchemy import Column, String, DateTime, Integer
-from database import Base, engine
+
+from email_profile.config.database import Base, engine
 
 
-class Email(Base):
+class EmailModel(Base):
     """
     Return-Path
     Delivered-To
@@ -27,8 +28,7 @@ class Email(Base):
     __tablename__ = "email"
     __table_args__ = {'extend_existing': True}
 
-    id = Column(String(32), primary_key=True, default=uuid4().hex, index=True)
-    number = Column(Integer)
+    id = Column(Integer, primary_key=True, index=True)
     body_text_plain = Column(String)
     body_text_html = Column(String)
     return_path = Column(String)
@@ -38,7 +38,7 @@ class Email(Base):
     received = Column(String)
     content_type = Column(String)
     date = Column(DateTime)
-    _from = Column('from', String)
+    from_who = Column('from', String)
     mime_version = Column(String)
     message_id = Column(String, unique=True, primary_key=True)
     subject = Column(String)

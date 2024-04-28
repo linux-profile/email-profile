@@ -1,8 +1,10 @@
 from uuid import uuid4
 from sqlalchemy import Column, String, TEXT, ForeignKey
-from database import Base, engine
 
-class MailBox(Base):
+from email_profile.config.database import Base, engine
+
+
+class MailBoxModel(Base):
 
     __tablename__ = "mailbox"
     __table_args__ = {'extend_existing': True}

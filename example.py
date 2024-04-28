@@ -6,7 +6,7 @@ from email_profile import Email
 
 
 def main():
-    """Test"""
+    """Exemple"""
     load_dotenv()
 
     app = Email(
@@ -18,8 +18,25 @@ def main():
     # Query instance
     query = app.select(mailbox="Inbox").where(subject="abc")
 
-    # Query result
-    print(query.execute())
+    # Count
+    print(query.count())
+
+    # List IDs
+    ids = query.list_id()
+    print(ids)
+
+    # List Data
+    data = query.list_data()
+
+    for content in data:
+        # Email data model
+        print(content.email)
+
+        # Attachments data model
+        print(content.attachments)
+
+        # Dump Json
+        print(content.json())
 
 
 if __name__ == '__main__':
