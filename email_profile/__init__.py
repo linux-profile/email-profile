@@ -1,4 +1,4 @@
-__version__ = "0.2.0-dev.6"
+__version__ = "0.2.0-dev.8"
 
 __author__ = 'Fernando Celmer <email@fernandocelmer.com>'
 __copyright__ = """MIT License
@@ -23,6 +23,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
 
-# from email_profile.core import Email
+from email_profile.core import Email
 
-# __all__ = ['Email']
+__all__ = ['Email']

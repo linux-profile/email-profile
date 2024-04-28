@@ -1,6 +1,6 @@
 [project]
 name = "email-profile"
-version = "0.1.0"
+version = "0.2.0-dev.8"
 authors = [
   { name="Fernando Celmer", email="email@fernandocelmer.com" },
 ]
@@ -9,44 +9,29 @@ description = "📩 Email Profile"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
-    'Development Status :: 4 - Beta',
-    'Intended Audience :: Developers',
-    'Natural Language :: English',
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11"
+  'Development Status :: 4 - Beta',
+  "Operating System :: OS Independent",
+  "License :: OSI Approved :: MIT License",
+  'Intended Audience :: Developers',
+  'Natural Language :: English',
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "pydantic",
+  "sqlalchemy",
+  "python-dotenv"
 ]
 
 [project.urls]
 Homepage = "https://github.com/linux-profile/email-profile"
 Issues = "https://github.com/linux-profile/email-profile/issues"
-
-
-[tool.poetry]
-name = "email-profile"
-version = "0.1.0"
-description = "📩 Email Profile"
-authors = ["Fernando Celmer <email@fernandocelmer.com>"]
-license = "MIT"
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.8"
-pydantic = "^2.7.0"
-sqlalchemy = "^2.0.29"
-python-dotenv = "^1.0.1"
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.2.0"
-coverage = "^7.5.0"
-flake8 = "^7.0.0"
-pytest-cov = "^5.0.0"
-tox = "^4.15.0"
+Repository = "https://github.com/linux-profile/email-profile"
+Documentation = "https://github.com/linux-profile/email-profile/blob/master/README.md"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

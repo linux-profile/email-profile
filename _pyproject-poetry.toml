@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "email-profile"
+version = "0.1.0"
+description = "📩 Email Profile"
+authors = ["Fernando Celmer <email@fernandocelmer.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = "^2.7.0"
+sqlalchemy = "^2.0.29"
+python-dotenv = "^1.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+coverage = "^7.5.0"
+flake8 = "^7.0.0"
+pytest-cov = "^5.0.0"
+tox = "^4.15.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
