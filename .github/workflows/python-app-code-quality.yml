@@ -1,18 +1,16 @@
-name: ❤️️ Unit Testing
+name: 📝 Code quality
 
 on:
   push:
     branches: [ "develop" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+    environment: develop
 
     steps:
     - uses: actions/checkout@v3
@@ -24,10 +22,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt --no-cache-dir
-        pip install tox tox-gh-actions
-    - name: ❤️️ Test with PyTest
+    - name: 📝️ Code Scan
       run: |
-        pytest
-    - name: ❤️️ Test with Tox
-      run: |
-        tox
+        flake8 email_profile/ --count --show-source --statistics --ignore=E501
+        flake8 tests/ --count --show-source --statistics --ignore=E501,E712
