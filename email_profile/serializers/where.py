@@ -80,7 +80,9 @@ class WhereSerializer(BaseModel):
     @classmethod
     def format_from_who(cls, value: str) -> str:
         if value:
-            return '(FROM "{}")'.format(value)
+            return '(FROM "{}")'.format(
+                value.encode("ASCII", 'ignore').decode()
+            )
         return ''
 
     def result(self):

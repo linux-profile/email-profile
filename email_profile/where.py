@@ -30,19 +30,21 @@ class Where:
               before: Optional[date] = None,
               subject: Optional[str] = None,
               from_who: Optional[str] = None) -> object:
-        local = locals().copy()
+        variables = locals().copy()
         options = {}
 
-        for item in local:
-            if local[item]:
-                options[item] = local[item]
+        for item in variables:
+            if variables[item] and item != 'self':
+                options[item] = variables[item]
 
         status, total = self.server.select(self.mailbox.capitalize())
-        self._status = Status.validate_status(status)
+        validate = Status.validate_status(status)
+        self._status = validate.type
         self._total = int(total[0].decode())
 
         status, data = self.server.search(None, WhereSerializer(**options).result())
-        self._status = Status.validate_status(status)
+        validate = Status.validate_status(status)
+        self._status = validate.type
         self._data = Status.validate_data(data)
 
         return self
