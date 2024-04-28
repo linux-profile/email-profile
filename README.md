@@ -36,7 +36,7 @@ def main():
     )
 ```
 
-## Query instance - Test
+## Query instance
 
 ```python
 from datetime import date
@@ -51,10 +51,34 @@ query = app.select(
 )
 ```
 
-## Query result
+## Query count
 
 ```python
-print(query.execute())
+print(query.count())
+```
+
+
+## List IDs
+
+```python
+ids = query.list_id()
+print(ids)
+```
+
+## List Data
+
+```python
+data = query.list_data()
+
+for content in data:
+    # Email data model
+    print(content.email)
+
+    # Attachments data model
+    print(content.attachments)
+
+    # Dump Json
+    print(content.json())
 ```
 
 ## Commit Style
