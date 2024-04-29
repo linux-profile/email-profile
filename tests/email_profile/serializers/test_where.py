@@ -23,12 +23,12 @@ def test_where_serializer_since():
 
 def test_where_serializer_since_wrong_data_type():
     test_date = "1996-5-31"
-    test_assert = "date_from_datetime_parsing"
+    test_assert = "Attribute validation error (SINCE)."
 
     try:
         WhereSerializer(since=test_date)
-    except ValidationError as error:
-        current_error = error.errors()[0]['type']
+    except AttributeError as error:
+        current_error = error.args[0]
 
     assert current_error == test_assert
 
@@ -43,12 +43,12 @@ def test_where_serializer_before():
 
 def test_where_serializer_before_wrong_data_type():
     test_date = "1996-5-31"
-    test_assert = "date_from_datetime_parsing"
+    test_assert = "Attribute validation error (BEFORE)."
 
     try:
         WhereSerializer(before=test_date)
-    except ValidationError as error:
-        current_error = error.errors()[0]['type']
+    except AttributeError as error:
+        current_error = error.args[0]
 
     assert current_error == test_assert
 
