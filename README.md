@@ -39,7 +39,7 @@ def main():
 ## Query instance
 
 ```python
-from datetime import date
+from datetime import datetime, date
 
 query = app.select(mailbox="Inbox").where(
     since=datetime(1996, 5, 31),
