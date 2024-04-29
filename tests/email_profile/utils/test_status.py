@@ -64,7 +64,7 @@ def test_status_validate_status_bad():
 
 
 def test_status_validate_data_with_data():
-    input_status = [b'4', b'8', b'15', b'16', b'23', b'42']
+    input_status = [b'4 8 15 16 23 42']
     output_status = ['4', '8', '15', '16', '23', '42']
 
     assert Status.validate_data(input_status) == output_status
