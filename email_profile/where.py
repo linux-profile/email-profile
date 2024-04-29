@@ -57,11 +57,26 @@ class Where:
 
     def list_data(self) -> List[any]:
         if self._data:
-            status, messages = self.server.fetch(','.join(self._data), '(RFC822)')
-            messages = [message for message in messages if message != b')']
+            _sum = 1
+            _sum_searching = 0
+            _groups = 1
 
-            for reference, text in messages:
-                _id = int(reference.split()[0])
-                self._message.append(Message(text, _id).result())
+            while _sum < len(self._data):
+                _sum += 100
+                _groups += 1
+
+            splited = [self._data[item::_groups] for item in range(_groups)]
+
+            for group_mail in splited:
+                _sum_searching += len(group_mail)
+
+                status, messages = self.server.fetch(','.join(group_mail), '(RFC822)')
+                messages = [message for message in messages if message != b')']
+
+                print(f"Searching: {_sum_searching}/{len(self._data)}")
+
+                for reference, text in messages:
+                    _id = int(reference.split()[0])
+                    self._message.append(Message(text, _id).result())
 
         return self._message
