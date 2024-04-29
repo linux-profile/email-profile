@@ -1,5 +1,4 @@
 from datetime import datetime, date
-from pydantic import ValidationError
 from email_profile.serializers import WhereSerializer
 
 

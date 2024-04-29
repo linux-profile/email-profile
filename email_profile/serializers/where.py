@@ -3,17 +3,15 @@ Dataclass Module
 """
 
 from datetime import date
-from typing import Optional, Union
-from datetime import datetime
 from dataclasses import dataclass, field
 
 
 class Validations:
 
     def __post_init__(self):
-        for name, field in self.__dataclass_fields__.items():
+        for name, _field in self.__dataclass_fields__.items():
             if method := getattr(self, f"validate_{name}"):
-                setattr(self, name, method(field=field))
+                setattr(self, name, method(field=_field))
 
 
 @dataclass
@@ -70,8 +68,8 @@ class WhereSerializer(Validations):
 
     def result(self):
         data = []
-        for field in self.__dataclass_fields__:
-            content = getattr(self, field)
+        for _field in self.__dataclass_fields__:
+            content = getattr(self, _field)
             if content:
                 data.append(content)
         return " ".join(data)
