@@ -46,7 +46,7 @@ class Status:
 
     @staticmethod
     def validate_data(data: List[str]) -> List[str]:
-        data = [x.decode() for x in data]
+        data = [x.decode() for x in data[0].split()]
         if len(data) == 1 and not data[0]:
             return []
         return data

@@ -1,11 +1,13 @@
+"""
+Message Module
+"""
+
 from email import message_from_bytes
 from email.header import decode_header
 from email.utils import parsedate_to_datetime
+
 from email_profile.data import DataClass as Data
-from email_profile.models import (
-    AttachmentModel,
-    EmailModel
-)
+from email_profile.models import AttachmentModel, EmailModel
 
 
 class Message:
@@ -25,8 +27,14 @@ class Message:
                 field += sub[0].decode(encoding)
             except Exception:
                 field += sub[0]
-
         return field
+
+    def parsedate_to_datetime(self, date):
+        try:
+            return parsedate_to_datetime(date)
+        except ValueError:
+            pass
+        return None
 
     def get_content(self, part) -> None:
         content_type = part.get_content_type()
@@ -71,7 +79,7 @@ class Message:
                 received=self.message.get("Received"),
                 dkim_signature=self.message.get("DKIM-Signature"),
                 content_type=self.message.get_content_type(),
-                date=parsedate_to_datetime(self.message.get("Date")),
+                date=self.parsedate_to_datetime(self.message.get("Date")),
                 from_who=self.decode_field(self.message.get("From")),
                 mime_version=self.message.get("Mime-Version"),
                 message_id=self.message.get("Message-ID"),
