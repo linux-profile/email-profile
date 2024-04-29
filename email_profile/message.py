@@ -88,7 +88,7 @@ class Message:
                 precedence=self.message.get("Precedence"),
                 x_sg_eid=self.message.get("X-SG-EID"),
                 x_sg_id=self.message.get("X-SG-ID"),
-                to=self.message.get("To"),
+                to_who=self.message.get("To"),
                 x_entity_id=self.message.get("X-Entity-ID")
             )
         )

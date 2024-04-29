@@ -2,9 +2,16 @@
 Where Module
 """
 
+
+import logging
+
 from datetime import date
 from typing import Optional, List
 
+from email_profile.config.controller import (
+    AttachmentController,
+    EmailController
+)
 from email_profile.serializers import WhereSerializer
 from email_profile.utils import Status, Mode, Mailbox
 from email_profile.message import Message
@@ -80,3 +87,15 @@ class Where:
                     self._message.append(Message(text, _id).result())
 
         return self._message
+
+    def dump_sqlite(self):
+        logging.warning(" Function 'dump_sqlite' not implemented")
+
+        sql_email = EmailController()
+        sql_attachmentl = AttachmentController()
+
+        for message in self._message:
+            sql_email.create(data=message.email)
+
+            for attachment in message.attachments:
+                sql_attachmentl.create(data=attachment)

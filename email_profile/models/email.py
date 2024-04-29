@@ -26,5 +26,5 @@ class EmailModel:
     precedence: str = field(default=None)
     x_sg_eid: str = field(default=None)
     x_sg_id: str = field(default=None)
-    to: str = field(default=None)
+    to_who: str = field(default=None)
     x_entity_id: str = field(default=None)
