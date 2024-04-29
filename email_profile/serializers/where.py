@@ -2,92 +2,75 @@
 Dataclass Module
 """
 
-from typing import Union
 from datetime import date
-from pydantic import BaseModel, Field, field_validator
+from typing import Optional, Union
+from datetime import datetime
+from dataclasses import dataclass, field
 
 
-class WhereSerializer(BaseModel):
-    """
-    ------
-    URL: https://www.rfc-editor.org/rfc/rfc3501.html#page-53
-    ------
+class Validations:
 
-    SUBJECT <string>
-        Messages that contain the specified string in the envelope
-        structure's SUBJECT field.
+    def __post_init__(self):
+        for name, field in self.__dataclass_fields__.items():
+            if method := getattr(self, f"validate_{name}"):
+                setattr(self, name, method(field=field))
 
-    TEXT <string>
-        Messages that contain the specified string in the header or
-        body of the message.
 
-    TO <string>
-        Messages that contain the specified string in the envelope
-        structure's TO field.
+@dataclass
+class WhereSerializer(Validations):
 
-    UID <sequence set>
-        Messages with unique identifiers corresponding to the specified
-        unique identifier set.  Sequence set ranges are permitted.
+    since: date = field(default="")
+    before: date = field(default="")
+    subject: str = field(default="")
+    from_who: str = field(default="")
 
-    UNANSWERED
-        Messages that do not have the Answered flag set.
-
-    UNDELETED
-        Messages that do not have the Deleted flag set.
-
-    UNDRAFT
-        Messages that do not have the Draft flag set.
-
-    UNFLAGGED
-        Messages that do not have the Flagged flag set.
-
-    UNKEYWORD <flag>
-        Messages that do not have the specified keyword flag set.
-
-    UNSEEN
-        Messages that do not have the Seen flag set.
-    """
-
-    since: date = Field(default="")
-    before: date = Field(default="")
-    subject: str = Field(default="")
-    from_who: str = Field(default="")
-
-    @field_validator('since')
-    @classmethod
-    def format_since(cls, value: Union[date, str]) -> str:
-        if value:
-            return '(SINCE {})'.format(value.strftime('%d-%b-%Y'))
-        return ''
-
-    @field_validator('before')
-    @classmethod
-    def format_before(cls, value: Union[date, str]) -> str:
-        if value:
-            return '(BEFORE {})'.format(value.strftime('%d-%b-%Y'))
-        return ''
-
-    @field_validator('subject')
-    @classmethod
-    def format_subject(cls, value: str) -> str:
-        if value:
-            return '(SUBJECT "{}")'.format(
-                value.encode("ASCII", 'ignore').decode()
+    def validate_since(self, field) -> str:
+        if self.since:
+            if not isinstance(self.since, field.type):
+                raise AttributeError(
+                    "Attribute validation error (SINCE)."
+                )
+            return '(SINCE {})'.format(
+                self.since.strftime('%d-%b-%Y')
             )
         return ''
 
-    @field_validator('from_who')
-    @classmethod
-    def format_from_who(cls, value: str) -> str:
-        if value:
+    def validate_before(self, field) -> str:
+        if self.before:
+            if not isinstance(self.before, field.type):
+                raise AttributeError(
+                    "Attribute validation error (BEFORE)."
+                )
+            return '(BEFORE {})'.format(
+                self.before.strftime('%d-%b-%Y')
+            )
+        return ''
+
+    def validate_subject(self, field) -> str:
+        if self.subject:
+            if not isinstance(self.subject, field.type):
+                raise AttributeError(
+                    "Attribute validation error (SUBJECT)."
+                )
+            return '(SUBJECT "{}")'.format(
+                self.subject.encode("ASCII", 'ignore').decode()
+            )
+        return ''
+
+    def validate_from_who(self, field) -> str:
+        if self.from_who:
+            if not isinstance(self.from_who, field.type):
+                raise AttributeError(
+                    "Attribute validation error (FRON_WHO)."
+                )
             return '(FROM "{}")'.format(
-                value.encode("ASCII", 'ignore').decode()
+                self.from_who.encode("ASCII", 'ignore').decode()
             )
         return ''
 
     def result(self):
         data = []
-        for field in self.model_fields:
+        for field in self.__dataclass_fields__:
             content = getattr(self, field)
             if content:
                 data.append(content)

@@ -1,8 +1,12 @@
 import os
 
 from datetime import date, datetime
-from dotenv import load_dotenv
 from email_profile import Email
+
+try:
+    from dotenv import load_dotenv
+except Exception:
+    pass
 
 
 def main():
