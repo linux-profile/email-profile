@@ -78,8 +78,6 @@ for content in data:
     # Dump Json
     print(content.json())
 
-    # Dump SQLlite
-    content.sqllite()
 ```
 
 ## Commit Style
