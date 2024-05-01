@@ -143,3 +143,6 @@ dmypy.json
 # Database
 *.sqlite3
 *.db
+
+# Others
+html

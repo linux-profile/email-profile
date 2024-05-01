@@ -25,4 +25,6 @@ SOFTWARE."""
 
 from email_profile.core import Email
 
-__all__ = ['Email']
+__all__ = [
+    'Email'
+]

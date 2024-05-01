@@ -1,9 +1,13 @@
-from abc import abstractclassmethod, ABC
+"""
+Model Module
+"""
+
 from dataclasses import dataclass
+from abc import abstractclassmethod, ABC
 
 
 @dataclass
-class BaseModel(ABC):
+class AbstractModel(ABC):
 
     @abstractclassmethod
     class Meta:

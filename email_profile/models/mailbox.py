@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 
-from email_profile.models.dataclass.base import BaseModel
+from email_profile.abstract import AbstractModel
 
 
 @dataclass
-class MailBoxModel(BaseModel):
+class MailBoxModel(AbstractModel):
 
     class Meta:
         table_name = 'mailbox'

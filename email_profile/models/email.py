@@ -1,11 +1,11 @@
 from datetime import datetime
 from dataclasses import dataclass, field
 
-from email_profile.models.dataclass.base import BaseModel
+from email_profile.abstract import AbstractModel
 
 
 @dataclass
-class EmailModel(BaseModel):
+class EmailModel(AbstractModel):
 
     class Meta:
         table_name = 'email'
