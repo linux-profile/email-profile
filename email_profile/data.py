@@ -2,8 +2,23 @@
 Data Module
 """
 
+import logging
+
 from typing import List, Dict
 from abc import abstractmethod, ABC
+
+from email_profile.config.controller import Controller
+
+try:
+    from email_profile.models.peewee import (
+        AttachmentModel,
+        EmailModel
+    )
+except Exception as error:
+    logging.error(error)
+
+    AttachmentModel = None
+    EmailModel = None
 
 
 class DataAbstract(ABC):
@@ -25,6 +40,10 @@ class DataAbstract(ABC):
             "attachments": [{}]
         }
 
+    @abstractmethod
+    def sqllite(self) -> None:
+        pass
+
 
 class DataClass(DataAbstract):
 
@@ -37,3 +56,15 @@ class DataClass(DataAbstract):
             "email": self.email.__dict__,
             "attachments": attachments_temp
         }
+
+    def sqllite(self) -> None:
+        Controller(
+            model=EmailModel,
+            data=self.email
+        ).create()
+
+        for attachment in self.attachments:
+            Controller(
+                model=AttachmentModel,
+                data=attachment
+            ).create()

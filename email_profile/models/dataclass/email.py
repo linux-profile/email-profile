@@ -1,14 +1,16 @@
-from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass, field
 
+from email_profile.models.dataclass.base import BaseModel
+
 
 @dataclass
-class EmailModel:
+class EmailModel(BaseModel):
 
-    __tablename__ = 'email'
+    class Meta:
+        table_name = 'email'
 
-    id: Optional[int] = field(default=None)
+    id: int = field(default=None)
     body_text_plain: str = field(default=None)
     body_text_html: str = field(default=None)
     return_path: str = field(default=None)

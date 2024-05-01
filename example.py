@@ -46,6 +46,9 @@ def main():
         # Dump Json
         print(content.json())
 
+        # Dump SQLlite
+        content.sqllite()
+
 
 if __name__ == '__main__':
     main()

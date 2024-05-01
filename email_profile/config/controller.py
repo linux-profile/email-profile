@@ -5,58 +5,39 @@ Controller Module
 
 import logging
 
-from email_profile.config.database import session
-from email_profile.models import AttachmentModel, EmailModel
+from email_profile.models.peewee.base import db
 
 
 class Controller:
 
-    def __init__(self, model=None) -> None:
+    def __init__(self, model=None, data=None) -> None:
         self.model = model
-        self.fields = model.__dataclass_fields__.items()
-        self.table_name = model.__tablename__
+        self.data = data
 
-        self._validate_table()
+        db.connect()
+        db.create_tables([self.model])
 
-    def _create_table(self) -> None:
-        fields = [name for name, field in self.fields]
-        query = ", ".join(fields)
-
-        session.execute(f"CREATE TABLE {self.table_name} ({query})")
-
-    def _validate_table(self) -> None:
+    def create(self):
         try:
-            session.execute(f"SELECT * FROM {self.table_name}")
+            self.model.create(**self.data.__dict__)
         except Exception as error:
-            error_message = f'no such table: {self.table_name}'
+            message = f"\n{str(self.data.id)}: {str(error)}"
+            logging.error(error)
 
-            if error.args[0] == error_message:
-                self._create_table()
+            with open("log.txt", mode="a") as file:
+                file.write(message)
 
-    def create(self, data: object):
-        logging.info("Not implemented")
-        pass
+        finally:
+            db.close()
 
     def read(self):
-        logging.info("Not implemented")
+        logging.warning("Not implemented")
         pass
 
     def update(self):
-        logging.info("Not implemented")
+        logging.warning("Not implemented")
         pass
 
     def delete(self):
-        logging.info("Not implemented")
+        logging.warning("Not implemented")
         pass
-
-
-class AttachmentController(Controller):
-
-    def __init__(self):
-        super().__init__(model=AttachmentModel)
-
-
-class EmailController(Controller):
-
-    def __init__(self):
-        super().__init__(model=EmailModel)

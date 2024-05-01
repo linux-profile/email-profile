@@ -56,41 +56,39 @@ class Message:
         if "attachment" in str(part.get("Content-Disposition")):
             filename = part.get_filename()
             if filename:
-                self.data.add_attachment(
-                    AttachmentModel(
-                        email_id=self.id,
-                        file_name=filename,
-                        content_type=part.get_content_type(),
-                        content_ascii=part.get_payload().encode("ascii")
-                    )
+                model = AttachmentModel(
+                    email_id=self.id,
+                    file_name=filename,
+                    content_type=part.get_content_type(),
+                    content_ascii=part.get_payload().encode("ascii")
                 )
+                self.data.add_attachment(model)
 
     def result(self) -> EmailModel:
         for part in self.message.walk():
             self.get_content(part=part)
 
-        self.data.add_email(
-            EmailModel(
-                id=self.id,
-                body_text_plain=self.body_text_plain,
-                body_text_html=self.body_text_html,
-                return_path=self.message.get("Return-Path"),
-                delivered_to=self.message.get("Delivered-To"),
-                received=self.message.get("Received"),
-                dkim_signature=self.message.get("DKIM-Signature"),
-                content_type=self.message.get_content_type(),
-                date=self.parsedate_to_datetime(self.message.get("Date")),
-                from_who=self.decode_field(self.message.get("From")),
-                mime_version=self.message.get("Mime-Version"),
-                message_id=self.message.get("Message-ID"),
-                subject=self.decode_field(self.message["Subject"]),
-                reply_to=self.message.get("Reply-To"),
-                precedence=self.message.get("Precedence"),
-                x_sg_eid=self.message.get("X-SG-EID"),
-                x_sg_id=self.message.get("X-SG-ID"),
-                to_who=self.message.get("To"),
-                x_entity_id=self.message.get("X-Entity-ID")
-            )
+        model = EmailModel(
+            id=self.id,
+            body_text_plain=self.body_text_plain,
+            body_text_html=self.body_text_html,
+            return_path=self.message.get("Return-Path"),
+            delivered_to=self.message.get("Delivered-To"),
+            received=self.message.get("Received"),
+            dkim_signature=self.message.get("DKIM-Signature"),
+            content_type=self.message.get_content_type(),
+            date=self.parsedate_to_datetime(self.message.get("Date")),
+            from_who=self.decode_field(self.message.get("From")),
+            mime_version=self.message.get("Mime-Version"),
+            message_id=self.message.get("Message-ID"),
+            subject=self.decode_field(self.message["Subject"]),
+            reply_to=self.message.get("Reply-To"),
+            precedence=self.message.get("Precedence"),
+            x_sg_eid=self.message.get("X-SG-EID"),
+            x_sg_id=self.message.get("X-SG-ID"),
+            to_who=self.message.get("To"),
+            x_entity_id=self.message.get("X-Entity-ID")
         )
+        self.data.add_email(model)
 
         return self.data

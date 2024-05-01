@@ -20,6 +20,9 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
 ]
+dependencies = [
+  'peewee'
+]
 
 [project.urls]
 Homepage = "https://github.com/linux-profile/email-profile"
