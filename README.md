@@ -13,7 +13,8 @@
 
 - [x] Query API Structure
 - [x] Data table structure
-- [ ] SQLlite Backup
+- [x] SQLlite Backup
+- [ ] HTML Backup
 - [ ] CLI Email
 - [ ] Documentation
 
@@ -76,6 +77,9 @@ for content in data:
 
     # Dump Json
     print(content.json())
+
+    # Dump SQLlite
+    content.sqllite()
 ```
 
 ## Commit Style
