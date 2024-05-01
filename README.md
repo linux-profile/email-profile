@@ -13,8 +13,10 @@
 
 - [x] Query API Structure
 - [x] Data table structure
-- [x] SQLlite Backup
-- [ ] HTML Backup
+- [x] Response JSON
+- [ ] Dump JSON
+- [x] Dump HTML
+- [x] Response HTML
 - [ ] CLI Email
 - [ ] Documentation
 
@@ -76,7 +78,12 @@ for content in data:
     print(content.attachments)
 
     # Dump Json
-    print(content.json())
+    json = content.json()
+    print(json)
+
+    # Dump HMTL
+    html = content.html()
+    print(html)
 
 ```
 
