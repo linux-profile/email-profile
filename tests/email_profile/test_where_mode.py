@@ -1,4 +1,4 @@
-from email_profile.utils import Mode
+from email_profile.where import Mode
 
 
 def test_mode_all():

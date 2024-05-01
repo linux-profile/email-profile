@@ -1,4 +1,4 @@
-from email_profile.utils import Mailbox
+from email_profile.where import Mailbox
 
 
 def test_mainbox_inbox():

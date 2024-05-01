@@ -1,4 +1,4 @@
-from email_profile.utils import Status, StatusResponse
+from email_profile.status import Status, StatusResponse
 
 
 def test_status_ok():
