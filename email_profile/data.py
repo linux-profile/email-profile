@@ -2,6 +2,7 @@
 Data Module
 """
 
+from pathlib import Path
 from typing import List, Dict
 from abc import abstractmethod, ABC
 
@@ -26,7 +27,7 @@ class DataAbstract(ABC):
         }
 
     @abstractmethod
-    def hmtl(self) -> None:
+    def html(self) -> None:
         pass
 
 
@@ -42,5 +43,22 @@ class DataClass(DataAbstract):
             "attachments": attachments_temp
         }
 
-    def hmtl(self) -> None:
-        pass
+    def html(self) -> str:
+        _id = str(self.email.id)
+        path = Path("html", _id)
+
+        try:
+            path.mkdir(parents=True)
+        except FileExistsError:
+            pass
+
+        with open(
+            file=path.joinpath("index.html"),
+            mode="w",
+            errors="ignore"
+        ) as file:
+            file.write(
+                self.email.body_text_html
+            )
+
+        return self.email.body_text_html

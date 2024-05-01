@@ -6,9 +6,23 @@ Where Module
 from datetime import date
 from typing import Optional, List
 
-from email_profile.serializers import WhereSerializer
-from email_profile.utils import Status, Mode, Mailbox
+from email_profile.status import Status
 from email_profile.message import Message
+from email_profile.serializers import WhereSerializer
+
+
+class Mailbox:
+
+    INBOX = "INBOX"
+    SENT = "INBOX.Sent"
+    JUNK = "INBOX.Junk"
+    DRAFTS = "INBOX.Drafts"
+
+
+class Mode:
+
+    ALL = "ALL"
+    UNSEEN = "UNSEEN"
 
 
 class Where:

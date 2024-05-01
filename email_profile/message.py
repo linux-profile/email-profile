@@ -6,7 +6,7 @@ from email import message_from_bytes
 from email.header import decode_header
 from email.utils import parsedate_to_datetime
 
-from email_profile.data import DataClass as Data
+from email_profile.data import DataClass
 from email_profile.models import AttachmentModel, EmailModel
 
 
@@ -17,7 +17,7 @@ class Message:
         self.id = id
         self.body_text_plain = ""
         self.body_text_html = ""
-        self.data = Data()
+        self.data = DataClass()
 
     def decode_field(self, header) -> str:
         field = ""
@@ -57,7 +57,7 @@ class Message:
             filename = part.get_filename()
             if filename:
                 model = AttachmentModel(
-                    email_id=self.id,
+                    id=self.id,
                     file_name=filename,
                     content_type=part.get_content_type(),
                     content_ascii=part.get_payload().encode("ascii")

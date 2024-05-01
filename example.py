@@ -44,7 +44,12 @@ def main():
         print(content.attachments)
 
         # Dump Json
-        print(content.json())
+        json = content.json()
+        print(json)
+
+        # Dump HMTL
+        html = content.html()
+        print(html)
 
 
 if __name__ == '__main__':
