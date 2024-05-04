@@ -12,11 +12,22 @@
 ## Check list
 
 - [x] Query API Structure
+    - [x] Mailbox
+    - [x] Since
+    - [x] Before
+    - [x] Subject
+    - [x] From Who
+    - [ ] Body
+    - [ ] Unseen
 - [x] Data table structure
+- [x] Get emails
+- [x] Download Attachments
 - [x] Response JSON
-- [ ] Dump JSON
-- [x] Dump HTML
+- [x] Dump File JSON
 - [x] Response HTML
+- [x] Dump File HTML
+- [x] Response Attachment File
+- [ ] Dump Attachment File
 - [ ] CLI Email
 - [ ] Documentation
 
