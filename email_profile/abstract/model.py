@@ -6,8 +6,19 @@ from dataclasses import dataclass
 from abc import abstractclassmethod, ABC
 
 
+class Validations:
+
+    def __post_init__(self):
+        for name, _field in self.__dataclass_fields__.items():
+            method_name = f"validate_{name}"
+
+            if hasattr(self, method_name):
+                if method := getattr(self, method_name):
+                    setattr(self, name, method(field=_field))
+
+
 @dataclass
-class AbstractModel(ABC):
+class AbstractModel(ABC, Validations):
 
     @abstractclassmethod
     class Meta:

@@ -2,29 +2,33 @@
 Data Module
 """
 
+import json
+
 from pathlib import Path
 from typing import List, Dict
 from abc import abstractmethod, ABC
 
+from email_profile.utils import mkdir
+
 
 class DataAbstract(ABC):
+
+    _id = None
 
     def __init__(self) -> None:
         self.email: object = None
         self.attachments: List[object] = list()
 
     def add_email(self, model: object):
+        self._id = str(model.id)
         self.email = model
 
     def add_attachment(self, model: object):
         self.attachments.append(model)
 
     @abstractmethod
-    def json(self) -> Dict:
-        return {
-            "email": {},
-            "attachments": [{}]
-        }
+    def json(self) -> None:
+        pass
 
     @abstractmethod
     def html(self) -> None:
@@ -33,32 +37,42 @@ class DataAbstract(ABC):
 
 class DataClass(DataAbstract):
 
-    def json(self) -> Dict:
-        attachments_temp = []
-        for attachment in self.attachments:
-            attachments_temp.append(attachment.__dict__)
+    def json(self,
+             path: str = "json",
+             create_file: bool = True) -> Dict:
+        data = self.email.__dict__
 
-        return {
-            "email": self.email.__dict__,
-            "attachments": attachments_temp
-        }
+        if create_file:
+            path = Path(path)
+            mkdir(path)
 
-    def html(self) -> str:
-        _id = str(self.email.id)
-        path = Path("html", _id)
+            with open(
+                file=path.joinpath(f"{self._id}.json"),
+                mode="w",
+                errors="ignore"
+            ) as file:
+                file.write(
+                    json.dumps(data, indent=4)
+                )
 
-        try:
-            path.mkdir(parents=True)
-        except FileExistsError:
-            pass
+        return data
 
-        with open(
-            file=path.joinpath("index.html"),
-            mode="w",
-            errors="ignore"
-        ) as file:
-            file.write(
-                self.email.body_text_html
-            )
+    def html(self,
+             path: str = "html",
+             create_file: bool = True) -> str:
+        data = self.email.body_text_html
 
-        return self.email.body_text_html
+        if create_file:
+            path = Path(path, self._id)
+            mkdir(path)
+
+            with open(
+                file=path.joinpath("index.html"),
+                mode="w",
+                errors="ignore"
+            ) as file:
+                file.write(
+                    self.email.body_text_html
+                )
+
+        return data

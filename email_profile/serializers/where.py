@@ -5,13 +5,7 @@ Dataclass Module
 from datetime import date
 from dataclasses import dataclass, field
 
-
-class Validations:
-
-    def __post_init__(self):
-        for name, _field in self.__dataclass_fields__.items():
-            if method := getattr(self, f"validate_{name}"):
-                setattr(self, name, method(field=_field))
+from email_profile.abstract.model import Validations
 
 
 @dataclass

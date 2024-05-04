@@ -33,10 +33,8 @@ class Where:
     _total = 0
 
     def __init__(self,
-                 mode: Mode = Mode.ALL,
                  mailbox: Mailbox = Mailbox.INBOX,
                  server: any = None) -> None:
-        self.mode = mode
         self.mailbox = mailbox
         self.server = server
 
@@ -57,7 +55,8 @@ class Where:
         self._status = validate.type
         self._total = int(total[0].decode())
 
-        status, data = self.server.search(None, WhereSerializer(**options).result())
+        status, data = self.server.search(
+            None, WhereSerializer(**options).result())
         validate = Status.validate_status(status)
         self._status = validate.type
         self._data = Status.validate_data(data)
@@ -85,7 +84,9 @@ class Where:
             for group_mail in splited:
                 _sum_searching += len(group_mail)
 
-                status, messages = self.server.fetch(','.join(group_mail), '(RFC822)')
+                status, messages = self.server.fetch(
+                    ','.join(group_mail), '(RFC822)'
+                )
                 messages = [message for message in messages if message != b')']
 
                 print(f"Loading: {_sum_searching}/{len(self._data)}", end="\r")

@@ -19,11 +19,19 @@ class Status:
     BAD = 'BAD'
 
     @staticmethod
-    def validate_status(status: str, raise_error: bool = True) -> StatusResponse:
+    def validate_status(
+            status: str,
+            raise_error: bool = True) -> StatusResponse:
         data = {
-            Status.OK: (True, "Login completed, now in authenticated state"),
-            Status.NO: (False, "Login failure: user name or password rejected"),
-            Status.BAD: (False, "Command unknown or arguments invalid")
+            Status.OK: (
+                True,
+                "Login completed, now in authenticated state"),
+            Status.NO: (
+                False,
+                "Login failure: user name or password rejected"),
+            Status.BAD: (
+                False,
+                "Command unknown or arguments invalid")
         }.get(status, (False, "Unknown error"))
 
         if raise_error:

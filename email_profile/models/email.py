@@ -30,3 +30,13 @@ class EmailModel(AbstractModel):
     x_sg_id: str = field(default=None)
     to_who: str = field(default=None)
     x_entity_id: str = field(default=None)
+
+    def validate_body_text_plain(self, field) -> str:
+        if self.body_text_plain:
+            return str(self.body_text_plain)
+        return ''
+
+    def validate_date(self, field) -> str:
+        if self.date:
+            return self.date.strftime('%Y-%d-%m %H:%M:%S')
+        return ''
