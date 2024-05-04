@@ -21,6 +21,10 @@
     - [ ] Unseen
 - [x] Data table structure
 - [x] Get emails
+- [ ] Create email
+- [ ] Answer email
+- [ ] Get folders
+- [ ] Get contacts
 - [x] Download Attachments
 - [x] Response JSON
 - [x] Dump File JSON
@@ -88,14 +92,17 @@ for content in data:
     # Attachments data model
     print(content.attachments)
 
-    # Dump Json
+    # Dump File JSON
     json = content.json()
+
+    # Response JSON
     print(json)
 
-    # Dump HMTL
+    # Dump File HMTL
     html = content.html()
-    print(html)
 
+    # Response HTML
+    print(html)
 ```
 
 ## Commit Style

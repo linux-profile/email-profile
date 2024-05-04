@@ -43,12 +43,16 @@ def main():
         # Attachments data model
         print(content.attachments)
 
-        # Dump Json
+        # Dump File JSON
         json = content.json()
+
+        # Response JSON
         print(json)
 
-        # Dump HMTL
+        # Dump File HMTL
         html = content.html()
+
+        # Response HTML
         print(html)
 
 
