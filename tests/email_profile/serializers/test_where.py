@@ -92,7 +92,10 @@ def test_where_serializer_result():
     output_since = input_since.strftime('%d-%b-%Y')
     output_before = input_before.strftime('%d-%b-%Y')
     output_subject = input_subject
-    output_result = f'(SINCE {output_since}) (BEFORE {output_before}) (SUBJECT "{output_subject}")'
+    output_result = f'\
+        (SINCE {output_since}) \
+            (BEFORE {output_before}) \
+                (SUBJECT "{output_subject}")'
 
     serializer = WhereSerializer(
         since=input_since,
