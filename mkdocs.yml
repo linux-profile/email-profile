@@ -1,0 +1,16 @@
+site_name: 📩 Email Profile
+repo_name: linux-profile/email-profile
+repo_url: https://github.com/linux-profile/email-profile
+site_url: https://linuxprofile.com
+copyright: Fernando Celmer
+
+nav:
+    - Home: index.md
+    - Getting Started: nav/getting-started.md
+    - Development:
+      - nav/development-guide.md
+      - nav/release-notes.md
+
+theme:
+  name: simple-blog
+  theme_style: dark
