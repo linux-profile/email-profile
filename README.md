@@ -4,12 +4,12 @@
 
 ---
 
-- **Documentation**: [Link](https://github.com/FernandoCelmer/email-profile)
-- **Source Code**: [Link](https://github.com/FernandoCelmer/email-profile)
+- **Documentation**: [https://linux-profile.github.io/email-profile](https://github.com/FernandoCelmer/email-profile)
+- **Source Code**: [https://github.com/FernandoCelmer/email-profile](https://github.com/FernandoCelmer/email-profile)
 
 ---
 
-## Check list
+## Features
 
 - [x] Query API Structure
     - [x] Mailbox
