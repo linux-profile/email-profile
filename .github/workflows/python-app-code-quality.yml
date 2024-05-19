@@ -1,7 +1,7 @@
 name: 📝 Code quality
 
 on:
-  push:
+  pull_request:
     branches: [ "develop" ]
 
 permissions:
