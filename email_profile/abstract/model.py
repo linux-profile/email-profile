@@ -3,24 +3,31 @@ Model Module
 """
 
 from dataclasses import dataclass
-from abc import abstractclassmethod, ABC
+from abc import ABC
 
 
-class Validations:
+class Validator:
 
     def __post_init__(self):
         for name, _field in self.__dataclass_fields__.items():
             method_name = f"validate_{name}"
 
             if hasattr(self, method_name):
-                if method := getattr(self, method_name):
-                    setattr(self, name, method(field=_field))
+                if validate := getattr(self, method_name):
+                    value = getattr(self, name)
+
+                    if value and not isinstance(value, _field.type):
+                        raise AttributeError(
+                            f"Attribute validation error in '{name}'"
+                        )
+
+                    setattr(self, name, validate(value=value))
 
 
 @dataclass
-class AbstractModel(ABC, Validations):
+class AbstractModel(ABC, Validator):
 
-    @abstractclassmethod
+    @classmethod
     class Meta:
         table_name = None
 

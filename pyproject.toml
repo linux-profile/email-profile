@@ -27,6 +27,19 @@ Issues = "https://github.com/linux-profile/email-profile/issues"
 Repository = "https://github.com/linux-profile/email-profile"
 Documentation = "https://github.com/linux-profile/email-profile/blob/master/README.md"
 
+[tool.poetry]
+name = "email-profile"
+version = "0.5.0"
+description = "📩 Email Profile"
+authors = ["FernandoCelmer <email@fernandocelmer.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-dotenv = "^1.1.1"
+sqlalchemy = "^2.0.43"
+pydantic = "^2.11.7"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

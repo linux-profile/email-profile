@@ -1,7 +1,7 @@
 import os
 
 from datetime import date, datetime
-from email_profile import Email
+from _email_profile import Email
 
 try:
     from dotenv import load_dotenv

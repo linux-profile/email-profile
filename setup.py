@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from email_profile import __version__
+from _email_profile import __version__
 from setuptools import setup
 from setuptools.command.install import install
 

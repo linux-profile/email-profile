@@ -1,5 +1,5 @@
-from email_profile.serializers.where import WhereSerializer
+from email_profile.serializers.query import Query
 
 __all__ = [
-    "WhereSerializer"
+    "Query"
 ]

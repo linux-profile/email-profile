@@ -8,7 +8,7 @@ from typing import Optional, List
 
 from email_profile.status import Status
 from email_profile.message import Message
-from email_profile.serializers import WhereSerializer
+from email_profile.serializers import Query
 
 
 class Mailbox:
@@ -56,7 +56,7 @@ class Where:
         self._total = int(total[0].decode())
 
         status, data = self.server.search(
-            None, WhereSerializer(**options).result())
+            None, Query(**options).result())
         validate = Status.validate_status(status)
         self._status = validate.type
         self._data = Status.validate_data(data)
