@@ -5,16 +5,25 @@ from __future__ import annotations
 import imaplib
 import logging
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Callable, Literal, Optional
 
 from email_profile._internal import _build_serializer, _state
 from email_profile.eml import EmailSerializer
 from email_profile.query import Q, QueryLike, _q
+from email_profile.retry import with_retry
 
 if TYPE_CHECKING:
     from email_profile.mailbox import MailBox
 
 logger = logging.getLogger(__name__)
+
+FetchMode = Literal["full", "text", "headers"]
+
+_FETCH_SPECS: dict[str, str] = {
+    "full": "(RFC822)",
+    "text": "(BODY.PEEK[HEADER] BODY.PEEK[TEXT])",
+    "headers": "(BODY.PEEK[HEADER])",
+}
 
 
 class Where:
@@ -31,16 +40,27 @@ class Where:
         self._client = client
         self._mailbox = mailbox
         self._q = _q(query) if query is not None else Q.all()
+        self._cached_uids: Optional[list[str]] = None
 
     def _uids(self) -> list[str]:
+        if self._cached_uids is not None:
+            return self._cached_uids
+
         _state(self._client.select(self._mailbox.name))
 
         data = _state(self._client.uid("search", None, self._q.mount()))
 
         if not data or not data[0]:
-            return []
+            self._cached_uids = []
+            return self._cached_uids
 
-        return data[0].decode().split()
+        self._cached_uids = data[0].decode().split()
+        return self._cached_uids
+
+    def refresh(self) -> Where:
+        """Drop cached UIDs so the next call hits IMAP again."""
+        self._cached_uids = None
+        return self
 
     def count(self) -> int:
         """How many messages match — no body fetched."""
@@ -52,27 +72,59 @@ class Where:
 
     def uids(self) -> list[str]:
         """Matching IMAP UIDs — no body fetched."""
-        return self._uids()
+        return list(self._uids())
 
-    def iter_messages(self) -> Iterator[EmailSerializer]:
-        """Stream matching messages, fetched in chunks."""
+    def messages(
+        self,
+        *,
+        mode: FetchMode = "full",
+        chunk_size: Optional[int] = None,
+        on_progress: Optional[Callable[[int, int], None]] = None,
+    ) -> Iterator[EmailSerializer]:
+        """Stream matching messages, fetched in chunks. Wrap in ``list()``
+        if you need a materialized list.
+
+        ``mode``:
+            - ``"full"``  — RFC822 with attachments (default).
+            - ``"text"``  — headers + body, no attachments (~50x lighter).
+            - ``"headers"`` — headers only (cheapest).
+
+        ``chunk_size`` overrides ``CHUNK_SIZE`` for this call. Larger values
+        ride faster servers; smaller ones survive flaky links.
+
+        ``on_progress`` is called with ``(done, total)`` after each chunk.
+        """
+
+        spec = _FETCH_SPECS.get(mode)
+        if spec is None:
+            raise ValueError(
+                f"Unknown fetch mode {mode!r}. Use one of: "
+                f"{sorted(_FETCH_SPECS)}"
+            )
+
+        size = chunk_size or self.CHUNK_SIZE
         uids = self._uids()
+        total = len(uids)
 
-        for start in range(0, len(uids), self.CHUNK_SIZE):
-            group = uids[start : start + self.CHUNK_SIZE]
+        fetch = with_retry()(self._fetch_chunk)
+
+        for start in range(0, total, size):
+            group = uids[start : start + size]
             if not group:
                 continue
 
-            messages = _state(
-                self._client.uid("fetch", ",".join(group), "(RFC822)")
-            )
+            messages = fetch(group, spec)
 
+            done = min(start + size, total)
             logger.info(
-                "Fetched %d/%d messages from %s",
-                min(start + self.CHUNK_SIZE, len(uids)),
-                len(uids),
+                "Fetched %d/%d messages from %s (mode=%s)",
+                done,
+                total,
                 self._mailbox.name,
+                mode,
             )
+            if on_progress is not None:
+                on_progress(done, total)
 
             for entry in messages:
                 if not isinstance(entry, tuple):
@@ -87,23 +139,18 @@ class Where:
                         mailbox=self._mailbox.name,
                     )
                 except Exception:
-                    logger.exception("Failed to parse message")
+                    uid_text = (
+                        raw_uid.decode(errors="replace") if raw_uid else "?"
+                    )
+                    logger.exception(
+                        "Failed to parse message uid=%s mailbox=%s",
+                        uid_text,
+                        self._mailbox.name,
+                    )
                     continue
 
-    def __iter__(self) -> Iterator[EmailSerializer]:
-        return self.iter_messages()
-
-    def list_messages(self) -> list[EmailSerializer]:
-        """Materialize all matching messages."""
-        return list(self.iter_messages())
-
-    def first(self) -> Optional[EmailSerializer]:
-        """First match, or None."""
-        return next(iter(self.iter_messages()), None)
-
-    def execute(self) -> list[EmailSerializer]:
-        """Alias for list_messages."""
-        return self.list_messages()
+    def _fetch_chunk(self, group: list[str], spec: str) -> list:
+        return _state(self._client.uid("fetch", ",".join(group), spec))
 
     def __repr__(self) -> str:
         return (
