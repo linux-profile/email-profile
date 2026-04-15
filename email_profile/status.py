@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from email_profile.errors import QuotaExceeded, RateLimited
+
 
 class IMAPError(Exception):
     """Raised when the IMAP server returns a non-OK status."""
@@ -17,6 +19,39 @@ class StatusResponse:
         return self.ok
 
 
+_QUOTA_HINTS = ("OVERQUOTA", "QUOTA-EXCEEDED", "TOO MUCH MAIL")
+_RATE_HINTS = (
+    "BANDWIDTH-LIMIT",
+    "BANDWIDTH",
+    "TOO MANY",
+    "RATE",
+    "TRYAGAIN",
+    "TEMPFAIL",
+)
+
+
+def _classify(payload: object) -> Exception | None:
+    """Detect quota/rate-limit hints in an IMAP response payload."""
+    text = ""
+    if isinstance(payload, list):
+        for chunk in payload:
+            if isinstance(chunk, bytes):
+                text += chunk.decode("utf-8", errors="replace") + " "
+            else:
+                text += str(chunk) + " "
+    else:
+        text = str(payload or "")
+
+    upper = text.upper()
+    for hint in _QUOTA_HINTS:
+        if hint in upper:
+            return QuotaExceeded(text.strip())
+    for hint in _RATE_HINTS:
+        if hint in upper:
+            return RateLimited(text.strip())
+    return None
+
+
 class Status:
     OK = "OK"
     NO = "NO"
@@ -30,10 +65,15 @@ class Status:
 
     @staticmethod
     def validate_status(
-        status: str, raise_error: bool = True
+        status: str,
+        raise_error: bool = True,
+        payload: object = None,
     ) -> StatusResponse:
         ok, message = Status._MESSAGES.get(status, (False, "Unknown error"))
         if raise_error and not ok:
+            specific = _classify(payload)
+            if specific is not None:
+                raise specific
             raise IMAPError(message)
         return StatusResponse(ok=ok, message=message)
 
