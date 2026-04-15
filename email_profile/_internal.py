@@ -11,7 +11,7 @@ from email_profile.status import Status
 
 def _state(context: tuple) -> list:
     """Validate IMAP response status and return the payload."""
-    Status.validate_status(context[0])
+    Status.validate_status(context[0], payload=context[1])
     return context[1]
 
 
