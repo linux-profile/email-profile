@@ -12,8 +12,8 @@ def main() -> None:
         & ~Q.from_("noreply@")
     )
 
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
-        for msg in app.inbox.where(expr):
+    with Email(user="you@yourdomain.com", password="your-password") as app:
+        for msg in app.inbox.where(expr).messages():
             print(msg.from_, msg.subject)
 
 

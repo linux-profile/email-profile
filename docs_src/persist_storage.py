@@ -6,8 +6,8 @@ from email_profile import Email, Storage
 def main() -> None:
     storage = Storage("./mail.db")
 
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
-        saved = storage.save_many(app.recent(days=7).iter_messages())
+    with Email(user="you@yourdomain.com", password="your-password") as app:
+        saved = storage.save_many(app.recent(days=7).messages())
         print(f"Persisted {saved} messages to ./mail.db")
 
     storage.dispose()

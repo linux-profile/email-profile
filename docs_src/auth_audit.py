@@ -5,7 +5,7 @@ from email_profile import Email
 
 def main() -> None:
     with Email.from_env() as app:
-        for msg in app.recent(days=7):
+        for msg in app.recent(days=7).messages():
             auth = msg.authentication_results or ""
 
             spf = "spf=pass" in auth

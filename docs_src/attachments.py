@@ -4,8 +4,8 @@ from email_profile import Email
 
 
 def main() -> None:
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
-        for msg in app.inbox.where(subject="report"):
+    with Email(user="you@yourdomain.com", password="your-password") as app:
+        for msg in app.inbox.where(subject="report").messages():
             if not msg.attachments:
                 continue
 

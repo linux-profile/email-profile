@@ -9,7 +9,7 @@ def main() -> None:
     with Email.from_env() as app:
         senders: Counter[str] = Counter()
 
-        for msg in app.recent(days=90):
+        for msg in app.recent(days=90).messages():
             if msg.from_:
                 senders[msg.from_] += 1
 

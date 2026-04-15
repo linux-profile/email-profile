@@ -7,7 +7,7 @@ def main() -> None:
     with Email.from_env() as app:
         print(f"Total in inbox: {app.all().count()}")
 
-        for msg in app.all():
+        for msg in app.all().messages():
             print(f"  {msg.uid}  {msg.subject}")
 
 

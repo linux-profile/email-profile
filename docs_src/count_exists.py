@@ -4,11 +4,11 @@ from email_profile import Email
 
 
 def main() -> None:
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
+    with Email(user="you@yourdomain.com", password="your-password") as app:
         if app.unread().exists():
             print(f"You have {app.unread().count()} unread messages.")
 
-        first = app.inbox.where(subject="invoice").first()
+        first = next(app.inbox.where(subject="invoice").messages(), None)
         if first is not None:
             print(f"First invoice: {first.date}  {first.subject}")
 

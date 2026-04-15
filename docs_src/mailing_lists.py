@@ -10,7 +10,7 @@ def main() -> None:
         lists: Counter[str] = Counter()
         unsubscribe: dict[str, str] = {}
 
-        for msg in app.recent(days=180):
+        for msg in app.recent(days=180).messages():
             if msg.list_id:
                 lists[msg.list_id] += 1
                 if msg.list_unsubscribe:

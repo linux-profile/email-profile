@@ -8,8 +8,8 @@ from email_profile import Email
 
 
 def main() -> None:
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
-        for msg in app.unread():
+    with Email(user="you@yourdomain.com", password="your-password") as app:
+        for msg in app.unread().messages():
             print(f"{msg.date}  {msg.from_:<40}  {msg.subject}")
 
 

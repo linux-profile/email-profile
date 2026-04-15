@@ -7,7 +7,7 @@ def main() -> None:
     storage = Storage("./backup/mail.db")
 
     with Email.from_env() as app:
-        saved = storage.save_many(app.recent(days=30).iter_messages())
+        saved = storage.save_many(app.recent(days=30).messages())
         print(f"Backed up {saved} messages to ./backup/mail.db")
 
     storage.dispose()

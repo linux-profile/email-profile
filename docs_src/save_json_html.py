@@ -4,8 +4,8 @@ from email_profile import Email
 
 
 def main() -> None:
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
-        for msg in app.recent(days=1):
+    with Email(user="you@yourdomain.com", password="your-password") as app:
+        for msg in app.recent(days=1).messages():
             msg.save_json("./out/json")
             msg.save_html("./out/html")
             msg.save_attachments("./out/attachments")

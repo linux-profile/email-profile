@@ -1,8 +1,8 @@
 """Inspect IMAP host discovery for a custom domain.
 
-Useful when you want to understand which host `Email.from_email` will
+Useful when you want to understand which host ``Email(user=...)`` will
 pick for an arbitrary address — known providers map first, then DNS SRV,
-then DNS MX with provider hints, then `imap.<domain>` as a fallback.
+then DNS MX with provider hints, then ``imap.<domain>`` as a fallback.
 """
 
 from email_profile import resolve_imap_host

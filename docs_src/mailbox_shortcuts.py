@@ -9,7 +9,7 @@ from email_profile import Email
 
 
 def main() -> None:
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
+    with Email(user="you@yourdomain.com", password="your-password") as app:
         print(f"Inbox:   {app.inbox.name}")
         print(f"Sent:    {app.sent.name}")
         print(f"Spam:    {app.spam.name}")

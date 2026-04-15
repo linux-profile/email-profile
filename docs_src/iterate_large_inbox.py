@@ -4,9 +4,9 @@ from email_profile import Email
 
 
 def main() -> None:
-    with Email.from_email("you@yourdomain.com", "your-password") as app:
+    with Email(user="you@yourdomain.com", password="your-password") as app:
         processed = 0
-        for msg in app.archive.where().iter_messages():
+        for _msg in app.archive.where().messages():
             processed += 1
             if processed % 100 == 0:
                 print(f"processed {processed} messages...")

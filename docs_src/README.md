@@ -14,8 +14,11 @@ in a `.env` file at the repo root.
 | File | What it shows |
 |------|---------------|
 | [quickstart.py](quickstart.py) | Read mail in 4 lines with auto-discovery |
+| [connect_zero_args.py](connect_zero_args.py) | `Email()` — pulls everything from `.env` |
+| [connect_address.py](connect_address.py) | `Email("u@domain", "pw")` — auto-discovers host |
+| [connect_explicit.py](connect_explicit.py) | `Email(server=..., user=..., password=..., port=..., ssl=...)` |
 | [provider_factories.py](provider_factories.py) | `Email.gmail`, `outlook`, `icloud`, `hostinger`, ... |
-| [from_env.py](from_env.py) | Credentials from env vars / `.env` |
+| [from_env.py](from_env.py) | `Email.from_env()` classmethod |
 | [manual_login.py](manual_login.py) | Bypass auto-discovery and pass an explicit host |
 | [custom_domain_resolver.py](custom_domain_resolver.py) | How auto-discovery picks an IMAP host |
 
@@ -37,7 +40,7 @@ in a `.env` file at the repo root.
 | [filter_by_date.py](filter_by_date.py) | `since`, `before`, `on` filters |
 | [filter_by_size.py](filter_by_size.py) | `larger` / `smaller` to find heavy or tiny mail |
 | [filter_by_flags.py](filter_by_flags.py) | `seen`, `answered`, `flagged`, `draft` |
-| [count_exists_first.py](count_exists_first.py) | Cheap operations that skip the body fetch |
+| [count_exists.py](count_exists.py) | Cheap operations that skip the body fetch |
 | [sent_search.py](sent_search.py) | Search the Sent folder, not the inbox |
 
 ## Working with messages
@@ -48,7 +51,7 @@ in a `.env` file at the repo root.
 | [save_json_html.py](save_json_html.py) | Dump messages as JSON / HTML files |
 | [raw_eml.py](raw_eml.py) | Access the raw RFC822 source |
 | [headers_bag.py](headers_bag.py) | Inspect non-standard `X-*` headers |
-| [threading.py](threading.py) | Reconstruct conversation threads |
+| [threads.py](threads.py) | Reconstruct conversation threads |
 
 ## Backup, restore, migration
 

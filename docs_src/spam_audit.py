@@ -9,7 +9,7 @@ def main() -> None:
     with Email.from_env() as app:
         senders: Counter[str] = Counter()
 
-        for msg in app.spam.where():
+        for msg in app.spam.where().messages():
             if msg.from_:
                 senders[msg.from_] += 1
 

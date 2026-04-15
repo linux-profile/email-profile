@@ -7,7 +7,7 @@ from email_profile import Email
 
 def main() -> None:
     with Email.from_env() as app:
-        msg = app.inbox.where().first()
+        msg = next(app.inbox.where().messages(), None)
         if msg is None:
             print("Empty inbox.")
             return
@@ -19,7 +19,9 @@ def main() -> None:
         print("...")
 
         parsed = message_from_string(raw)
-        print(f"\nReceived chain has {len(parsed.get_all('Received', []))} hops.")
+        print(
+            f"\nReceived chain has {len(parsed.get_all('Received', []))} hops."
+        )
 
 
 if __name__ == "__main__":
