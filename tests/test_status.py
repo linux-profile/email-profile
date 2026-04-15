@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from email_profile import IMAPError, Status
+from email_profile import IMAPError, QuotaExceeded, RateLimited, Status
 
 
 class TestStatus(TestCase):
@@ -33,3 +33,23 @@ class TestValidateData(TestCase):
     def test_handles_empty(self):
         self.assertEqual(Status.validate_data([b""]), [])
         self.assertEqual(Status.validate_data([]), [])
+
+
+class TestClassifyPayload(TestCase):
+    def test_overquota_raises_quota(self):
+        with self.assertRaises(QuotaExceeded):
+            Status.validate_status("NO", payload=[b"[OVERQUOTA] mailbox full"])
+
+    def test_bandwidth_limit_raises_rate(self):
+        with self.assertRaises(RateLimited):
+            Status.validate_status(
+                "NO", payload=[b"[BANDWIDTH-LIMIT] try later"]
+            )
+
+    def test_too_many_raises_rate(self):
+        with self.assertRaises(RateLimited):
+            Status.validate_status("NO", payload=[b"[TOO MANY] connections"])
+
+    def test_generic_no_still_raises_imap_error(self):
+        with self.assertRaises(IMAPError):
+            Status.validate_status("NO", payload=[b"login failed"])
