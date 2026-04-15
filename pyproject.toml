@@ -5,27 +5,46 @@ authors = [
   { name="Fernando Celmer", email="email@fernandocelmer.com" },
 ]
 license = {file = "LICENSE"}
-description = "📩 Email Profile"
+description = "📩 Read, search, back up and restore IMAP mailboxes from Python — works with Gmail, Outlook, iCloud, Hostinger and any custom domain."
 readme = "README.md"
 requires-python = ">=3.9"
+dependencies = [
+  "pydantic",
+  "sqlalchemy",
+  "dnspython",
+  "python-dotenv",
+]
+keywords = [
+  "email",
+  "imap",
+  "mailbox",
+  "inbox",
+  "backup",
+  "restore",
+  "rfc822",
+  "eml",
+  "attachments",
+  "search",
+  "gmail",
+  "outlook",
+  "hostinger",
+]
 classifiers = [
   'Development Status :: 4 - Beta',
   "Operating System :: OS Independent",
   "License :: OSI Approved :: MIT License",
   'Intended Audience :: Developers',
   'Natural Language :: English',
+  "Topic :: Communications :: Email",
+  "Topic :: Communications :: Email :: Post-Office :: IMAP",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
-]
-dependencies = [
-  "pydantic>=2.7",
-  "sqlalchemy>=2.0",
-  "dnspython>=2.6",
-  "python-dotenv>=1.0",
 ]
 
 [project.urls]
@@ -37,17 +56,79 @@ Documentation = "https://github.com/linux-profile/email-profile/blob/master/READ
 [tool.poetry]
 name = "email-profile"
 version = "0.6.0"
-description = "📩 Email Profile"
-authors = ["FernandoCelmer <email@fernandocelmer.com>"]
+description = "📩 Read, search, back up and restore IMAP mailboxes from Python — works with Gmail, Outlook, iCloud, Hostinger and any custom domain."
+authors = ["Fernando Celmer <email@fernandocelmer.com>"]
 readme = "README.md"
+license = "MIT"
+package-mode = true
+homepage = "https://github.com/linux-profile/email-profile"
+documentation = "https://github.com/linux-profile/email-profile/blob/master/README.md"
+repository = "https://github.com/linux-profile/email-profile"
+keywords = [
+  "email",
+  "imap",
+  "mailbox",
+  "inbox",
+  "backup",
+  "restore",
+  "rfc822",
+  "eml",
+  "attachments",
+  "search",
+  "gmail",
+  "outlook",
+  "hostinger",
+]
+classifiers = [
+  'Development Status :: 4 - Beta',
+  "Operating System :: OS Independent",
+  "License :: OSI Approved :: MIT License",
+  'Intended Audience :: Developers',
+  'Natural Language :: English',
+  "Topic :: Communications :: Email",
+  "Topic :: Communications :: Email :: Post-Office :: IMAP",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
-python-dotenv = "^1.0"
-sqlalchemy = "^2.0"
+python = ">=3.9.0"
 pydantic = "^2.7"
+sqlalchemy = "^2.0"
 dnspython = "^2.6"
+python-dotenv = "^1.0"
+
+[tool.poetry.group.dev.dependencies]
+build = "^1.2"
+pytest = "^8.3"
+pytest-cov = "^6.0"
+pytest-mock = "^3.14"
+flake8 = "^7.1"
+tox = "^4.26"
+
+[tool.poetry.group.code-quality.dependencies]
+ruff = "^0.9"
+mypy = "^1.13"
+pre-commit = "^4.0"
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "^1.6"
+mkdocs-simple-blog = "^0.0.9"
+
+[[tool.poetry.source]]
+name = "test"
+url = "https://test.pypi.org/simple/"
+priority = "supplemental"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
