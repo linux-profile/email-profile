@@ -9,8 +9,10 @@ def main() -> None:
     with Email.from_env() as app:
         threads: dict[str, list[str]] = defaultdict(list)
 
-        for msg in app.recent(days=30):
-            root = (msg.references or msg.in_reply_to or msg.id or "").split()[0]
+        for msg in app.recent(days=30).messages():
+            root = (msg.references or msg.in_reply_to or msg.id or "").split()[
+                0
+            ]
             threads[root].append(f"{msg.date}  {msg.subject}")
 
         biggest = sorted(threads.items(), key=lambda kv: -len(kv[1]))[:5]
