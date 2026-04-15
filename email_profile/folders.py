@@ -77,9 +77,7 @@ def find_mailbox(
     """First mailbox whose name matches any hint (case-insensitive)."""
 
     for hint in hints:
-
         for name, mb in mailboxes.items():
-
             if hint == name.lower() or hint in name.lower():
                 return mb
 

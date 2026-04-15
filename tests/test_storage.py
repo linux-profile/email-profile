@@ -14,7 +14,6 @@ def _msg(uid: str = "1", mailbox: str = "INBOX") -> EmailSerializer:
 
 
 class TestStorageURL(TestCase):
-
     def test_accepts_plain_path(self):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "mail.db")
@@ -34,7 +33,6 @@ class TestStorageURL(TestCase):
 
 
 class TestStoragePersistence(TestCase):
-
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.storage = Storage(Path(self._tmp.name) / "mail.db")
@@ -61,7 +59,6 @@ class TestStoragePersistence(TestCase):
 
 
 class TestStorageEmlIO(TestCase):
-
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.tmp = Path(self._tmp.name)

@@ -9,7 +9,6 @@ from email_profile.folders import (
 
 
 class TestFindMailbox(TestCase):
-
     def test_exact_match(self):
         result = find_mailbox({"INBOX": "x"}, INBOX_HINTS)
         self.assertEqual(result, "x")
@@ -26,9 +25,7 @@ class TestFindMailbox(TestCase):
         self.assertEqual(find_mailbox(boxes, SPAM_HINTS), "s")
 
     def test_localized_pt_name(self):
-        self.assertEqual(
-            find_mailbox({"Enviados": "x"}, SENT_HINTS), "x"
-        )
+        self.assertEqual(find_mailbox({"Enviados": "x"}, SENT_HINTS), "x")
 
     def test_case_insensitive(self):
         self.assertEqual(find_mailbox({"INBOX": "x"}, INBOX_HINTS), "x")

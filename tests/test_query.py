@@ -7,7 +7,6 @@ from email_profile import Q, Query
 
 
 class TestQuery(TestCase):
-
     def test_empty_mounts_all(self):
         self.assertEqual(Query().mount(), "ALL")
 
@@ -18,9 +17,7 @@ class TestQuery(TestCase):
         self.assertIn('(FROM "a@b")', Query(**{"from": "a@b"}).mount())
 
     def test_date_format(self):
-        out = Query(
-            since=date(2030, 1, 1), before=date(2030, 12, 31)
-        ).mount()
+        out = Query(since=date(2030, 1, 1), before=date(2030, 12, 31)).mount()
         self.assertIn("(SINCE 01-Jan-2030)", out)
         self.assertIn("(BEFORE 31-Dec-2030)", out)
 
@@ -44,7 +41,6 @@ class TestQuery(TestCase):
 
 
 class TestQ(TestCase):
-
     def test_combinators(self):
         self.assertIn("(SUBJECT", (Q.subject("a") & Q.unseen()).mount())
         self.assertTrue(

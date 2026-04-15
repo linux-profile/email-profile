@@ -72,9 +72,7 @@ class Query(BaseModel):
             ("SENTBEFORE", self.sent_before),
         )
         return [
-            f"({name} {_imap_date(value)})"
-            for name, value in fields
-            if value
+            f"({name} {_imap_date(value)})" for name, value in fields if value
         ]
 
     def _string_clauses(self) -> list[str]:
@@ -89,17 +87,13 @@ class Query(BaseModel):
             ("KEYWORD", self.keyword),
         )
         return [
-            f'({name} "{_ascii(value)}")'
-            for name, value in fields
-            if value
+            f'({name} "{_ascii(value)}")' for name, value in fields if value
         ]
 
     def _size_clauses(self) -> list[str]:
         fields = (("LARGER", self.larger), ("SMALLER", self.smaller))
         return [
-            f"({name} {value})"
-            for name, value in fields
-            if value is not None
+            f"({name} {value})" for name, value in fields if value is not None
         ]
 
     def _flag_clauses(self) -> list[str]:

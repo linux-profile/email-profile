@@ -66,16 +66,22 @@ def gmail_client():
 @pytest.fixture
 def app(fake_client):
     """A connected Email app talking to a fake IMAP server."""
-    with patch(
-        "email_profile.email.imaplib.IMAP4_SSL", return_value=fake_client
-    ), Email("imap.x", "u", "p") as connected:
+    with (
+        patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=fake_client
+        ),
+        Email("imap.x", "u", "p") as connected,
+    ):
         yield connected
 
 
 @pytest.fixture
 def gmail_app(gmail_client):
     """A connected Email app with Gmail-style mailbox names."""
-    with patch(
-        "email_profile.email.imaplib.IMAP4_SSL", return_value=gmail_client
-    ), Email("imap.x", "u", "p") as connected:
+    with (
+        patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=gmail_client
+        ),
+        Email("imap.x", "u", "p") as connected,
+    ):
         yield connected

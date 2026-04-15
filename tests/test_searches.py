@@ -6,7 +6,6 @@ from tests.conftest import make_fake_client
 
 
 class TestWhereLazy(TestCase):
-
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(

@@ -43,7 +43,6 @@ class Storage:
         """Persist many messages in a single transaction."""
         count = 0
         with self._session_factory() as session:
-
             for serializer in serializers:
                 session.add(EmailModel.from_serializer(serializer))
                 count += 1
@@ -57,7 +56,6 @@ class Storage:
     ) -> Iterator[EmailSerializer]:
         """Reconstruct serializers from persisted rows."""
         with self._session_factory() as session:
-
             query = session.query(EmailModel)
             if mailbox is not None:
                 query = query.filter(EmailModel.mailbox == mailbox)
@@ -83,7 +81,6 @@ class Storage:
         count = 0
 
         with self._session_factory() as session:
-
             query = session.query(EmailModel)
             if mailbox is not None:
                 query = query.filter(EmailModel.mailbox == mailbox)
@@ -108,9 +105,7 @@ class Storage:
 
         count = 0
         with self._session_factory() as session:
-
             for eml_path in source.rglob("*.eml"):
-
                 raw = eml_path.read_bytes()
                 box = mailbox or eml_path.parent.name
                 uid = eml_path.stem.encode()

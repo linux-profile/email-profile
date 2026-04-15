@@ -138,7 +138,6 @@ def _decode_header(value: Optional[str]) -> str:
     out = ""
 
     for chunk, encoding in decode_header(value):
-
         if isinstance(chunk, bytes):
             try:
                 out += chunk.decode(encoding or "utf-8", errors="replace")
@@ -157,7 +156,6 @@ def _decode_payload(part: PyEmailMessage) -> str:
         return ""
 
     if isinstance(payload, bytes):
-
         charset = part.get_content_charset() or "utf-8"
 
         try:
@@ -191,7 +189,6 @@ def _extras(message: PyEmailMessage) -> dict[str, Union[str, list[str]]]:
     bag: dict[str, Union[str, list[str]]] = {}
 
     for name, value in message.items():
-
         if name.lower() in _NAMED_HEADERS:
             continue
 
@@ -255,12 +252,10 @@ def parse_rfc822(raw_message: bytes) -> ParsedBody:
     )
 
     for part in message.walk():
-
         content_type = part.get_content_type()
         disposition = str(part.get("Content-Disposition") or "")
 
         if "attachment" in disposition.lower():
-
             filename = part.get_filename()
             if not filename:
                 continue

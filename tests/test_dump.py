@@ -7,7 +7,6 @@ from tests.conftest import SAMPLE_RFC822
 
 
 class TestMessageDumper(TestCase):
-
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.tmp = Path(self._tmp.name)

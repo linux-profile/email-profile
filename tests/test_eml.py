@@ -7,7 +7,6 @@ from tests.conftest import SAMPLE_RFC822
 
 
 class TestFromRaw(TestCase):
-
     def test_round_trips_basic_fields(self):
         msg = EmailSerializer.from_raw(
             uid="42", mailbox="INBOX", raw=SAMPLE_RFC822
@@ -24,7 +23,6 @@ class TestFromRaw(TestCase):
 
 
 class TestSaveMethods(TestCase):
-
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.tmp = Path(self._tmp.name)
@@ -57,7 +55,6 @@ class TestSaveMethods(TestCase):
 
 
 class TestEmailModel(TestCase):
-
     def test_from_serializer(self):
         msg = EmailSerializer.from_raw(
             uid="1", mailbox="INBOX", raw=SAMPLE_RFC822

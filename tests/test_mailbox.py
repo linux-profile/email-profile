@@ -6,7 +6,6 @@ from tests.conftest import SAMPLE_RFC822, make_fake_client
 
 
 class TestMailBoxWhere(TestCase):
-
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
@@ -38,7 +37,6 @@ class TestMailBoxWhere(TestCase):
 
 
 class TestMailBoxAppend(TestCase):
-
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(

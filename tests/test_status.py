@@ -4,7 +4,6 @@ from email_profile import IMAPError, Status
 
 
 class TestStatus(TestCase):
-
     def test_validate_status_ok(self):
         response = Status.validate_status("OK")
         self.assertTrue(response.ok)
@@ -28,7 +27,6 @@ class TestStatus(TestCase):
 
 
 class TestValidateData(TestCase):
-
     def test_decodes_uids(self):
         self.assertEqual(Status.validate_data([b"1 2 3"]), ["1", "2", "3"])
 

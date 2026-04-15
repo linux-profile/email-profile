@@ -9,14 +9,13 @@ MULTIPART = (
     b'Content-Type: multipart/mixed; boundary="B"\r\n\r\n'
     b"--B\r\nContent-Type: text/plain\r\n\r\nplain body\r\n"
     b"--B\r\nContent-Type: text/html\r\n\r\n<p>html body</p>\r\n"
-    b"--B\r\nContent-Disposition: attachment; filename=\"note.txt\"\r\n\r\n"
+    b'--B\r\nContent-Disposition: attachment; filename="note.txt"\r\n\r\n'
     b"hello attachment\r\n"
     b"--B--\r\n"
 )
 
 
 class TestSubjectAndBodies(TestCase):
-
     def test_subject(self):
         self.assertEqual(parse_rfc822(MULTIPART).subject, "Hi")
 
@@ -32,7 +31,6 @@ class TestSubjectAndBodies(TestCase):
 
 
 class TestAttachments(TestCase):
-
     def test_count_and_name(self):
         atts = parse_rfc822(MULTIPART).attachments
         self.assertEqual(len(atts), 1)
@@ -45,7 +43,6 @@ class TestAttachments(TestCase):
 
 
 class TestNamedHeaders(TestCase):
-
     def test_named_headers_extracted(self):
         raw = (
             b"From: a@x\r\nTo: b@x\r\nSubject: t\r\n"
@@ -69,13 +66,10 @@ class TestNamedHeaders(TestCase):
         )
         p = parse_rfc822(raw)
         self.assertEqual(p.mime_version, "1.0")
-        self.assertNotIn(
-            "mime-version", (k.lower() for k in p.headers)
-        )
+        self.assertNotIn("mime-version", (k.lower() for k in p.headers))
 
 
 class TestHeadersBag(TestCase):
-
     def test_unknown_headers_go_to_bag(self):
         raw = (
             b"From: a@x\r\nTo: b@x\r\nSubject: t\r\n"

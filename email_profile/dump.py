@@ -39,9 +39,7 @@ class MessageDumper:
         target = Path(path)
         target.mkdir(parents=True, exist_ok=True)
         out = target / f"{self.message.id}.json"
-        out.write_text(
-            json.dumps(self.to_dict(), indent=indent, default=str)
-        )
+        out.write_text(json.dumps(self.to_dict(), indent=indent, default=str))
         return out
 
     def to_html(self, path: PathLike = "html") -> Path:
