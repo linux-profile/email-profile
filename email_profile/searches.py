@@ -57,7 +57,7 @@ class Where:
         self._cached_uids = data[0].decode().split()
         return self._cached_uids
 
-    def refresh(self) -> Where:
+    def clear_cache(self) -> Where:
         """Drop cached UIDs so the next call hits IMAP again."""
         self._cached_uids = None
         return self
