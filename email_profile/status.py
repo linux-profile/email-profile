@@ -1,51 +1,47 @@
-"""
-Staus Module
-"""
+"""IMAP status validation."""
 
-from typing import List
+from __future__ import annotations
+
+
+class IMAPError(Exception):
+    """Raised when the IMAP server returns a non-OK status."""
 
 
 class StatusResponse:
-
-    def __init__(self, type: bool, message: str) -> None:
-        self.type = type
+    def __init__(self, ok: bool, message: str) -> None:
+        self.ok = ok
         self.message = message
+
+    @property
+    def type(self) -> bool:  # legacy alias
+        return self.ok
 
 
 class Status:
+    OK = "OK"
+    NO = "NO"
+    BAD = "BAD"
 
-    OK = 'OK'
-    NO = 'NO'
-    BAD = 'BAD'
+    _MESSAGES = {
+        OK: (True, "Login completed, now in authenticated state"),
+        NO: (False, "Login failure: user name or password rejected"),
+        BAD: (False, "Command unknown or arguments invalid"),
+    }
 
     @staticmethod
     def validate_status(
-            status: str,
-            raise_error: bool = True) -> StatusResponse:
-        data = {
-            Status.OK: (
-                True,
-                "Login completed, now in authenticated state"),
-            Status.NO: (
-                False,
-                "Login failure: user name or password rejected"),
-            Status.BAD: (
-                False,
-                "Command unknown or arguments invalid")
-        }.get(status, (False, "Unknown error"))
-
-        if raise_error:
-            if not data[0]:
-                raise Exception(data[1])
-
-        return StatusResponse(
-            type=data[0],
-            message=data[1]
-        )
+        status: str, raise_error: bool = True
+    ) -> StatusResponse:
+        ok, message = Status._MESSAGES.get(status, (False, "Unknown error"))
+        if raise_error and not ok:
+            raise IMAPError(message)
+        return StatusResponse(ok=ok, message=message)
 
     @staticmethod
-    def validate_data(data: List[str]) -> List[str]:
-        data = [x.decode() for x in data[0].split()]
-        if len(data) == 1 and not data[0]:
+    def validate_data(data: list[bytes]) -> list[str]:
+        if not data or data[0] is None:
             return []
-        return data
+        items = [x.decode() for x in data[0].split()]
+        if len(items) == 1 and not items[0]:
+            return []
+        return items
