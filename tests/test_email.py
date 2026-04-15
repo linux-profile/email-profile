@@ -75,8 +75,8 @@ class TestFromEmail(TestCase):
             return_value=IMAPHost("imap.test", port=993),
         ):
             app = Email.from_email("a@test.example", "pw")
-        self.assertEqual(app._server, "imap.test")
-        self.assertEqual(app._user, "a@test.example")
+        self.assertEqual(app.server, "imap.test")
+        self.assertEqual(app.user, "a@test.example")
 
 
 class TestFromEnv(TestCase):
@@ -91,7 +91,7 @@ class TestFromEnv(TestCase):
             clear=True,
         ):
             app = Email.from_env(load_dotenv=False)
-        self.assertEqual(app._server, "imap.x.com")
+        self.assertEqual(app.server, "imap.x.com")
 
     def test_auto_discovers_when_server_missing(self):
         with patch.dict(
@@ -100,7 +100,7 @@ class TestFromEnv(TestCase):
             clear=True,
         ):
             app = Email.from_env(load_dotenv=False)
-        self.assertEqual(app._server, "imap.gmail.com")
+        self.assertEqual(app.server, "imap.gmail.com")
 
     def test_missing_credentials_raises(self):
         with (
@@ -174,14 +174,36 @@ class TestQueryShortcuts(TestCase):
         self.assertTrue(any("TEXT" in str(c) for c in searches))
 
 
+class TestPublicProperties(TestCase):
+    def test_properties_expose_config(self):
+        app = Email("imap.x.com", "u", "pw", port=143, ssl=False)
+        self.assertEqual(app.server, "imap.x.com")
+        self.assertEqual(app.user, "u")
+        self.assertEqual(app.port, 143)
+        self.assertFalse(app.ssl)
+
+    def test_is_connected_false_before_connect(self):
+        app = Email("imap.x.com", "u", "pw")
+        self.assertFalse(app.is_connected)
+
+    def test_is_connected_true_after_connect(self):
+        fake = make_fake_client()
+        with (
+            patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
+            Email("imap.x", "u", "p") as app,
+        ):
+            self.assertTrue(app.is_connected)
+        self.assertFalse(app.is_connected)
+
+
 class TestConstructorOverloads(TestCase):
     def test_three_positional_args_explicit(self):
         app = Email("imap.x.com", "u", "pw")
-        self.assertEqual(app._server, "imap.x.com")
+        self.assertEqual(app.server, "imap.x.com")
 
     def test_keyword_form(self):
         app = Email(server="imap.x.com", user="u", password="pw")
-        self.assertEqual(app._server, "imap.x.com")
+        self.assertEqual(app.server, "imap.x.com")
 
     def test_two_args_with_email_auto_discovers(self):
         from email_profile import IMAPHost
@@ -191,8 +213,8 @@ class TestConstructorOverloads(TestCase):
             return_value=IMAPHost("imap.test"),
         ):
             app = Email("u@test.example", "pw")
-        self.assertEqual(app._server, "imap.test")
-        self.assertEqual(app._user, "u@test.example")
+        self.assertEqual(app.server, "imap.test")
+        self.assertEqual(app.user, "u@test.example")
 
     def test_zero_args_reads_env(self):
         with (
@@ -209,7 +231,7 @@ class TestConstructorOverloads(TestCase):
         ):
             build.return_value = ("imap.x.com", "u@x.com", "pw")
             app = Email()
-        self.assertEqual(app._server, "imap.x.com")
+        self.assertEqual(app.server, "imap.x.com")
 
     def test_zero_args_without_env_raises(self):
         with (

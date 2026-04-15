@@ -12,7 +12,7 @@ def main() -> None:
     with Email(
         user="contato@suaempresa.com.br", password="your-password"
     ) as app:
-        print(f"Auto-discovered. Connected as {app._user}")
+        print(f"Auto-discovered. Connected as {app.user}")
         print(f"Inbox: {app.all().count()} messages")
 
 
