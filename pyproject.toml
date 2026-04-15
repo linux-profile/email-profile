@@ -113,7 +113,7 @@ flake8 = "^7.1"
 tox = "^4.26"
 
 [tool.poetry.group.code-quality.dependencies]
-ruff = "^0.9"
+ruff = "^0.15"
 mypy = "^1.13"
 pre-commit = "^4.0"
 
