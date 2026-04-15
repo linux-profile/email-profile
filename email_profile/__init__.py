@@ -26,20 +26,29 @@ SOFTWARE."""
 from email_profile.dump import MessageDumper
 from email_profile.email import Email
 from email_profile.eml import EmailModel, EmailSerializer
-from email_profile.errors import ConnectionFailure, NotConnected
-from email_profile.mailbox import MailBox
+from email_profile.errors import (
+    ConnectionFailure,
+    NotConnected,
+    QuotaExceeded,
+    RateLimited,
+    Retryable,
+)
+from email_profile.mailbox import AppendedUID, MailBox
 from email_profile.parser import Attachment, ParsedBody, parse_rfc822
+from email_profile.protocols import StorageProtocol
 from email_profile.providers import (
     IMAPHost,
     ProviderResolutionError,
     resolve_imap_host,
 )
 from email_profile.query import Q, Query
+from email_profile.retry import with_retry
 from email_profile.searches import Where
 from email_profile.status import IMAPError, Status
 from email_profile.storage import Storage
 
 __all__ = [
+    "AppendedUID",
     "Attachment",
     "ConnectionFailure",
     "Email",
@@ -54,9 +63,14 @@ __all__ = [
     "ProviderResolutionError",
     "Q",
     "Query",
+    "QuotaExceeded",
+    "RateLimited",
+    "Retryable",
     "Status",
     "Storage",
+    "StorageProtocol",
     "Where",
     "parse_rfc822",
     "resolve_imap_host",
+    "with_retry",
 ]
