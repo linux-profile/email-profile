@@ -5,11 +5,13 @@ from __future__ import annotations
 import imaplib
 import re
 import time
+from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional, Union
 
 from email_profile._internal import _state
 from email_profile.query import Query, QueryLike
+from email_profile.retry import with_retry
 from email_profile.searches import Where
 
 if TYPE_CHECKING:
@@ -17,6 +19,30 @@ if TYPE_CHECKING:
 
 
 MessageLike = Union["EmailSerializer", bytes, str]
+
+
+@dataclass(frozen=True)
+class AppendedUID:
+    """Result of a successful IMAP APPEND when the server supports UIDPLUS."""
+
+    uidvalidity: int
+    uid: int
+
+
+_APPENDUID_RE = re.compile(rb"APPENDUID (\d+) (\d+)")
+
+
+def _parse_append_uid(payload: object) -> Optional[AppendedUID]:
+    candidates = payload if isinstance(payload, list) else [payload]
+    for chunk in candidates:
+        if isinstance(chunk, bytes):
+            match = _APPENDUID_RE.search(chunk)
+            if match:
+                return AppendedUID(
+                    uidvalidity=int(match.group(1)),
+                    uid=int(match.group(2)),
+                )
+    return None
 
 
 class MailBox:
@@ -74,8 +100,12 @@ class MailBox:
         message: MessageLike,
         flags: str = "",
         date: Optional[datetime] = None,
-    ) -> None:
-        """Upload one message into this mailbox via IMAP APPEND."""
+    ) -> Optional[AppendedUID]:
+        """Upload one message into this mailbox via IMAP APPEND.
+
+        Returns the new ``AppendedUID`` when the server supports UIDPLUS
+        (RFC 4315). Returns ``None`` otherwise — the message is still saved.
+        """
 
         from email_profile.eml import EmailSerializer
 
@@ -97,7 +127,10 @@ class MailBox:
             date.timestamp() if date else time.time()
         )
 
-        _state(self._client.append(self.name, flags, date_time, raw))
+        do_append = with_retry()(self._client.append)
+        status, payload = do_append(self.name, flags, date_time, raw)
+        _state((status, payload))
+        return _parse_append_uid(payload)
 
     def __repr__(self) -> str:
         return f"MailBox(name={self.name!r}, flags={self.flags})"
