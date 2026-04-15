@@ -67,3 +67,17 @@ class TestMailBoxAppend(TestCase):
     def test_rejects_unsupported_type(self):
         with self.assertRaises(TypeError):
             self.app.inbox.append(42)
+
+    def test_returns_appended_uid_when_supported(self):
+        self.fake.append.return_value = (
+            "OK",
+            [b"[APPENDUID 1380995967 421] APPEND completed"],
+        )
+        result = self.app.inbox.append(SAMPLE_RFC822)
+        self.assertIsNotNone(result)
+        self.assertEqual(result.uidvalidity, 1380995967)
+        self.assertEqual(result.uid, 421)
+
+    def test_returns_none_without_uidplus(self):
+        self.fake.append.return_value = ("OK", [b"APPEND completed"])
+        self.assertIsNone(self.app.inbox.append(SAMPLE_RFC822))
