@@ -174,6 +174,69 @@ class TestQueryShortcuts(TestCase):
         self.assertTrue(any("TEXT" in str(c) for c in searches))
 
 
+class TestConstructorOverloads(TestCase):
+    def test_three_positional_args_explicit(self):
+        app = Email("imap.x.com", "u", "pw")
+        self.assertEqual(app._server, "imap.x.com")
+
+    def test_keyword_form(self):
+        app = Email(server="imap.x.com", user="u", password="pw")
+        self.assertEqual(app._server, "imap.x.com")
+
+    def test_two_args_with_email_auto_discovers(self):
+        from email_profile import IMAPHost
+
+        with patch(
+            "email_profile.email.resolve_imap_host",
+            return_value=IMAPHost("imap.test"),
+        ):
+            app = Email("u@test.example", "pw")
+        self.assertEqual(app._server, "imap.test")
+        self.assertEqual(app._user, "u@test.example")
+
+    def test_zero_args_reads_env(self):
+        with (
+            patch.dict(
+                "os.environ",
+                {
+                    "EMAIL_SERVER": "imap.x.com",
+                    "EMAIL_USERNAME": "u@x.com",
+                    "EMAIL_PASSWORD": "pw",
+                },
+                clear=True,
+            ),
+            patch("email_profile.email.Email._build_from_env") as build,
+        ):
+            build.return_value = ("imap.x.com", "u@x.com", "pw")
+            app = Email()
+        self.assertEqual(app._server, "imap.x.com")
+
+    def test_zero_args_without_env_raises(self):
+        with (
+            patch(
+                "email_profile.email.Email._build_from_env",
+                side_effect=KeyError("nope"),
+            ),
+            self.assertRaises(KeyError),
+        ):
+            Email()
+
+    def test_partial_args_raises(self):
+        with self.assertRaises(TypeError):
+            Email("imap.x.com")
+
+
+class TestNoop(TestCase):
+    def test_noop_calls_imap_noop(self):
+        fake = make_fake_client()
+        with (
+            patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
+            Email("imap.x", "u", "p") as app,
+        ):
+            app.noop()
+        fake.noop.assert_called_once()
+
+
 class TestRestore(TestCase):
     def test_restore_re_uploads(self):
         import tempfile

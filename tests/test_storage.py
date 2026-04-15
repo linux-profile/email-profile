@@ -43,7 +43,7 @@ class TestStoragePersistence(TestCase):
 
     def test_save_one(self):
         self.storage.save(_msg("1"))
-        self.assertEqual(len(list(self.storage.iter_messages())), 1)
+        self.assertEqual(len(list(self.storage.messages())), 1)
 
     def test_save_many_returns_count(self):
         n = self.storage.save_many(iter([_msg("1"), _msg("2")]))
@@ -53,9 +53,34 @@ class TestStoragePersistence(TestCase):
         self.storage.save(_msg("1", "INBOX"))
         self.storage.save(_msg("2", "Sent"))
         self.assertEqual(
-            {m.uid for m in self.storage.iter_messages(mailbox="INBOX")},
+            {m.uid for m in self.storage.messages(mailbox="INBOX")},
             {"1"},
         )
+
+
+class TestStorageDedup(TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.storage = Storage(Path(self._tmp.name) / "mail.db")
+
+    def tearDown(self):
+        self.storage.dispose()
+        self._tmp.cleanup()
+
+    def test_existing_ids_returns_persisted_ids(self):
+        msg = _msg("1", "INBOX")
+        self.storage.save(msg)
+        self.assertIn(msg.id, self.storage.existing_ids())
+
+    def test_existing_ids_filters_by_mailbox(self):
+        self.storage.save(_msg("1", "INBOX"))
+        self.storage.save(_msg("2", "Sent"))
+        self.assertEqual(len(self.storage.existing_ids(mailbox="INBOX")), 1)
+
+    def test_existing_uids_filters_by_mailbox(self):
+        self.storage.save(_msg("1", "INBOX"))
+        self.storage.save(_msg("2", "Sent"))
+        self.assertEqual(self.storage.existing_uids("INBOX"), {"1"})
 
 
 class TestStorageEmlIO(TestCase):
@@ -83,7 +108,7 @@ class TestStorageEmlIO(TestCase):
         n = dst.import_eml(self.tmp / "dump")
         self.assertEqual(n, 2)
         self.assertEqual(
-            {m.mailbox for m in dst.iter_messages()},
+            {m.mailbox for m in dst.messages()},
             {"INBOX", "Sent"},
         )
         dst.dispose()
