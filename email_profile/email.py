@@ -24,20 +24,56 @@ from email_profile.providers import IMAPHost, resolve_imap_host
 from email_profile.searches import Where
 
 if TYPE_CHECKING:
-    from email_profile.storage import Storage
+    from email_profile.protocols import StorageProtocol
 
 
 class Email:
-    """IMAP client; connects lazily via `with Email(...) as app:`."""
+    """IMAP client; lazy connect via ``with Email(...) as app:``.
+
+    Constructor overloads::
+
+        Email(user="u@gmail.com", password="pw")          # auto-discover
+        Email("u@gmail.com", "pw")                          # same, positional
+        Email("imap.gmail.com", "u", "pw")                  # explicit host
+        Email(server="...", user="...", password="...")     # full kwargs
+        Email()                                              # zero args -> env
+
+    The ``Email.gmail/.../from_env`` classmethods keep working.
+    """
 
     def __init__(
         self,
-        server: str,
-        user: str,
-        password: str,
+        server: Optional[str] = None,
+        user: Optional[str] = None,
+        password: Optional[str] = None,
         port: int = 993,
         ssl: bool = True,
     ) -> None:
+        if server is None and user is None and password is None:
+            built = Email._build_from_env()
+            self._server, self._user, self._password = built
+            self._port, self._ssl = 993, True
+            self._client = None
+            self._mailboxes = {}
+            return
+
+        if password is None and user is not None and server and "@" in server:
+            address, password = server, user
+            host: IMAPHost = resolve_imap_host(address)
+            server, user = host.host, address
+            port, ssl = host.port, host.ssl
+
+        if server is None and user is not None and "@" in user and password:
+            host = resolve_imap_host(user)
+            server, port, ssl = host.host, host.port, host.ssl
+
+        if server is None or user is None or password is None:
+            raise TypeError(
+                "Email() requires (server, user, password), "
+                "or (user='you@domain', password=...) for auto-discovery, "
+                "or no args (env vars)."
+            )
+
         self._server = server
         self._user = user
         self._password = password
@@ -45,6 +81,35 @@ class Email:
         self._ssl = ssl
         self._client: Optional[imaplib.IMAP4_SSL] = None
         self._mailboxes: dict[str, MailBox] = {}
+
+    @staticmethod
+    def _build_from_env(
+        server_var: str = "EMAIL_SERVER",
+        user_var: str = "EMAIL_USERNAME",
+        password_var: str = "EMAIL_PASSWORD",
+        load_dotenv: bool = True,
+    ) -> tuple[str, str, str]:
+        if load_dotenv:
+            try:
+                from dotenv import load_dotenv as _ld
+
+                _ld()
+            except ImportError:
+                pass
+
+        user = os.environ.get(user_var)
+        password = os.environ.get(password_var)
+
+        if not user or not password:
+            raise KeyError(
+                f"Missing {user_var!r} or {password_var!r} in environment."
+            )
+
+        server = os.environ.get(server_var)
+        if not server:
+            host = resolve_imap_host(user)
+            server = host.host
+        return server, user, password
 
     @classmethod
     def from_email(cls, address: str, password: str) -> Email:
@@ -69,28 +134,13 @@ class Email:
         load_dotenv: bool = True,
     ) -> Email:
         """Read credentials from env or .env; auto-discover if missing."""
-        if load_dotenv:
-            try:
-                from dotenv import load_dotenv as _ld
-
-                _ld()
-            except ImportError:
-                pass
-
-        user = os.environ.get(user_var)
-        password = os.environ.get(password_var)
-
-        if not user or not password:
-            raise KeyError(
-                f"Missing {user_var!r} or {password_var!r} in environment."
-            )
-
-        server = os.environ.get(server_var)
-
-        if server:
-            return cls(server=server, user=user, password=password)
-
-        return cls.from_email(user, password)
+        server, user, password = cls._build_from_env(
+            server_var=server_var,
+            user_var=user_var,
+            password_var=password_var,
+            load_dotenv=load_dotenv,
+        )
+        return cls(server=server, user=user, password=password)
 
     @classmethod
     def gmail(cls, user: str, password: str) -> Email:
@@ -148,6 +198,11 @@ class Email:
             finally:
                 self._client = None
                 self._mailboxes = {}
+
+    def noop(self) -> None:
+        """Send IMAP NOOP to keep the connection alive on long jobs."""
+        self._require_connection()
+        self._client.noop()
 
     def mailboxes(self) -> list[str]:
         """All mailbox names visible on the server."""
@@ -219,22 +274,38 @@ class Email:
 
     def restore(
         self,
-        storage: Storage,
+        storage: StorageProtocol,
         mailbox: Optional[str] = None,
         target: Optional[str] = None,
+        skip_duplicates: bool = True,
     ) -> int:
-        """Re-upload every message persisted in storage to this server."""
+        """Re-upload every message persisted in storage to this server.
+
+        With ``skip_duplicates=True`` (default) any message whose
+        ``Message-ID`` already exists in the destination mailbox is
+        skipped — making ``restore`` safe to re-run after an interruption.
+        """
 
         self._require_connection()
         count = 0
+        seen_ids: dict[str, set[str]] = {}
 
-        for serializer in storage.iter_messages(mailbox=mailbox):
+        for serializer in storage.messages(mailbox=mailbox):
             box_name = target or serializer.mailbox
             if box_name not in self._mailboxes:
                 raise KeyError(
                     f"Target mailbox {box_name!r} does not exist. "
                     f"Available: {self.mailboxes()}"
                 )
+
+            if skip_duplicates:
+                if box_name not in seen_ids:
+                    seen_ids[box_name] = self._existing_ids(box_name)
+                if serializer.id and serializer.id in seen_ids[box_name]:
+                    continue
+                if serializer.id:
+                    seen_ids[box_name].add(serializer.id)
+
             self._mailboxes[box_name].append(serializer)
             count += 1
 
@@ -265,6 +336,42 @@ class Email:
             count += 1
 
         return count
+
+    def _existing_ids(self, mailbox_name: str) -> set[str]:
+        """Collect Message-IDs already present in a server mailbox."""
+        from email_profile._internal import _state
+
+        ids: set[str] = set()
+        client = self._client
+        if client is None:
+            return ids
+
+        _state(client.select(mailbox_name))
+        status, data = client.uid("search", None, "ALL")
+        if status != "OK" or not data or not data[0]:
+            return ids
+
+        uids = data[0].decode().split()
+        if not uids:
+            return ids
+
+        # Pull only the Message-ID header — cheap.
+        status, fetched = client.uid(
+            "fetch", ",".join(uids), "(BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])"
+        )
+        if status != "OK":
+            return ids
+
+        for entry in fetched:
+            if not isinstance(entry, tuple):
+                continue
+            _, raw = entry
+            text = raw.decode("utf-8", errors="replace")
+            for line in text.splitlines():
+                if line.lower().startswith("message-id:"):
+                    ids.add(line.split(":", 1)[1].strip())
+                    break
+        return ids
 
     def _require_connection(self) -> None:
         if self._client is None:
