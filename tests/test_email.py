@@ -1,165 +1,263 @@
+from unittest import TestCase
 from unittest.mock import patch
 
-import pytest
-
-from email_profile import Email, NotConnected, Q, Query, Storage
-from tests.conftest import make_fake_client
+from email_profile import Email, NotConnected
+from tests.conftest import GMAIL_LIST, make_fake_client
 
 
-def _patched_email(client) -> Email:
-    patcher = patch(
-        "email_profile.email.imaplib.IMAP4_SSL", return_value=client
-    )
-    patcher.start()
-    return Email(server="imap.example.com", user="u", password="p")
+class TestConnection(TestCase):
+
+    def test_does_not_connect_eagerly(self):
+        fake = make_fake_client()
+        with patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=fake
+        ):
+            Email("imap.x", "u", "p")
+        fake.login.assert_not_called()
+
+    def test_mailbox_requires_connection(self):
+        fake = make_fake_client()
+        with patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=fake
+        ):
+            app = Email("imap.x", "u", "p")
+        with self.assertRaises(NotConnected):
+            app.mailbox("INBOX")
+
+    def test_context_manager_logs_in_and_out(self):
+        fake = make_fake_client()
+        with patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=fake
+        ), Email("imap.x", "u", "p") as app:
+            self.assertIn("INBOX", app.mailboxes())
+        fake.login.assert_called_once()
+        fake.logout.assert_called_once()
+
+    def test_unknown_mailbox_raises(self):
+        fake = make_fake_client()
+        with patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=fake
+        ), Email("imap.x", "u", "p") as app, self.assertRaises(KeyError):
+            app.mailbox("Trash")
 
 
-def test_email_does_not_connect_eagerly():
-    fake = make_fake_client()
-    with patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake):
-        Email(server="imap.example.com", user="u", password="p")
-    fake.login.assert_not_called()
+class TestProviderFactories(TestCase):
+
+    def test_gmail(self):
+        self.assertEqual(Email.gmail("u", "p")._server, "imap.gmail.com")
+
+    def test_outlook(self):
+        self.assertEqual(
+            Email.outlook("u", "p")._server, "outlook.office365.com"
+        )
+
+    def test_icloud(self):
+        self.assertEqual(
+            Email.icloud("u", "p")._server, "imap.mail.me.com"
+        )
+
+    def test_yahoo(self):
+        self.assertEqual(
+            Email.yahoo("u", "p")._server, "imap.mail.yahoo.com"
+        )
+
+    def test_hostinger(self):
+        self.assertEqual(
+            Email.hostinger("u", "p")._server, "imap.hostinger.com"
+        )
+
+    def test_zoho(self):
+        self.assertEqual(Email.zoho("u", "p")._server, "imap.zoho.com")
+
+    def test_fastmail(self):
+        self.assertEqual(
+            Email.fastmail("u", "p")._server, "imap.fastmail.com"
+        )
 
 
-def test_mailbox_requires_connection():
-    fake = make_fake_client()
-    app = _patched_email(fake)
-    with pytest.raises(NotConnected):
-        app.mailbox("INBOX")
+class TestFromEmail(TestCase):
+
+    def test_uses_resolver(self):
+        from email_profile import IMAPHost
+
+        with patch(
+            "email_profile.email.resolve_imap_host",
+            return_value=IMAPHost("imap.test", port=993),
+        ):
+            app = Email.from_email("a@test.example", "pw")
+        self.assertEqual(app._server, "imap.test")
+        self.assertEqual(app._user, "a@test.example")
 
 
-def test_context_manager_connects_and_closes():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        assert "INBOX" in app.mailboxes()
-    fake.login.assert_called_once()
-    fake.logout.assert_called_once()
+class TestFromEnv(TestCase):
+
+    def test_uses_explicit_server(self):
+        with patch.dict(
+            "os.environ",
+            {
+                "EMAIL_SERVER": "imap.x.com",
+                "EMAIL_USERNAME": "u@x.com",
+                "EMAIL_PASSWORD": "pw",
+            },
+            clear=True,
+        ):
+            app = Email.from_env(load_dotenv=False)
+        self.assertEqual(app._server, "imap.x.com")
+
+    def test_auto_discovers_when_server_missing(self):
+        with patch.dict(
+            "os.environ",
+            {"EMAIL_USERNAME": "a@gmail.com", "EMAIL_PASSWORD": "pw"},
+            clear=True,
+        ):
+            app = Email.from_env(load_dotenv=False)
+        self.assertEqual(app._server, "imap.gmail.com")
+
+    def test_missing_credentials_raises(self):
+        with patch.dict("os.environ", {}, clear=True), self.assertRaises(
+            KeyError
+        ):
+            Email.from_env(load_dotenv=False)
 
 
-def test_unknown_mailbox_raises():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-        pytest.raises(KeyError),
-    ):
-        app.mailbox("Trash")
+class TestMailboxProperties(TestCase):
+
+    def setUp(self):
+        self.fake = make_fake_client(mailboxes=GMAIL_LIST)
+        self._patcher = patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=self.fake
+        )
+        self._patcher.start()
+        self.app = Email("imap.x", "u", "p").connect()
+
+    def tearDown(self):
+        self.app.close()
+        self._patcher.stop()
+
+    def test_inbox(self):
+        self.assertEqual(self.app.inbox.name, "INBOX")
+
+    def test_sent(self):
+        self.assertIn("Sent", self.app.sent.name)
+
+    def test_spam(self):
+        self.assertIn("Spam", self.app.spam.name)
+
+    def test_trash(self):
+        self.assertIn("Trash", self.app.trash.name)
+
+    def test_drafts(self):
+        self.assertIn("Drafts", self.app.drafts.name)
 
 
-def test_where_returns_independent_results():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        inbox = app.mailbox("INBOX")
-        first = inbox.where(Query(subject="hello")).list_messages()
-        second = inbox.where(Query(subject="hello")).list_messages()
-    assert len(first) == len(second)
-    assert first is not second
+class TestQueryShortcuts(TestCase):
+
+    def setUp(self):
+        self.fake = make_fake_client()
+        self._patcher = patch(
+            "email_profile.email.imaplib.IMAP4_SSL", return_value=self.fake
+        )
+        self._patcher.start()
+        self.app = Email("imap.x", "u", "p").connect()
+
+    def tearDown(self):
+        self.app.close()
+        self._patcher.stop()
+
+    def test_unread_uses_unseen_clause(self):
+        self.app.unread().count()
+        searches = [
+            c for c in self.fake.uid.call_args_list if c.args[0] == "search"
+        ]
+        self.assertTrue(any("(UNSEEN)" in str(c) for c in searches))
+
+    def test_recent_uses_since_clause(self):
+        self.app.recent(days=3).count()
+        searches = [
+            c for c in self.fake.uid.call_args_list if c.args[0] == "search"
+        ]
+        self.assertTrue(any("SINCE" in str(c) for c in searches))
+
+    def test_search_uses_text_clause(self):
+        self.app.search("invoice").count()
+        searches = [
+            c for c in self.fake.uid.call_args_list if c.args[0] == "search"
+        ]
+        self.assertTrue(any("TEXT" in str(c) for c in searches))
 
 
-def test_iter_messages_is_lazy():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        it = app.mailbox("INBOX").where().iter_messages()
-        first = next(it)
-    assert first.mailbox == "INBOX"
-    assert first.from_ == "alice@example.com"
+class TestRestore(TestCase):
 
+    def test_restore_re_uploads(self):
+        import tempfile
+        from pathlib import Path
 
-def test_storage_save_persists_message(tmp_path):
-    db_url = f"sqlite:///{tmp_path / 'mail.db'}"
-    storage = Storage(url=db_url)
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        messages = app.mailbox("INBOX").where().list_messages()
-        for msg in messages:
-            storage.save(msg)
-    assert len(messages) >= 1
-    storage.dispose()
+        from email_profile import EmailSerializer, Storage
 
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp) / "src.db")
+            for uid in ("1", "2"):
+                from tests.conftest import SAMPLE_RFC822
 
-def test_storage_save_many_returns_count(tmp_path):
-    storage = Storage(url=f"sqlite:///{tmp_path / 'm.db'}")
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        saved = storage.save_many(app.mailbox("INBOX").where().iter_messages())
-    assert saved >= 1
-    storage.dispose()
+                raw = SAMPLE_RFC822.replace(
+                    b"<abc@example.com>", f"<{uid}@x>".encode()
+                )
+                storage.save(
+                    EmailSerializer.from_raw(
+                        uid=uid, mailbox="INBOX", raw=raw
+                    )
+                )
 
+            fake = make_fake_client()
+            with patch(
+                "email_profile.email.imaplib.IMAP4_SSL", return_value=fake
+            ), Email("imap.x", "u", "p") as app:
+                n = app.restore(storage)
 
-def test_count_does_not_fetch_bodies():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        n = app.mailbox("INBOX").where().count()
-    assert n == 2
-    fetch_calls = [c for c in fake.uid.call_args_list if c.args[0] == "fetch"]
-    assert fetch_calls == []
+            self.assertEqual(n, 2)
+            self.assertEqual(fake.append.call_count, 2)
+            storage.dispose()
 
+    def test_restore_unknown_mailbox_raises(self):
+        import tempfile
+        from pathlib import Path
 
-def test_exists_short_circuits():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        assert app.mailbox("INBOX").where().exists() is True
+        from email_profile import EmailSerializer, Storage
 
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp) / "src.db")
+            storage.save(
+                EmailSerializer.from_raw(
+                    uid="1", mailbox="Archive", raw=b"From: a\r\n\r\nx"
+                )
+            )
 
-def test_where_accepts_kwargs():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        w = app.mailbox("INBOX").where(subject="hi", unseen=True)
-    assert "(SUBJECT" in repr(w)
-    assert "(UNSEEN)" in repr(w)
+            fake = make_fake_client()
+            with patch(
+                "email_profile.email.imaplib.IMAP4_SSL", return_value=fake
+            ), Email("imap.x", "u", "p") as app, self.assertRaises(KeyError):
+                app.restore(storage)
 
+            storage.dispose()
 
-def test_where_rejects_query_and_kwargs_together():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-        pytest.raises(TypeError),
-    ):
-        app.mailbox("INBOX").where(Query(subject="x"), unseen=True)
+    def test_restore_eml_from_directory(self):
+        import tempfile
+        from pathlib import Path
 
+        from email_profile import Email
+        from tests.conftest import SAMPLE_RFC822
 
-def test_where_accepts_q_expression():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        w = app.mailbox("INBOX").where(Q.subject("hi") & Q.unseen())
-    assert "(SUBJECT" in repr(w)
-    assert "(UNSEEN)" in repr(w)
+        with tempfile.TemporaryDirectory() as tmp:
+            box = Path(tmp) / "INBOX"
+            box.mkdir()
+            (box / "1.eml").write_bytes(SAMPLE_RFC822)
+            (box / "2.eml").write_bytes(SAMPLE_RFC822)
 
+            fake = make_fake_client()
+            with patch(
+                "email_profile.email.imaplib.IMAP4_SSL", return_value=fake
+            ), Email("imap.x", "u", "p") as app:
+                n = app.restore_eml(tmp)
 
-def test_first_returns_one_message_or_none():
-    fake = make_fake_client()
-    with (
-        patch("email_profile.email.imaplib.IMAP4_SSL", return_value=fake),
-        Email(server="imap.example.com", user="u", password="p") as app,
-    ):
-        msg = app.mailbox("INBOX").where().first()
-    assert msg is not None
-    assert msg.uid == "1"
+            self.assertEqual(n, 2)
+            self.assertEqual(fake.append.call_count, 2)

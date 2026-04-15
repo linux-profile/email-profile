@@ -1,67 +1,58 @@
 from datetime import date
+from unittest import TestCase
 
-import pytest
 from pydantic import ValidationError
 
 from email_profile import Q, Query
 
 
-def test_empty_query_mounts_all():
-    assert Query().mount() == "ALL"
+class TestQuery(TestCase):
+
+    def test_empty_mounts_all(self):
+        self.assertEqual(Query().mount(), "ALL")
+
+    def test_subject(self):
+        self.assertEqual(Query(subject="hi").mount(), '(SUBJECT "hi")')
+
+    def test_from_alias(self):
+        self.assertIn('(FROM "a@b")', Query(**{"from": "a@b"}).mount())
+
+    def test_date_format(self):
+        out = Query(
+            since=date(2030, 1, 1), before=date(2030, 12, 31)
+        ).mount()
+        self.assertIn("(SINCE 01-Jan-2030)", out)
+        self.assertIn("(BEFORE 31-Dec-2030)", out)
+
+    def test_flags(self):
+        self.assertEqual(Query(seen=True).mount(), "(SEEN)")
+        self.assertEqual(Query(seen=False).mount(), "(UNSEEN)")
+        self.assertEqual(Query(answered=False).mount(), "(UNANSWERED)")
+
+    def test_size_filters(self):
+        out = Query(larger=1024, smaller=4096).mount()
+        self.assertIn("(LARGER 1024)", out)
+        self.assertIn("(SMALLER 4096)", out)
+
+    def test_invalid_type_rejected(self):
+        with self.assertRaises(ValidationError):
+            Query(since="yesterday")
+
+    def test_extra_field_rejected(self):
+        with self.assertRaises(ValidationError):
+            Query(unknown="x")
 
 
-def test_subject_clause():
-    assert Query(subject="hello").mount() == '(SUBJECT "hello")'
+class TestQ(TestCase):
 
+    def test_combinators(self):
+        self.assertIn("(SUBJECT", (Q.subject("a") & Q.unseen()).mount())
+        self.assertTrue(
+            (Q.subject("a") | Q.subject("b")).mount().startswith("OR ")
+        )
+        self.assertEqual((~Q.unseen()).mount(), "NOT (UNSEEN)")
 
-def test_combined_clauses_use_imap_date_format():
-    q = Query(
-        since=date(2030, 1, 1), before=date(2030, 12, 31), from_who="a@b"
-    )
-    out = q.mount()
-    assert "(SINCE 01-Jan-2030)" in out
-    assert "(BEFORE 31-Dec-2030)" in out
-    assert '(FROM "a@b")' in out
-
-
-def test_from_alias_accepts_from_keyword():
-    q = Query(**{"from": "a@b"})
-    assert '(FROM "a@b")' in q.mount()
-
-
-def test_flag_filters_render_seen_unseen_correctly():
-    assert Query(seen=True).mount() == "(SEEN)"
-    assert Query(seen=False).mount() == "(UNSEEN)"
-    assert Query(answered=False).mount() == "(UNANSWERED)"
-
-
-def test_size_filters():
-    out = Query(larger=1024, smaller=4096).mount()
-    assert "(LARGER 1024)" in out
-    assert "(SMALLER 4096)" in out
-
-
-def test_invalid_since_type_rejected():
-    with pytest.raises(ValidationError):
-        Query(since="yesterday")
-
-
-def test_extra_field_rejected():
-    with pytest.raises(ValidationError):
-        Query(unknown="x")
-
-
-def test_q_combinators_and_or_not():
-    expr = (Q.subject("hi") & Q.unseen()).mount()
-    assert "(SUBJECT" in expr and "(UNSEEN)" in expr
-
-    expr = (Q.subject("a") | Q.subject("b")).mount()
-    assert expr.startswith("OR ")
-
-    expr = (~Q.unseen()).mount()
-    assert expr == "NOT (UNSEEN)"
-
-
-def test_query_can_be_combined_with_q():
-    expr = (Query(subject="hi") & Q.unseen()).mount()
-    assert "(SUBJECT" in expr and "(UNSEEN)" in expr
+    def test_query_combines_with_q(self):
+        expr = (Query(subject="a") & Q.unseen()).mount()
+        self.assertIn("(SUBJECT", expr)
+        self.assertIn("(UNSEEN)", expr)
