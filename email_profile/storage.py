@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Optional, Union
 
@@ -13,6 +13,8 @@ from email_profile.session import Base, make_session
 
 class Storage:
     """SQLAlchemy persistence; call save() explicitly."""
+
+    BULK_BATCH = 500
 
     def __init__(self, url: Union[str, Path] = "sqlite:///:memory:") -> None:
         self.url = self._coerce_url(url)
@@ -39,19 +41,53 @@ class Storage:
 
         return model
 
-    def save_many(self, serializers: Iterator[EmailSerializer]) -> int:
-        """Persist many messages in a single transaction."""
-        count = 0
+    def save_many(
+        self,
+        serializers: Iterable[EmailSerializer],
+        *,
+        batch_size: Optional[int] = None,
+    ) -> int:
+        """Persist many messages using SQLAlchemy bulk insert."""
+        size = batch_size or self.BULK_BATCH
+        total = 0
+        buffer: list[EmailModel] = []
+
         with self._session_factory() as session:
             for serializer in serializers:
-                session.add(EmailModel.from_serializer(serializer))
-                count += 1
+                buffer.append(EmailModel.from_serializer(serializer))
+                if len(buffer) >= size:
+                    session.bulk_save_objects(buffer)
+                    session.commit()
+                    total += len(buffer)
+                    buffer.clear()
 
-            session.commit()
+            if buffer:
+                session.bulk_save_objects(buffer)
+                session.commit()
+                total += len(buffer)
 
-        return count
+        return total
 
-    def iter_messages(
+    def existing_ids(self, mailbox: Optional[str] = None) -> set[str]:
+        """Return the set of stored message ``id`` values (Message-ID/UUID).
+
+        Useful for resumable backups: skip messages already in the database.
+        """
+        with self._session_factory() as session:
+            query = session.query(EmailModel.id)
+            if mailbox is not None:
+                query = query.filter(EmailModel.mailbox == mailbox)
+            return {row[0] for row in query.all()}
+
+    def existing_uids(self, mailbox: str) -> set[str]:
+        """Return persisted IMAP UIDs for a mailbox."""
+        with self._session_factory() as session:
+            query = session.query(EmailModel.uid).filter(
+                EmailModel.mailbox == mailbox
+            )
+            return {row[0] for row in query.all()}
+
+    def messages(
         self, mailbox: Optional[str] = None
     ) -> Iterator[EmailSerializer]:
         """Reconstruct serializers from persisted rows."""
