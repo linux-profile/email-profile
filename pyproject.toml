@@ -7,19 +7,22 @@ authors = [
 license = {file = "LICENSE"}
 description = "📩 Email Profile"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 classifiers = [
   'Development Status :: 4 - Beta',
   "Operating System :: OS Independent",
   "License :: OSI Approved :: MIT License",
   'Intended Audience :: Developers',
   'Natural Language :: English',
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-  "pydantic>=2.12",
+  "pydantic>=2.7",
   "sqlalchemy>=2.0",
   "dnspython>=2.6",
   "python-dotenv>=1.0",
@@ -39,10 +42,10 @@ authors = ["FernandoCelmer <email@fernandocelmer.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-python-dotenv = "^1.1.1"
-sqlalchemy = "^2.0.43"
-pydantic = "^2.12"
+python = ">=3.9,<4.0"
+python-dotenv = "^1.0"
+sqlalchemy = "^2.0"
+pydantic = "^2.7"
 dnspython = "^2.6"
 
 [build-system]
