@@ -7,16 +7,16 @@ from email_profile.clients.imap.mailbox import MailBox
 from email_profile.clients.imap.searches import Where
 from email_profile.clients.smtp.client import SmtpClient
 from email_profile.core.abc import (
-    ImapClientProtocol,
-    SenderProtocol,
-    SmtpClientProtocol,
+    ImapClientABC,
+    SenderABC,
+    SmtpClientABC,
     StorageABC,
 )
 from email_profile.core.credentials import Credentials, EmailFactories
 from email_profile.core.errors import Retryable
 from email_profile.core.status import IMAPError, Status
 from email_profile.core.types import AppendedUID, IMAPHost, SMTPHost
-from email_profile.models.raw import EmailModel
+from email_profile.models.raw import RawModel
 from email_profile.parser import Attachment, ParsedBody, parse_rfc822
 from email_profile.providers import (
     ProviderResolutionError,
@@ -30,19 +30,19 @@ __all__ = [
     "Attachment",
     "Credentials",
     "EmailFactories",
-    "EmailModel",
     "IMAPError",
     "IMAPHost",
     "ImapClient",
-    "ImapClientProtocol",
+    "ImapClientABC",
     "MailBox",
     "ParsedBody",
     "ProviderResolutionError",
+    "RawModel",
     "Retryable",
     "SMTPHost",
-    "SenderProtocol",
+    "SenderABC",
     "SmtpClient",
-    "SmtpClientProtocol",
+    "SmtpClientABC",
     "Status",
     "StorageABC",
     "Where",
