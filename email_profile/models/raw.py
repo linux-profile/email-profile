@@ -12,8 +12,8 @@ class RawModel(Base):
 
     __tablename__ = "raw"
 
-    message_id = Column(String, primary_key=True)
-    uid = Column(String, nullable=False, index=True)
-    mailbox = Column(String, nullable=False, index=True)
+    uid = Column(String, primary_key=True)
+    mailbox = Column(String, primary_key=True)
+    message_id = Column(String, nullable=False, index=True)
     flags = Column(String, nullable=False, default="")
     file = Column(Text)

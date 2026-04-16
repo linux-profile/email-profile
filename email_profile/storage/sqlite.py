@@ -32,10 +32,13 @@ class StorageSQLite(StorageABC):
 
         return f"sqlite:///{value}"
 
-    def stored_ids(self) -> set[str]:
+    def stored_ids(self, mailbox: Optional[str] = None) -> set[str]:
         """Return stored email IDs."""
         with self._session_factory() as session:
-            return {row[0] for row in session.query(RawModel.message_id).all()}
+            query = session.query(RawModel.message_id)
+            if mailbox:
+                query = query.filter(RawModel.mailbox == mailbox)
+            return {row[0] for row in query.all()}
 
     def stored_uids(self, mailbox: str) -> set[str]:
         """Return stored IMAP UIDs for a mailbox."""
@@ -47,30 +50,36 @@ class StorageSQLite(StorageABC):
                 .all()
             }
 
-    def save_raw(self, raw: RawSerializer) -> None:
-        """Persist the RFC822 source for one email."""
+    def save_raw(self, raw: RawSerializer) -> bool:
+        """Persist the RFC822 source. Returns True if inserted, False if updated."""
         with self._session_factory() as session:
             existing = (
                 session.query(RawModel)
-                .filter(RawModel.message_id == raw.message_id)
+                .filter(
+                    RawModel.uid == raw.uid,
+                    RawModel.mailbox == raw.mailbox,
+                )
                 .first()
             )
 
             if existing:
-                existing.file = raw.file
+                existing.message_id = raw.message_id
                 existing.flags = raw.flags
-            else:
-                session.add(
-                    RawModel(
-                        message_id=raw.message_id,
-                        uid=raw.uid,
-                        mailbox=raw.mailbox,
-                        flags=raw.flags,
-                        file=raw.file,
-                    )
-                )
+                existing.file = raw.file
+                session.commit()
+                return False
 
+            session.add(
+                RawModel(
+                    message_id=raw.message_id,
+                    uid=raw.uid,
+                    mailbox=raw.mailbox,
+                    flags=raw.flags,
+                    file=raw.file,
+                )
+            )
             session.commit()
+            return True
 
     def get_raw(self, message_id: str) -> Optional[RawSerializer]:
         """Retrieve the RFC822 source by email id."""
