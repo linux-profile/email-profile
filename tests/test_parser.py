@@ -57,7 +57,7 @@ class TestNamedHeaders(TestCase):
         self.assertEqual(p.cc, "c@x")
         self.assertEqual(p.in_reply_to, "<prev@x>")
         self.assertEqual(p.list_id, "<list@x>")
-        self.assertEqual(p.importance, "high")
+        self.assertEqual(p.headers["Importance"], "high")
 
     def test_case_insensitive(self):
         raw = (
@@ -65,8 +65,7 @@ class TestNamedHeaders(TestCase):
             b"mime-version: 1.0\r\ncontent-type: text/plain\r\n\r\nbody\r\n"
         )
         p = parse_rfc822(raw)
-        self.assertEqual(p.mime_version, "1.0")
-        self.assertNotIn("mime-version", (k.lower() for k in p.headers))
+        self.assertIn("mime-version", (k.lower() for k in p.headers))
 
 
 class TestHeadersBag(TestCase):

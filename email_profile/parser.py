@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from email import message_from_bytes
 from email.header import decode_header
 from email.message import Message as PyEmailMessage
+from email.utils import parseaddr, parsedate_to_datetime
 from pathlib import Path
 from typing import Optional, Union
 
@@ -17,40 +19,15 @@ _NAMED_HEADERS = frozenset(
         "To",
         "Cc",
         "Bcc",
-        "Sender",
         "Reply-To",
         "Message-ID",
         "In-Reply-To",
         "References",
         "Subject",
         "Date",
-        "MIME-Version",
         "Content-Type",
-        "Content-Transfer-Encoding",
-        "Return-Path",
-        "Delivered-To",
-        "Received",
-        "DKIM-Signature",
-        "Authentication-Results",
-        "ARC-Authentication-Results",
-        "ARC-Message-Signature",
-        "ARC-Seal",
         "List-Id",
         "List-Unsubscribe",
-        "List-Unsubscribe-Post",
-        "List-Post",
-        "List-Help",
-        "List-Archive",
-        "List-Owner",
-        "Importance",
-        "Priority",
-        "X-Priority",
-        "Sensitivity",
-        "Auto-Submitted",
-        "Precedence",
-        "X-SG-EID",
-        "X-SG-ID",
-        "X-Entity-ID",
     )
 )
 
@@ -81,57 +58,31 @@ class ParsedBody(BaseModel):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
+    message_id: Optional[str] = None
+    date: Optional[datetime] = None
+    from_: Optional[str] = None
+    to_: Optional[str] = None
+
     subject: Optional[str] = None
     body_text_plain: str = ""
     body_text_html: str = ""
     content_type: Optional[str] = None
-    attachments: list[Attachment] = []
 
     cc: Optional[str] = None
     bcc: Optional[str] = None
-    sender: Optional[str] = None
     reply_to: Optional[str] = None
 
     in_reply_to: Optional[str] = None
     references: Optional[str] = None
 
-    mime_version: Optional[str] = None
-    content_transfer_encoding: Optional[str] = None
-
-    return_path: Optional[str] = None
-    delivered_to: Optional[str] = None
-    received: Optional[str] = None
-
-    dkim_signature: Optional[str] = None
-    authentication_results: Optional[str] = None
-    arc_authentication_results: Optional[str] = None
-    arc_message_signature: Optional[str] = None
-    arc_seal: Optional[str] = None
-
     list_id: Optional[str] = None
     list_unsubscribe: Optional[str] = None
-    list_unsubscribe_post: Optional[str] = None
-    list_post: Optional[str] = None
-    list_help: Optional[str] = None
-    list_archive: Optional[str] = None
-    list_owner: Optional[str] = None
 
-    importance: Optional[str] = None
-    priority: Optional[str] = None
-    x_priority: Optional[str] = None
-    sensitivity: Optional[str] = None
-    auto_submitted: Optional[str] = None
-    precedence: Optional[str] = None
-
-    x_sg_eid: Optional[str] = None
-    x_sg_id: Optional[str] = None
-    x_entity_id: Optional[str] = None
-
+    attachments: list[Attachment] = []
     headers: dict[str, Union[str, list[str]]] = {}
 
 
 def _decode_header(value: Optional[str]) -> str:
-
     if not value:
         return ""
 
@@ -150,8 +101,8 @@ def _decode_header(value: Optional[str]) -> str:
 
 
 def _decode_payload(part: PyEmailMessage) -> str:
-
     payload = part.get_payload(decode=True)
+
     if payload is None:
         return ""
 
@@ -213,41 +164,28 @@ def parse_rfc822(raw_message: bytes) -> ParsedBody:
 
     message = message_from_bytes(raw_message)
 
+    raw_date = message.get("Date")
+    parsed_date = None
+    if raw_date:
+        try:
+            parsed_date = parsedate_to_datetime(raw_date)
+        except (TypeError, ValueError):
+            parsed_date = None
+
     body = ParsedBody(
+        message_id=_h(message, "Message-ID"),
+        date=parsed_date,
+        from_=parseaddr(message.get("From", ""))[1] or None,
+        to_=parseaddr(message.get("To", ""))[1] or None,
         subject=_decode_header(message.get("Subject")),
         content_type=message.get_content_type(),
         cc=_h(message, "Cc"),
         bcc=_h(message, "Bcc"),
-        sender=_h(message, "Sender"),
         reply_to=_h(message, "Reply-To"),
         in_reply_to=_h(message, "In-Reply-To"),
         references=_h(message, "References"),
-        mime_version=_h(message, "MIME-Version"),
-        content_transfer_encoding=_h(message, "Content-Transfer-Encoding"),
-        return_path=_h(message, "Return-Path"),
-        delivered_to=_h(message, "Delivered-To"),
-        received=_h(message, "Received"),
-        dkim_signature=_h(message, "DKIM-Signature"),
-        authentication_results=_h(message, "Authentication-Results"),
-        arc_authentication_results=_h(message, "ARC-Authentication-Results"),
-        arc_message_signature=_h(message, "ARC-Message-Signature"),
-        arc_seal=_h(message, "ARC-Seal"),
         list_id=_h(message, "List-Id"),
         list_unsubscribe=_h(message, "List-Unsubscribe"),
-        list_unsubscribe_post=_h(message, "List-Unsubscribe-Post"),
-        list_post=_h(message, "List-Post"),
-        list_help=_h(message, "List-Help"),
-        list_archive=_h(message, "List-Archive"),
-        list_owner=_h(message, "List-Owner"),
-        importance=_h(message, "Importance"),
-        priority=_h(message, "Priority"),
-        x_priority=_h(message, "X-Priority"),
-        sensitivity=_h(message, "Sensitivity"),
-        auto_submitted=_h(message, "Auto-Submitted"),
-        precedence=_h(message, "Precedence"),
-        x_sg_eid=_h(message, "X-SG-EID"),
-        x_sg_id=_h(message, "X-SG-ID"),
-        x_entity_id=_h(message, "X-Entity-ID"),
         headers=_extras(message),
     )
 
