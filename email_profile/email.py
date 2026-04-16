@@ -9,7 +9,6 @@ from email_profile.backup import RestoreOps
 from email_profile.factories import Credentials, EmailFactories
 from email_profile.folders import FolderAccess
 from email_profile.imap_session import IMAPSession
-from email_profile.providers import resolve_imap_host
 from email_profile.queries import QueryShortcuts
 from email_profile.searches import Where
 from email_profile.sender import Sender
@@ -109,13 +108,13 @@ class Email:
     @classmethod
     def from_email(cls, address: str, password: str) -> Email:
         """Auto-discover the IMAP host from the address."""
-        host = resolve_imap_host(address)
+        creds = EmailFactories.from_address(address, password)
         return cls(
-            server=host.host,
-            user=address,
-            password=password,
-            port=host.port,
-            ssl=host.ssl,
+            server=creds.server,
+            user=creds.user,
+            password=creds.password,
+            port=creds.port,
+            ssl=creds.ssl,
         )
 
     @classmethod
@@ -138,32 +137,40 @@ class Email:
         )
 
     @classmethod
+    def from_provider(cls, provider: str, user: str, password: str) -> Email:
+        """Build an Email for a known provider (gmail, outlook, ...)."""
+        creds = EmailFactories.from_provider(provider, user, password)
+        return cls(
+            server=creds.server, user=creds.user, password=creds.password
+        )
+
+    @classmethod
     def gmail(cls, user: str, password: str) -> Email:
-        return cls("imap.gmail.com", user, password)
+        return cls.from_provider("gmail", user, password)
 
     @classmethod
     def outlook(cls, user: str, password: str) -> Email:
-        return cls("outlook.office365.com", user, password)
+        return cls.from_provider("outlook", user, password)
 
     @classmethod
     def icloud(cls, user: str, password: str) -> Email:
-        return cls("imap.mail.me.com", user, password)
+        return cls.from_provider("icloud", user, password)
 
     @classmethod
     def yahoo(cls, user: str, password: str) -> Email:
-        return cls("imap.mail.yahoo.com", user, password)
+        return cls.from_provider("yahoo", user, password)
 
     @classmethod
     def hostinger(cls, user: str, password: str) -> Email:
-        return cls("imap.hostinger.com", user, password)
+        return cls.from_provider("hostinger", user, password)
 
     @classmethod
     def zoho(cls, user: str, password: str) -> Email:
-        return cls("imap.zoho.com", user, password)
+        return cls.from_provider("zoho", user, password)
 
     @classmethod
     def fastmail(cls, user: str, password: str) -> Email:
-        return cls("imap.fastmail.com", user, password)
+        return cls.from_provider("fastmail", user, password)
 
     def connect(self) -> Email:
         self._session.connect()
