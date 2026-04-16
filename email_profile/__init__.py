@@ -47,7 +47,7 @@ from email_profile.providers import (
 from email_profile.query import Q, Query
 from email_profile.retry import with_retry
 from email_profile.searches import Where
-from email_profile.smtp import SmtpClient
+from email_profile.smtp_client import SmtpClient
 from email_profile.status import IMAPError, Status
 from email_profile.storage import Storage
 from email_profile.types import SMTPHost

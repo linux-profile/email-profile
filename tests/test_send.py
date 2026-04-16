@@ -7,8 +7,13 @@ from tests.conftest import SAMPLE_RFC822, make_fake_client
 
 def _smtp_patches(fake_smtp):
     return (
-        patch("email_profile.smtp.smtplib.SMTP_SSL", return_value=fake_smtp),
-        patch("email_profile.smtp.smtplib.SMTP", return_value=fake_smtp),
+        patch(
+            "email_profile.smtp_client.smtplib.SMTP_SSL",
+            return_value=fake_smtp,
+        ),
+        patch(
+            "email_profile.smtp_client.smtplib.SMTP", return_value=fake_smtp
+        ),
         patch(
             "email_profile.sender.resolve_smtp_host",
             return_value=SMTPHost("smtp.test", port=465, ssl=True),
@@ -22,7 +27,7 @@ class _SendTest(TestCase):
         self.smtp = MagicMock()
 
         self._imap_patch = patch(
-            "email_profile.imap_session.imaplib.IMAP4_SSL",
+            "email_profile.imap_client.imaplib.IMAP4_SSL",
             return_value=self.imap,
         )
         ssl_patch, plain_patch, resolve_patch = _smtp_patches(self.smtp)

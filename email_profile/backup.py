@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
-from email_profile.imap_session import IMAPSession
+from email_profile.imap_client import ImapClient
 
 if TYPE_CHECKING:
     from email_profile.protocols import StorageProtocol
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class RestoreOps:
     """Idempotent restore of persisted messages back to an IMAP server."""
 
-    def __init__(self, session: IMAPSession) -> None:
+    def __init__(self, session: ImapClient) -> None:
         self._session = session
 
     def restore(
