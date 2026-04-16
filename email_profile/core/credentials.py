@@ -18,6 +18,12 @@ class Credentials:
     port: int = 993
     ssl: bool = True
 
+    def __repr__(self) -> str:
+        return f"Credentials(server={self.server!r}, user={self.user!r}, password='***')"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
 
 class EmailFactories:
     """Build :class:`Credentials` without the user spelling out a hostname."""

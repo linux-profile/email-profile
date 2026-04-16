@@ -58,6 +58,7 @@ class ImapClient:
             finally:
                 self.client = None
                 self.mailboxes = {}
+                self.password = None
 
     def noop(self) -> None:
         self.require()

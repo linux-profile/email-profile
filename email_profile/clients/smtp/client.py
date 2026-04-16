@@ -128,6 +128,7 @@ class SmtpClient:
                 self._smtp.quit()
             finally:
                 self._smtp = None
+                self._password = None
 
     def send(self, message: EmailMessage) -> None:
         """Send a pre-built message through the current SMTP session."""
