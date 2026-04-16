@@ -98,6 +98,7 @@ class StorageSQLite(StorageABC):
                 uid=row.uid,
                 mailbox=row.mailbox,
                 file=row.file,
+                flags=row.flags,
             )
 
     def __repr__(self) -> str:
