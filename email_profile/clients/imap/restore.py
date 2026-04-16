@@ -19,7 +19,6 @@ from email_profile.clients.imap.parser import (
     EmailParser,
     SearchParser,
 )
-from email_profile.serializers.raw import RawSerializer
 
 if TYPE_CHECKING:
     from email_profile.core.abc import StorageABC
@@ -43,7 +42,7 @@ class Restore:
         """Restore all mailboxes with progress and parallel upload."""
         self._session.require()
 
-        by_mailbox: dict[str, list[RawSerializer]] = {}
+        ids_by_mailbox: dict[str, list[str]] = {}
 
         for message_id in storage.ids():
             raw = storage.get(message_id)
@@ -51,9 +50,10 @@ class Restore:
                 continue
             if mailbox and raw.mailbox != mailbox:
                 continue
-            by_mailbox.setdefault(raw.mailbox, []).append(raw)
+            ids_by_mailbox.setdefault(raw.mailbox, []).append(message_id)
+            del raw
 
-        if not by_mailbox:
+        if not ids_by_mailbox:
             return 0
 
         total_count = 0
@@ -61,7 +61,7 @@ class Restore:
         progress = Progress()
 
         def restore_one(
-            box_name: str, raws: list[RawSerializer], retries: int = 3
+            box_name: str, message_ids: list[str], retries: int = 3
         ) -> int:
             task = None
 
@@ -91,11 +91,15 @@ class Restore:
 
                     with lock:
                         task = progress.add_task(
-                            f"  [cyan]{box_name}", total=len(raws)
+                            f"  [cyan]{box_name}", total=len(message_ids)
                         )
 
                     result = self.restore_mailbox(
-                        session, box_name, raws, skip_duplicates
+                        session,
+                        box_name,
+                        message_ids,
+                        storage,
+                        skip_duplicates,
                     )
 
                     with lock:
@@ -127,12 +131,12 @@ class Restore:
         with (
             progress,
             ThreadPoolExecutor(
-                max_workers=min(max_workers, len(by_mailbox))
+                max_workers=min(max_workers, len(ids_by_mailbox))
             ) as pool,
         ):
             futures = {
-                pool.submit(restore_one, box_name, raws): box_name
-                for box_name, raws in by_mailbox.items()
+                pool.submit(restore_one, box_name, msg_ids): box_name
+                for box_name, msg_ids in ids_by_mailbox.items()
             }
             for future in as_completed(futures):
                 total_count += future.result()
@@ -143,10 +147,16 @@ class Restore:
     def restore_mailbox(
         session: ImapClient,
         box_name: str,
-        raws: list[RawSerializer],
+        message_ids: list[str],
+        storage: StorageABC,
         skip_duplicates: bool = True,
     ) -> dict[str, int]:
-        """Restore a single mailbox. Returns {'uploaded': N, 'skipped': N}."""
+        """Restore a single mailbox. Returns {'uploaded': N, 'skipped': N}.
+
+        Messages are loaded from *storage* one at a time so that only
+        one RFC-822 body is kept in memory per iteration, avoiding OOM
+        on large backups.
+        """
 
         server_ids: set[str] = set()
         if skip_duplicates:
@@ -155,17 +165,23 @@ class Restore:
         uploaded = 0
         skipped = 0
 
-        for raw in raws:
-            if skip_duplicates and raw.message_id in server_ids:
+        for mid in message_ids:
+            if skip_duplicates and mid in server_ids:
                 skipped += 1
                 continue
-            server_ids.add(raw.message_id)
+
+            raw = storage.get(mid)
+            if raw is None or not raw.file:
+                continue
+
+            server_ids.add(mid)
 
             date = EmailParser(raw.file).date()
             session.mailboxes[box_name].append(
                 raw.file, flags=raw.flags, date=date
             )
             uploaded += 1
+            del raw
 
         return {"uploaded": uploaded, "skipped": skipped}
 
