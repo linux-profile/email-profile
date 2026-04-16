@@ -4,12 +4,14 @@ from pathlib import Path
 from typing import Optional
 from unittest import TestCase
 
-from email_profile import EmailSerializer, Storage, StorageProtocol
+from email_profile import EmailSerializer
+from email_profile import StorageSQLite as Storage
+from email_profile.core.abc import StorageABC
 from tests.conftest import SAMPLE_RFC822
 
 
-class _InMemoryStorage:
-    """A minimal storage that satisfies StorageProtocol without subclassing."""
+class _InMemoryStorage(StorageABC):
+    """A minimal in-memory storage that inherits StorageABC."""
 
     def __init__(self) -> None:
         self._rows: list[EmailSerializer] = []
@@ -51,22 +53,22 @@ class _InMemoryStorage:
         self._rows.clear()
 
 
-class TestStorageProtocol(TestCase):
+class TestStorageABC(TestCase):
     def test_real_storage_satisfies_protocol(self):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "x.db")
-            self.assertIsInstance(storage, StorageProtocol)
+            self.assertIsInstance(storage, StorageABC)
             storage.dispose()
 
     def test_in_memory_satisfies_protocol(self):
-        self.assertIsInstance(_InMemoryStorage(), StorageProtocol)
+        self.assertIsInstance(_InMemoryStorage(), StorageABC)
 
     def test_object_missing_methods_does_not_satisfy(self):
         class Partial:
             def save(self, x):
                 return x
 
-        self.assertNotIsInstance(Partial(), StorageProtocol)
+        self.assertNotIsInstance(Partial(), StorageABC)
 
 
 class TestInMemoryStorageRoundTrips(TestCase):

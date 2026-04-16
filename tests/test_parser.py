@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from email_profile import parse_rfc822
+from email_profile.parser import parse_rfc822
 
 MULTIPART = (
     b"From: a@x\r\n"

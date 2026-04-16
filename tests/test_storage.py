@@ -2,7 +2,8 @@ import tempfile
 from pathlib import Path
 from unittest import TestCase
 
-from email_profile import EmailSerializer, Storage
+from email_profile import EmailSerializer
+from email_profile import StorageSQLite as Storage
 from tests.conftest import SAMPLE_RFC822
 
 

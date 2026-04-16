@@ -2,7 +2,8 @@ import tempfile
 from pathlib import Path
 from unittest import TestCase
 
-from email_profile import EmailModel, EmailSerializer
+from email_profile.models.email import EmailModel
+from email_profile.serializers.email import EmailSerializer
 from tests.conftest import SAMPLE_RFC822
 
 
@@ -42,7 +43,7 @@ class TestSaveMethods(TestCase):
         self.assertTrue(out.exists())
 
     def test_save_attachments_returns_paths(self):
-        from email_profile import Attachment
+        from email_profile.parser import Attachment
 
         self.msg.attachments.append(
             Attachment(

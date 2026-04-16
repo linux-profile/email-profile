@@ -9,7 +9,7 @@ class TestWhereLazy(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -47,7 +47,7 @@ class TestFetchModes(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -86,7 +86,7 @@ class TestChunkAndProgress(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -118,7 +118,7 @@ class TestUidsCache(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()

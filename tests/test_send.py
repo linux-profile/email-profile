@@ -1,18 +1,20 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from email_profile import Email, EmailSerializer, SMTPHost
+from email_profile import Email, EmailSerializer
+from email_profile.core.types import SMTPHost
 from tests.conftest import SAMPLE_RFC822, make_fake_client
 
 
 def _smtp_patches(fake_smtp):
     return (
         patch(
-            "email_profile.smtp_client.smtplib.SMTP_SSL",
+            "email_profile.clients.smtp_client.smtplib.SMTP_SSL",
             return_value=fake_smtp,
         ),
         patch(
-            "email_profile.smtp_client.smtplib.SMTP", return_value=fake_smtp
+            "email_profile.clients.smtp_client.smtplib.SMTP",
+            return_value=fake_smtp,
         ),
         patch(
             "email_profile.sender.resolve_smtp_host",
@@ -27,7 +29,7 @@ class _SendTest(TestCase):
         self.smtp = MagicMock()
 
         self._imap_patch = patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
             return_value=self.imap,
         )
         ssl_patch, plain_patch, resolve_patch = _smtp_patches(self.smtp)

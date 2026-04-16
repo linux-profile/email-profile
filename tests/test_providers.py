@@ -1,8 +1,8 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from email_profile import IMAPHost, resolve_imap_host
-from email_profile.providers import KNOWN_PROVIDERS
+from email_profile.core.types import IMAPHost
+from email_profile.providers import KNOWN_PROVIDERS, resolve_imap_host
 
 
 class TestResolveImapHost(TestCase):

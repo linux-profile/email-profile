@@ -2,9 +2,8 @@ from email.message import EmailMessage
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from email_profile import SmtpClient
-from email_profile.smtp_client import _build_message
-from email_profile.types import SMTPHost
+from email_profile.clients.smtp_client import SmtpClient, _build_message
+from email_profile.core.types import SMTPHost
 
 
 class TestBuildMessage(TestCase):
@@ -63,7 +62,7 @@ class TestSmtpClientSSL(TestCase):
         self.host = SMTPHost("smtp.x", port=465, ssl=True)
         self.fake = MagicMock()
         self._patcher = patch(
-            "email_profile.smtp_client.smtplib.SMTP_SSL",
+            "email_profile.clients.smtp_client.smtplib.SMTP_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -92,7 +91,7 @@ class TestSmtpClientStartTLS(TestCase):
         host = SMTPHost("smtp.x", port=587, ssl=False, starttls=True)
         fake = MagicMock()
         with patch(
-            "email_profile.smtp_client.smtplib.SMTP", return_value=fake
+            "email_profile.clients.smtp_client.smtplib.SMTP", return_value=fake
         ):
             SmtpClient(host, "u", "pw").connect()
         fake.starttls.assert_called_once()

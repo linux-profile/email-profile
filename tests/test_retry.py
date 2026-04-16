@@ -1,7 +1,8 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from email_profile import QuotaExceeded, RateLimited, with_retry
+from email_profile import QuotaExceeded, RateLimited
+from email_profile.retry import with_retry
 
 
 class TestWithRetry(TestCase):

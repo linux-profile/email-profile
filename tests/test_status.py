@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from email_profile import IMAPError, QuotaExceeded, RateLimited, Status
+from email_profile import QuotaExceeded, RateLimited
+from email_profile.core.status import IMAPError, Status
 
 
 class TestStatus(TestCase):

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from email_profile.session import Base, make_session
+from email_profile.storage.db import Base, make_session
 
 
 class TestMakeSession(TestCase):

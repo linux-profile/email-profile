@@ -2,7 +2,8 @@ import tempfile
 from pathlib import Path
 from unittest import TestCase
 
-from email_profile import EmailSerializer, MessageDumper
+from email_profile import EmailSerializer
+from email_profile.storage.dump import MessageDumper
 from tests.conftest import SAMPLE_RFC822
 
 
