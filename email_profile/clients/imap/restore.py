@@ -76,14 +76,13 @@ class Restore:
 
                 try:
                     session.connect()
-                except Exception:
+                except Exception as exc:
                     if attempt < retries - 1:
                         time.sleep(2**attempt)
                         continue
                     with lock:
                         progress.console.print(
-                            f"  [red]✗[/] {box_name} — "
-                            f"connection failed ({retries} attempts)"
+                            f"  [red]✗[/] {box_name} — connection failed: {exc}"
                         )
                     return 0
 
@@ -108,7 +107,7 @@ class Restore:
                         )
 
                     return result["uploaded"]
-                except Exception:
+                except Exception as exc:
                     if attempt < retries - 1:
                         time.sleep(2**attempt)
                         continue
@@ -117,8 +116,7 @@ class Restore:
                             progress.update(task, visible=False)
                     with lock:
                         progress.console.print(
-                            f"  [red]✗[/] {box_name} — "
-                            f"restore failed ({retries} attempts)"
+                            f"  [red]✗[/] {box_name} — restore failed: {exc}"
                         )
                     return 0
                 finally:
