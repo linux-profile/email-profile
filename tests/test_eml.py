@@ -1,9 +1,8 @@
-import tempfile
-from pathlib import Path
 from unittest import TestCase
 
-from email_profile.models.email import EmailModel
+from email_profile.models.email import RawModel
 from email_profile.serializers.email import EmailSerializer
+from email_profile.serializers.raw import RawSerializer
 from tests.conftest import SAMPLE_RFC822
 
 
@@ -23,43 +22,18 @@ class TestFromRaw(TestCase):
         self.assertIn("Hi Bob", msg.body_text_plain)
 
 
-class TestSaveMethods(TestCase):
-    def setUp(self):
-        self._tmp = tempfile.TemporaryDirectory()
-        self.tmp = Path(self._tmp.name)
-        self.msg = EmailSerializer.from_raw(
-            uid="1", mailbox="INBOX", raw=SAMPLE_RFC822
+class TestRawSerializer(TestCase):
+    def test_creates_from_fields(self):
+        raw = RawSerializer(
+            message_id="<abc@x>", uid="1", mailbox="INBOX", file="raw content"
         )
-
-    def tearDown(self):
-        self._tmp.cleanup()
-
-    def test_save_json(self):
-        out = self.msg.save_json(self.tmp / "j")
-        self.assertTrue(out.exists())
-
-    def test_save_html(self):
-        out = self.msg.save_html(self.tmp / "h")
-        self.assertTrue(out.exists())
-
-    def test_save_attachments_returns_paths(self):
-        from email_profile.parser import Attachment
-
-        self.msg.attachments.append(
-            Attachment(
-                file_name="x.txt", content_type="text/plain", content=b"hi"
-            )
-        )
-        paths = self.msg.save_attachments(self.tmp / "a")
-        self.assertEqual(len(paths), 1)
-        self.assertEqual(paths[0].read_bytes(), b"hi")
+        self.assertEqual(raw.message_id, "<abc@x>")
+        self.assertEqual(raw.file, "raw content")
 
 
-class TestEmailModel(TestCase):
-    def test_from_serializer(self):
-        msg = EmailSerializer.from_raw(
-            uid="1", mailbox="INBOX", raw=SAMPLE_RFC822
-        )
-        model = EmailModel.from_serializer(msg)
-        self.assertEqual(model.uid, "1")
-        self.assertEqual(model.subject, "Hello")
+class TestRawModel(TestCase):
+    def test_tablename(self):
+        self.assertEqual(RawModel.__tablename__, "raw")
+
+    def test_has_message_id_column(self):
+        self.assertIn("message_id", RawModel.__table__.columns.keys())

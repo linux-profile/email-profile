@@ -1,20 +1,20 @@
+# ruff: noqa: ARG001
 """IMAP client (high-level entry point)."""
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
-from email_profile.backup import RestoreOps
 from email_profile.clients.imap_client import ImapClient
 from email_profile.clients.smtp_client import AttachmentLike
-from email_profile.core.abc import StorageABC
+from email_profile.core.abc import StorageABC, SyncResult
 from email_profile.core.credentials import Credentials, EmailFactories
 from email_profile.folders import FolderAccess
 from email_profile.queries import QueryShortcuts
 from email_profile.searches import Where
 from email_profile.sender import Sender
 from email_profile.storage.sqlite import StorageSQLite
+from email_profile.sync import RestoreOps, SyncOps
 
 if TYPE_CHECKING:
     from email.message import EmailMessage
@@ -56,7 +56,8 @@ class Email:
         )
         self._folders = FolderAccess(self._session)
         self._queries = QueryShortcuts(self._folders)
-        self._backup = RestoreOps(self._session)
+        self._sync = SyncOps(self._session)
+        self._restore = RestoreOps(self._session)
         self._sender = Sender(self._session, self._folders)
         self.storage = storage or StorageSQLite()
 
@@ -191,26 +192,30 @@ class Email:
     def all(self) -> Where:
         return self._queries.all()
 
-    def restore(
+    def sync(
         self,
-        storage: StorageABC,
         mailbox: Optional[str] = None,
-        target: Optional[str] = None,
-        skip_duplicates: bool = True,
-    ) -> int:
-        return self._backup.restore(
-            storage=storage,
+        max_workers: int = 3,
+    ) -> SyncResult:
+        """Sync server state into local storage."""
+        return self._sync.orchestrate(
+            storage=self.storage,
             mailbox=mailbox,
-            target=target,
-            skip_duplicates=skip_duplicates,
+            mailbox_names=self._folders.mailboxes() if not mailbox else None,
+            max_workers=max_workers,
         )
 
-    def restore_eml(
+    def restore(
         self,
-        path: Union[str, Path],
-        target: Optional[str] = None,
+        mailbox: Optional[str] = None,
+        storage: Optional[StorageABC] = None,
+        skip_duplicates: bool = True,
     ) -> int:
-        return self._backup.restore_eml(path=path, target=target)
+        return self._restore.restore(
+            storage=storage or self.storage,
+            mailbox=mailbox,
+            skip_duplicates=skip_duplicates,
+        )
 
     def smtp_host(self) -> SMTPHost:
         return self._sender.smtp_host()

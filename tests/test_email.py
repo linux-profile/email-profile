@@ -261,19 +261,19 @@ class TestRestore(TestCase):
         import tempfile
         from pathlib import Path
 
-        from email_profile import EmailSerializer
         from email_profile import StorageSQLite as Storage
+        from email_profile.serializers.raw import RawSerializer
 
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "src.db")
             for uid in ("1", "2"):
-                from tests.conftest import SAMPLE_RFC822
-
-                raw = SAMPLE_RFC822.replace(
-                    b"<abc@example.com>", f"<{uid}@x>".encode()
-                )
-                storage.save(
-                    EmailSerializer.from_raw(uid=uid, mailbox="INBOX", raw=raw)
+                storage.save_raw(
+                    RawSerializer(
+                        message_id=f"<{uid}@x>",
+                        uid=uid,
+                        mailbox="INBOX",
+                        file=f"From: a\r\nMessage-ID: <{uid}@x>\r\n\r\nx",
+                    )
                 )
 
             fake = make_fake_client()
@@ -284,62 +284,7 @@ class TestRestore(TestCase):
                 ),
                 Email("imap.x", "u", "p") as app,
             ):
-                n = app.restore(storage)
-
-            self.assertEqual(n, 2)
-            self.assertEqual(fake.append.call_count, 2)
-            storage.dispose()
-
-    def test_restore_unknown_mailbox_raises(self):
-        import tempfile
-        from pathlib import Path
-
-        from email_profile import EmailSerializer
-        from email_profile import StorageSQLite as Storage
-
-        with tempfile.TemporaryDirectory() as tmp:
-            storage = Storage(Path(tmp) / "src.db")
-            storage.save(
-                EmailSerializer.from_raw(
-                    uid="1", mailbox="Archive", raw=b"From: a\r\n\r\nx"
-                )
-            )
-
-            fake = make_fake_client()
-            with (
-                patch(
-                    "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
-                    return_value=fake,
-                ),
-                Email("imap.x", "u", "p") as app,
-                self.assertRaises(KeyError),
-            ):
-                app.restore(storage)
-
-            storage.dispose()
-
-    def test_restore_eml_from_directory(self):
-        import tempfile
-        from pathlib import Path
-
-        from email_profile import Email
-        from tests.conftest import SAMPLE_RFC822
-
-        with tempfile.TemporaryDirectory() as tmp:
-            box = Path(tmp) / "INBOX"
-            box.mkdir()
-            (box / "1.eml").write_bytes(SAMPLE_RFC822)
-            (box / "2.eml").write_bytes(SAMPLE_RFC822)
-
-            fake = make_fake_client()
-            with (
-                patch(
-                    "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
-                    return_value=fake,
-                ),
-                Email("imap.x", "u", "p") as app,
-            ):
-                n = app.restore_eml(tmp)
+                n = app.restore(storage=storage)
 
             self.assertEqual(n, 2)
             self.assertEqual(fake.append.call_count, 2)

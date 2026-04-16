@@ -24,7 +24,6 @@ from email_profile.providers import (
 )
 from email_profile.retry import with_retry
 from email_profile.searches import Where
-from email_profile.storage.dump import MessageDumper
 
 __all__ = [
     "AppendedUID",
@@ -37,7 +36,6 @@ __all__ = [
     "ImapClient",
     "ImapClientProtocol",
     "MailBox",
-    "MessageDumper",
     "ParsedBody",
     "ProviderResolutionError",
     "Retryable",

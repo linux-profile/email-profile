@@ -1,56 +1,30 @@
 import tempfile
-from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import Optional
 from unittest import TestCase
 
-from email_profile import EmailSerializer
 from email_profile import StorageSQLite as Storage
 from email_profile.core.abc import StorageABC
-from tests.conftest import SAMPLE_RFC822
+from email_profile.serializers.raw import RawSerializer
 
 
 class _InMemoryStorage(StorageABC):
     """A minimal in-memory storage that inherits StorageABC."""
 
     def __init__(self) -> None:
-        self._rows: list[EmailSerializer] = []
+        self._rows: dict[str, RawSerializer] = {}
 
-    def save(self, serializer: EmailSerializer) -> EmailSerializer:
-        self._rows.append(serializer)
-        return serializer
+    def save_raw(self, raw: RawSerializer) -> None:
+        self._rows[raw.message_id] = raw
 
-    def save_many(
-        self,
-        serializers: Iterable[EmailSerializer],
-        *,
-        batch_size: Optional[int] = None,
-    ) -> int:
-        count = 0
-        for s in serializers:
-            self._rows.append(s)
-            count += 1
-        return count
+    def get_raw(self, message_id: str) -> Optional[RawSerializer]:
+        return self._rows.get(message_id)
 
-    def messages(
-        self, mailbox: Optional[str] = None
-    ) -> Iterator[EmailSerializer]:
-        for row in self._rows:
-            if mailbox is None or row.mailbox == mailbox:
-                yield row
+    def stored_ids(self) -> set[str]:
+        return set(self._rows.keys())
 
-    def existing_ids(self, mailbox: Optional[str] = None) -> set[str]:
-        return {
-            r.id
-            for r in self._rows
-            if r.id and (mailbox is None or r.mailbox == mailbox)
-        }
-
-    def existing_uids(self, mailbox: str) -> set[str]:
-        return {r.uid for r in self._rows if r.mailbox == mailbox}
-
-    def dispose(self) -> None:
-        self._rows.clear()
+    def stored_uids(self, mailbox: str) -> set[str]:
+        return {r.uid for r in self._rows.values() if r.mailbox == mailbox}
 
 
 class TestStorageABC(TestCase):
@@ -58,28 +32,27 @@ class TestStorageABC(TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "x.db")
             self.assertIsInstance(storage, StorageABC)
-            storage.dispose()
 
     def test_in_memory_satisfies_protocol(self):
         self.assertIsInstance(_InMemoryStorage(), StorageABC)
 
     def test_object_missing_methods_does_not_satisfy(self):
         class Partial:
-            def save(self, x):
+            def save_raw(self, x):
                 return x
 
         self.assertNotIsInstance(Partial(), StorageABC)
 
 
 class TestInMemoryStorageRoundTrips(TestCase):
-    def test_save_and_messages(self):
+    def test_save_and_get(self):
         storage = _InMemoryStorage()
-        msg = EmailSerializer.from_raw(
-            uid="1", mailbox="INBOX", raw=SAMPLE_RFC822
+        raw = RawSerializer(
+            message_id="<test@x>", uid="1", mailbox="INBOX", file="content"
         )
 
-        storage.save(msg)
+        storage.save_raw(raw)
 
-        out = list(storage.messages())
-        self.assertEqual(len(out), 1)
-        self.assertEqual(out[0].uid, "1")
+        result = storage.get_raw("<test@x>")
+        self.assertIsNotNone(result)
+        self.assertEqual(result.message_id, "<test@x>")

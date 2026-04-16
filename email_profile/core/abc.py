@@ -3,40 +3,62 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Iterator
+from dataclasses import dataclass, field
 from email.message import EmailMessage
 from typing import Optional, Union
 
 from email_profile.serializers.email import EmailSerializer
+from email_profile.serializers.raw import RawSerializer
+
+
+@dataclass
+class SyncResult:
+    """Outcome of a mailbox sync operation."""
+
+    mailbox: str
+    inserted: int = 0
+    updated: int = 0
+    deleted: int = 0
+    skipped: int = 0
+    errors: list[str] = field(default_factory=list)
+
+    @property
+    def total_processed(self) -> int:
+        return self.inserted + self.updated + self.deleted + self.skipped
+
+    @property
+    def has_errors(self) -> bool:
+        return len(self.errors) > 0
+
+    def merge(self, other: SyncResult) -> SyncResult:
+        return SyncResult(
+            mailbox="*",
+            inserted=self.inserted + other.inserted,
+            updated=self.updated + other.updated,
+            deleted=self.deleted + other.deleted,
+            skipped=self.skipped + other.skipped,
+            errors=self.errors + other.errors,
+        )
 
 
 class StorageABC(ABC):
     """Contract for a message-persistence backend."""
 
     @abstractmethod
-    def save(self, serializer: EmailSerializer) -> object: ...
+    def save_raw(self, raw: RawSerializer) -> None:
+        """Persist the complete RFC822 source for one email."""
+        ...
 
     @abstractmethod
-    def save_many(
-        self,
-        serializers: Iterable[EmailSerializer],
-        *,
-        batch_size: Optional[int] = None,
-    ) -> int: ...
+    def get_raw(self, message_id: str) -> Optional[RawSerializer]:
+        """Retrieve the RFC822 source by email id. None if not stored."""
+        ...
 
     @abstractmethod
-    def messages(
-        self, mailbox: Optional[str] = None
-    ) -> Iterator[EmailSerializer]: ...
+    def stored_ids(self) -> set[str]: ...
 
     @abstractmethod
-    def existing_ids(self, mailbox: Optional[str] = None) -> set[str]: ...
-
-    @abstractmethod
-    def existing_uids(self, mailbox: str) -> set[str]: ...
-
-    @abstractmethod
-    def dispose(self) -> None: ...
+    def stored_uids(self, mailbox: str) -> set[str]: ...
 
 
 class ImapClientABC(ABC):
