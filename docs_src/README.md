@@ -53,6 +53,14 @@ in a `.env` file at the repo root.
 | [headers_bag.py](headers_bag.py) | Inspect non-standard `X-*` headers |
 | [threads.py](threads.py) | Reconstruct conversation threads |
 
+## Sending mail (SMTP)
+
+| File | What it shows |
+|------|---------------|
+| [send_email.py](send_email.py) | `app.send(to=, subject=, body=, ...)` with auto-discovered SMTP |
+| [reply_email.py](reply_email.py) | `app.reply(msg, body=...)` preserving threading |
+| [forward_email.py](forward_email.py) | `app.forward(msg, to=...)` with quoted body |
+
 ## Backup, restore, migration
 
 | File | What it shows |
