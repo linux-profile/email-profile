@@ -23,7 +23,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
 
-from email_profile.dump import MessageDumper
 from email_profile.email import Email
 from email_profile.eml import EmailModel, EmailSerializer
 from email_profile.errors import (
@@ -57,7 +56,6 @@ __all__ = [
     "IMAPError",
     "IMAPHost",
     "MailBox",
-    "MessageDumper",
     "NotConnected",
     "ParsedBody",
     "ProviderResolutionError",
