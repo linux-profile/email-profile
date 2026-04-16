@@ -12,8 +12,9 @@ Resolution strategy, in order:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Optional
+
+from email_profile.types import IMAPHost
 
 try:
     import dns.resolver
@@ -26,13 +27,6 @@ except ImportError:
 
 class ProviderResolutionError(RuntimeError):
     """Raised when no IMAP host can be discovered for an address."""
-
-
-@dataclass(frozen=True)
-class IMAPHost:
-    host: str
-    port: int = 993
-    ssl: bool = True
 
 
 KNOWN_PROVIDERS: dict[str, IMAPHost] = {

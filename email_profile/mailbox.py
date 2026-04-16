@@ -5,7 +5,6 @@ from __future__ import annotations
 import imaplib
 import re
 import time
-from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional, Union
 
@@ -13,20 +12,13 @@ from email_profile._internal import _state
 from email_profile.query import Query, QueryLike
 from email_profile.retry import with_retry
 from email_profile.searches import Where
+from email_profile.types import AppendedUID
 
 if TYPE_CHECKING:
     from email_profile.eml import EmailSerializer
 
 
 MessageLike = Union["EmailSerializer", bytes, str]
-
-
-@dataclass(frozen=True)
-class AppendedUID:
-    """Result of a successful IMAP APPEND when the server supports UIDPLUS."""
-
-    uidvalidity: int
-    uid: int
 
 
 _APPENDUID_RE = re.compile(rb"APPENDUID (\d+) (\d+)")
