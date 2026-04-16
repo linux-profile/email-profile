@@ -23,8 +23,15 @@ class TestQuery(TestCase):
 
     def test_flags(self):
         self.assertEqual(Query(seen=True).mount(), "(SEEN)")
-        self.assertEqual(Query(seen=False).mount(), "(UNSEEN)")
-        self.assertEqual(Query(answered=False).mount(), "(UNANSWERED)")
+        self.assertEqual(Query(seen=False).mount(), "ALL")
+        self.assertEqual(Query(answered=True).mount(), "(ANSWERED)")
+        self.assertEqual(Query(answered=False).mount(), "ALL")
+        self.assertEqual(Query(unseen=True).mount(), "(UNSEEN)")
+        self.assertEqual(Query(unseen=False).mount(), "ALL")
+
+    def test_contradictory_seen_unseen_rejected(self):
+        with self.assertRaises(ValidationError):
+            Query(seen=True, unseen=True)
 
     def test_size_filters(self):
         out = Query(larger=1024, smaller=4096).mount()
