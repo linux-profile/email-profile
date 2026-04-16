@@ -55,6 +55,12 @@ class Where:
         data = _state(self._client.uid("search", None, self._q.mount()))
         search = SearchParser(data)
         self._cached_uids = search.uids()
+        if len(self._cached_uids) > 50_000:
+            logger.warning(
+                "Cached %d UIDs for mailbox %s. Consider using pagination.",
+                len(self._cached_uids),
+                self._mailbox.name,
+            )
         return self._cached_uids
 
     def clear_cache(self) -> Where:
@@ -163,40 +169,45 @@ class Where:
 
         done = 0
 
-        for fetched in fetcher.chunks(uids):
-            done = min(done + size, total)
-            logger.info(
-                "Fetched %d/%d messages from %s (mode=%s)",
-                done,
-                total,
-                self._mailbox.name,
-                mode,
-            )
-            if on_progress is not None:
-                on_progress(done, total)
+        try:
+            for fetched in fetcher.chunks(uids):
+                done = min(done + size, total)
+                logger.info(
+                    "Fetched %d/%d messages from %s (mode=%s)",
+                    done,
+                    total,
+                    self._mailbox.name,
+                    mode,
+                )
+                if on_progress is not None:
+                    on_progress(done, total)
 
-            for entry in fetched:
-                if not isinstance(entry, tuple):
-                    continue
+                for entry in fetched:
+                    if not isinstance(entry, tuple):
+                        continue
 
-                raw_uid, raw_message = entry
+                    raw_uid, raw_message = entry
 
-                try:
-                    yield _build_serializer(
-                        raw_uid=raw_uid,
-                        raw_message=raw_message,
-                        mailbox=self._mailbox.name,
-                    )
-                except Exception:
-                    uid_text = (
-                        raw_uid.decode(errors="replace") if raw_uid else "?"
-                    )
-                    logger.exception(
-                        "Failed to parse message uid=%s mailbox=%s",
-                        uid_text,
-                        self._mailbox.name,
-                    )
-                    continue
+                    try:
+                        yield _build_serializer(
+                            raw_uid=raw_uid,
+                            raw_message=raw_message,
+                            mailbox=self._mailbox.name,
+                        )
+                    except Exception:
+                        uid_text = (
+                            raw_uid.decode(errors="replace")
+                            if raw_uid
+                            else "?"
+                        )
+                        logger.exception(
+                            "Failed to parse message uid=%s mailbox=%s",
+                            uid_text,
+                            self._mailbox.name,
+                        )
+                        continue
+        finally:
+            self.clear_cache()
 
     def __repr__(self) -> str:
         return (
