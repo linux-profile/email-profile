@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Optional, Union
 
 from email_profile._internal import _state
 from email_profile.clients.imap.query import Query, QueryLike
-from email_profile.clients.imap.searches import Where
+from email_profile.clients.imap.where import Where
 from email_profile.core.types import AppendedUID
 from email_profile.retry import with_retry
 
@@ -62,6 +62,7 @@ class MailBox:
 
     def __init__(
         self,
+        *,
         client: imaplib.IMAP4_SSL,
         name: str,
         delimiter: str = "/",

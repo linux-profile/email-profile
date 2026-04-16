@@ -8,10 +8,9 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Callable, Literal, Optional
 
 from email_profile._internal import _build_serializer, _state
-from email_profile.clients.imap.fetch import F
-from email_profile.clients.imap.protocol import ImapSearch
+from email_profile.clients.imap.fetch import F, Fetch
+from email_profile.clients.imap.parser import SearchParser
 from email_profile.clients.imap.query import Q, QueryLike, _to_expr
-from email_profile.retry import with_retry
 from email_profile.serializers.email import Message
 
 if TYPE_CHECKING:
@@ -21,10 +20,10 @@ logger = logging.getLogger(__name__)
 
 FetchMode = Literal["full", "text", "headers"]
 
-_FETCH_SPECS: dict[str, str] = {
-    "full": F.rfc822().mount(),
-    "text": F.body_text().mount(),
-    "headers": F.all_headers().mount(),
+_FETCH_SPECS: dict[str, F] = {
+    "full": F.rfc822(),
+    "text": F.body_text(),
+    "headers": F.all_headers(),
 }
 
 
@@ -35,6 +34,7 @@ class Where:
 
     def __init__(
         self,
+        *,
         client: imaplib.IMAP4_SSL,
         mailbox: MailBox,
         query: Optional[QueryLike] = None,
@@ -53,7 +53,7 @@ class Where:
         _state(self._client.select(_quote(self._mailbox.name)))
 
         data = _state(self._client.uid("search", None, self._q.mount()))
-        search = ImapSearch(data)
+        search = SearchParser(data)
         self._cached_uids = search.uids()
         return self._cached_uids
 
@@ -154,16 +154,17 @@ class Where:
         uids = self._uids()
         total = len(uids)
 
-        fetch = with_retry()(self._fetch_chunk)
+        fetcher = Fetch(
+            client=self._client,
+            mailbox=self._mailbox,
+            spec=spec,
+            chunk_size=size,
+        )
 
-        for start in range(0, total, size):
-            group = uids[start : start + size]
-            if not group:
-                continue
+        done = 0
 
-            messages = fetch(group, spec)
-
-            done = min(start + size, total)
+        for fetched in fetcher.chunks(uids):
+            done = min(done + size, total)
             logger.info(
                 "Fetched %d/%d messages from %s (mode=%s)",
                 done,
@@ -174,7 +175,7 @@ class Where:
             if on_progress is not None:
                 on_progress(done, total)
 
-            for entry in messages:
+            for entry in fetched:
                 if not isinstance(entry, tuple):
                     continue
 
@@ -196,9 +197,6 @@ class Where:
                         self._mailbox.name,
                     )
                     continue
-
-    def _fetch_chunk(self, group: list[str], spec: str) -> list:
-        return _state(self._client.uid("fetch", ",".join(group), spec))
 
     def __repr__(self) -> str:
         return (

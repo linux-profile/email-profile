@@ -71,17 +71,17 @@ class TestSmtpClientSSL(TestCase):
         self._patcher.stop()
 
     def test_connect_logs_in(self):
-        SmtpClient(self.host, "u", "pw").connect()
+        SmtpClient(host=self.host, user="u", password="pw").connect()
         self.fake.login.assert_called_once_with("u", "pw")
 
     def test_context_manager_quits(self):
-        with SmtpClient(self.host, "u", "pw") as client:
+        with SmtpClient(host=self.host, user="u", password="pw") as client:
             self.assertTrue(client.is_connected)
         self.fake.quit.assert_called_once()
 
     def test_send_delegates_to_send_message(self):
         msg = EmailMessage()
-        with SmtpClient(self.host, "u", "pw") as client:
+        with SmtpClient(host=self.host, user="u", password="pw") as client:
             client.send(msg)
         self.fake.send_message.assert_called_once_with(msg)
 
@@ -93,13 +93,13 @@ class TestSmtpClientStartTLS(TestCase):
         with patch(
             "email_profile.clients.smtp.client.smtplib.SMTP", return_value=fake
         ):
-            SmtpClient(host, "u", "pw").connect()
+            SmtpClient(host=host, user="u", password="pw").connect()
         fake.starttls.assert_called_once()
         fake.login.assert_called_once_with("u", "pw")
 
 
 class TestSmtpClientErrors(TestCase):
     def test_send_before_connect_raises(self):
-        client = SmtpClient(SMTPHost("smtp.x"), "u", "pw")
+        client = SmtpClient(host=SMTPHost("smtp.x"), user="u", password="pw")
         with self.assertRaises(RuntimeError):
             client.send(EmailMessage())

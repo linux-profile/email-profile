@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from datetime import datetime
 from email import message_from_bytes, message_from_string
 from email.utils import parseaddr, parsedate_to_datetime
@@ -14,52 +15,61 @@ _FLAGS_RE = re.compile(r"UID (\d+) FLAGS \(([^)]*)\)")
 _FLAGS_ONLY_RE = re.compile(r"FLAGS \(([^)]*)\)")
 
 
-class ImapFetch:
+class FetchParser:
     """Decodes one IMAP fetch response entry."""
 
-    __slots__ = ("_header", "_body")
+    __slots__ = ("_header", "_body", "uid", "flags", "message_id")
 
     def __init__(self, entry: tuple) -> None:
         self._header = entry[0] if len(entry) > 0 else b""
         self._body = entry[1] if len(entry) > 1 else b""
+        self.uid: str = ""
+        self.flags: str = ""
+        self.message_id: str = ""
 
     @staticmethod
     def is_valid(entry: object) -> bool:
         return isinstance(entry, tuple) and len(entry) >= 2
 
-    def uid(self) -> Optional[str]:
+    def _parse_uid(self) -> Optional[str]:
         text = self._decode(self._header)
         match = _UID_RE.search(text)
+
         if match:
             return match.group(1)
+
         parts = text.split()
         return parts[0] if parts else None
 
-    def flags(self) -> Optional[str]:
+    def _parse_header_flags(self) -> Optional[str]:
         text = self._decode(self._header)
         match = _FLAGS_RE.search(text)
         return match.group(2) if match else None
 
-    def flags_with_uid(self) -> Optional[tuple[str, str]]:
+    def _parse_header_flags_with_uid(self) -> Optional[tuple[str, str]]:
         text = self._decode(self._header)
         match = _FLAGS_RE.search(text)
         if match:
             return match.group(1), match.group(2)
         return None
 
-    def message_id(self) -> Optional[str]:
+    def _parse_message_id(self) -> Optional[str]:
         text = self._decode(self._body)
+
         for line in text.splitlines():
             if line.lower().startswith("message-id:"):
                 value = line.split(":", 1)[1].strip()
                 return value or None
+
         return None
 
-    def message_id_or_hash(self) -> str:
+    def _resolve_message_id(self) -> str:
         msg = message_from_bytes(self._body)
-        message_id = msg.get("Message-ID")
-        if message_id:
-            return message_id
+        mid = msg.get("Message-ID")
+
+        if mid:
+            return mid
+
         return sha256(self._body).hexdigest()
 
     def raw(self) -> bytes:
@@ -71,12 +81,25 @@ class ImapFetch:
     def date(self) -> Optional[datetime]:
         msg = message_from_bytes(self._body)
         raw_date = msg.get("Date")
+
         if not raw_date:
             return None
+
         try:
             return parsedate_to_datetime(raw_date)
         except (TypeError, ValueError):
             return None
+
+    def _resolve_flags(self, trailing: object = None) -> str:
+        """Return flags from the header, falling back to a trailing element."""
+        flags = self._parse_header_flags() or ""
+
+        if not flags and isinstance(trailing, bytes):
+            parsed = self.parse_flags(self._decode(trailing))
+            if parsed:
+                flags = parsed[1]
+
+        return flags
 
     @staticmethod
     def _decode(data: bytes, errors: str = "replace") -> str:
@@ -98,39 +121,34 @@ class ImapFetch:
         return None
 
     @staticmethod
-    def fetch_message_ids(
-        client: object, uids: list[str], chunk_size: int = 500
-    ) -> dict[str, str]:
-        """Fetch Message-IDs from server. Returns {uid: message_id}."""
+    def iter_entries(fetched: list) -> Iterator[FetchParser]:
+        """Yield parsed entries with resolved flags."""
+        offset = 0
 
-        result: dict[str, str] = {}
+        while offset < len(fetched):
+            entry = fetched[offset]
+            offset += 1
 
-        for start in range(0, len(uids), chunk_size):
-            group = uids[start : start + chunk_size]
-
-            status, fetched = client.uid(
-                "fetch",
-                ",".join(group),
-                "(BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])",
-            )
-            if status != "OK":
+            if not FetchParser.is_valid(entry):
                 continue
 
-            for entry in fetched:
-                if not ImapFetch.is_valid(entry):
-                    continue
+            parsed_entry = FetchParser(entry)
+            uid = parsed_entry._parse_uid()
+            if uid is None:
+                continue
 
-                d = ImapFetch(entry)
-                uid = d.uid()
-                msg_id = d.message_id()
+            trailing = fetched[offset] if offset < len(fetched) else None
+            parsed_entry.uid = uid
+            parsed_entry.flags = parsed_entry._resolve_flags(trailing)
+            parsed_entry.message_id = parsed_entry._resolve_message_id()
 
-                if uid and msg_id:
-                    result[uid] = msg_id
+            if trailing is not None and isinstance(trailing, bytes):
+                offset += 1
 
-        return result
+            yield parsed_entry
 
 
-class ImapSearch:
+class SearchParser:
     """Decodes an IMAP SEARCH response."""
 
     __slots__ = ("_uids",)
@@ -160,7 +178,7 @@ class ImapSearch:
         return len(self._uids) > 0
 
     def __repr__(self) -> str:
-        return f"ImapSearch({self.count()} uids)"
+        return f"SearchParser({self.count()} uids)"
 
 
 class EmailParser:
