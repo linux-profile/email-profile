@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from email_profile.imap_session import IMAPSession
+    from email_profile.imap_client import ImapClient
     from email_profile.mailbox import MailBox
 
 
@@ -88,7 +88,7 @@ def find_mailbox(
 class FolderAccess:
     """Resolve common folder properties (inbox/sent/spam/...) for a session."""
 
-    def __init__(self, session: IMAPSession) -> None:
+    def __init__(self, session: ImapClient) -> None:
         self._session = session
 
     def mailboxes(self) -> list[str]:

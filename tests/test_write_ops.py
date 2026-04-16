@@ -9,7 +9,7 @@ class _WriteTest(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.imap_session.imaplib.IMAP4_SSL",
+            "email_profile.imap_client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()

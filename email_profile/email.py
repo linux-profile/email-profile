@@ -8,11 +8,11 @@ from typing import TYPE_CHECKING, Optional, Union
 from email_profile.backup import RestoreOps
 from email_profile.credentials import Credentials, EmailFactories
 from email_profile.folders import FolderAccess
-from email_profile.imap_session import IMAPSession
+from email_profile.imap_client import ImapClient
 from email_profile.queries import QueryShortcuts
 from email_profile.searches import Where
 from email_profile.sender import Sender
-from email_profile.smtp import AttachmentLike
+from email_profile.smtp_client import AttachmentLike
 
 if TYPE_CHECKING:
     from email.message import EmailMessage
@@ -45,7 +45,7 @@ class Email:
     ) -> None:
         creds = self._resolve(server, user, password, port, ssl)
 
-        self._session = IMAPSession(
+        self._session = ImapClient(
             server=creds.server,
             user=creds.user,
             password=creds.password,

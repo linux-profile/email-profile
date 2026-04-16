@@ -5,9 +5,13 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING, Optional, Union
 
-from email_profile.imap_session import IMAPSession
+from email_profile.imap_client import ImapClient
 from email_profile.providers import resolve_smtp_host
-from email_profile.smtp import AttachmentLike, SmtpClient, _build_message
+from email_profile.smtp_client import (
+    AttachmentLike,
+    SmtpClient,
+    _build_message,
+)
 
 if TYPE_CHECKING:
     from email.message import EmailMessage
@@ -20,7 +24,7 @@ if TYPE_CHECKING:
 class Sender:
     """Outgoing-mail facade: send, reply, forward."""
 
-    def __init__(self, session: IMAPSession, folders: FolderAccess) -> None:
+    def __init__(self, session: ImapClient, folders: FolderAccess) -> None:
         self._session = session
         self._folders = folders
         self._smtp_host: Optional[SMTPHost] = None

@@ -10,7 +10,7 @@ from email_profile.errors import ConnectionFailure, NotConnected
 from email_profile.mailbox import MailBox
 
 
-class IMAPSession:
+class ImapClient:
     """Owns the IMAP socket and the discovered mailbox map."""
 
     def __init__(
@@ -33,7 +33,7 @@ class IMAPSession:
     def is_connected(self) -> bool:
         return self.client is not None
 
-    def connect(self) -> IMAPSession:
+    def connect(self) -> ImapClient:
         try:
             client = imaplib.IMAP4_SSL(self.server)
             client.login(user=self.user, password=self.password)
