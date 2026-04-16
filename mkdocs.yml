@@ -109,7 +109,13 @@ nav:
       - nav/tutorial/storage.md
       - nav/tutorial/error-handling.md
     - Advanced:
-      - nav/tutorial/advanced.md
+      - nav/advanced/imap-client.md
+      - nav/advanced/smtp-client.md
+      - nav/advanced/custom-storage.md
+      - nav/advanced/auto-discovery.md
+      - nav/advanced/parser.md
+      - nav/advanced/retry.md
+      - nav/advanced/lazy-search.md
     - Concepts:
       - nav/concepts/message.md
       - nav/concepts/auto-discovery.md
