@@ -1,6 +1,8 @@
 # email-profile
 
-A Python library for email management. Connect to any IMAP/SMTP server, read and send emails, sync your mailbox to a local database, and restore backups — all with a single, unified API.
+The simplest way to work with email in Python. No boilerplate, no low-level IMAP commands, no headaches.
+
+Just connect, read, search, send, backup, and restore — with one class.
 
 ```python
 from email_profile import Email
@@ -10,9 +12,13 @@ with Email("user@gmail.com", "app_password") as app:
         print(f"{msg.date} | {msg.from_} | {msg.subject}")
 ```
 
+That's it. No server configuration needed — email-profile auto-discovers your IMAP server from your email address.
+
 ---
 
+- **Documentation**: [linux-profile.github.io/email-profile](https://linux-profile.github.io/email-profile/)
 - **Source Code**: [github.com/linux-profile/email-profile](https://github.com/linux-profile/email-profile)
+- **PyPI**: [pypi.org/project/email-profile](https://pypi.org/project/email-profile/)
 
 ---
 
@@ -22,22 +28,37 @@ with Email("user@gmail.com", "app_password") as app:
 pip install email-profile
 ```
 
+## Why email-profile?
+
+Most Python email libraries make you deal with `imaplib` directly, parse raw bytes, manage connections manually, and write dozens of lines just to read your inbox.
+
+**email-profile gives you a clean, human API:**
+
+- Write `Email("user@gmail.com", "pw")` instead of configuring IMAP servers manually
+- Write `app.inbox.where(Q.unseen()).first()` instead of raw IMAP search commands
+- Write `app.sync()` instead of building your own backup system
+- Write `app.send(to="...", subject="...", body="...")` instead of constructing MIME messages
+
+It combines IMAP + SMTP + storage + sync in a single library. No other Python package does this.
+
 ## Quick Start
 
 ### Connect
 
+Three ways to connect — pick the one that fits:
+
 ```python
 from email_profile import Email
 
-# Auto-discovery (detects IMAP server from email domain)
+# Just email + password (auto-discovers the server)
 with Email("user@gmail.com", "app_password") as app:
     print(app.mailboxes())
 
-# From environment variables (.env)
+# From .env file (great for production)
 with Email.from_env() as app:
     print(app.mailboxes())
 
-# Explicit server
+# Explicit server (when you need full control)
 with Email("imap.gmail.com", "user@gmail.com", "app_password") as app:
     print(app.mailboxes())
 ```
@@ -46,137 +67,123 @@ with Email("imap.gmail.com", "user@gmail.com", "app_password") as app:
 
 ```python
 with Email.from_env() as app:
-    # Count
+    # How many emails?
     print(app.inbox.where().count())
 
-    # Read all
+    # Read them
     for msg in app.inbox.where().messages():
         print(f"{msg.date} | {msg.from_} | {msg.subject}")
 
-    # Headers only (faster)
+    # Just the first one
+    msg = app.inbox.where().first()
+
+    # Only headers (much faster for large mailboxes)
     for msg in app.inbox.where().messages(mode="headers"):
         print(msg.subject)
 ```
 
-### Search with Q
+### Search
+
+Find exactly what you need with composable queries:
 
 ```python
 from email_profile import Email, Q
 from datetime import date
 
 with Email.from_env() as app:
-    # Composable queries
+    # Combine conditions with & (AND), | (OR), ~ (NOT)
     q = Q.subject("meeting") & Q.unseen()
     print(app.inbox.where(q).count())
 
-    # OR
+    # From Alice or Bob
     q = Q.from_("alice@x.com") | Q.from_("bob@x.com")
 
-    # NOT
+    # Everything except seen emails
     q = ~Q.seen()
 
-    # Date range
-    q = Q.since(date(2025, 1, 1)) & Q.before(date(2025, 12, 31))
-
-    # Size filter
-    q = Q.larger(1_000_000)
+    # Emails from 2025, larger than 1MB
+    q = Q.since(date(2025, 1, 1)) & Q.before(date(2025, 12, 31)) & Q.larger(1_000_000)
 ```
 
-### Search with Query (validated kwargs)
+Or use validated kwargs if you prefer:
 
 ```python
-from email_profile import Email, Query
-from datetime import date
+from email_profile import Query
 
-with Email.from_env() as app:
-    # Simple
-    query = Query(subject="report", unseen=True, since=date(2025, 1, 1))
-    print(app.inbox.where(query).count())
-
-    # Exclude and OR
-    query = Query(subject="report").exclude(subject="spam").or_(subject="urgent")
+query = Query(subject="report", unseen=True, since=date(2025, 1, 1))
+query = Query(subject="report").exclude(subject="spam").or_(subject="urgent")
 ```
 
-### Shortcuts
+Built-in shortcuts for common searches:
 
 ```python
-with Email.from_env() as app:
-    app.unread().count()
-    app.recent(days=7).count()
-    app.search("invoice").count()
+app.unread().count()
+app.recent(days=7).count()
+app.search("invoice").count()
 ```
 
 ### Send Emails
+
+Send, reply, and forward — with automatic SMTP discovery:
 
 ```python
 with Email.from_env() as app:
     # Simple
     app.send(to="recipient@x.com", subject="Hello", body="Hi there!")
 
-    # HTML + attachments
+    # HTML + attachments + CC
     app.send(
         to=["alice@x.com", "bob@x.com"],
         subject="Report",
         body="See attached.",
         html="<h1>Report</h1>",
         attachments=["report.pdf"],
+        cc="manager@x.com",
     )
 
-    # Reply
-    msg = list(app.inbox.where().messages(chunk_size=1))[0]
+    # Reply to an email (preserves threading)
+    msg = app.inbox.where().first()
     app.reply(msg, body="Thanks!")
 
     # Forward
     app.forward(msg, to="colleague@x.com", body="FYI")
 ```
 
-### Sync (server to local database)
+### Backup & Restore
+
+Sync your entire mailbox to a local SQLite database. Incremental — only downloads new emails. Parallel — multiple mailboxes at once. With progress bars.
 
 ```python
 with Email.from_env() as app:
-    # Sync all mailboxes
+    # Backup everything
     result = app.sync()
     print(f"{result.inserted} new, {result.skipped} skipped")
 
-    # Sync one mailbox
+    # Backup one mailbox
     result = app.sync(mailbox="INBOX")
-```
 
-### Restore (local database to server)
-
-```python
-with Email.from_env() as app:
-    # Restore all
+    # Restore to server (e.g. after migrating)
     count = app.restore()
-
-    # Restore one mailbox
-    count = app.restore(mailbox="INBOX")
 ```
 
 ### Mailbox Operations
 
 ```python
 with Email.from_env() as app:
-    # List
-    print(app.mailboxes())
+    # Built-in folder shortcuts (auto-detected across languages)
+    app.inbox      # INBOX
+    app.sent       # Sent / Enviados / Enviadas
+    app.trash      # Trash / Lixeira / Papelera
+    app.drafts     # Drafts / Rascunhos
+    app.spam       # Spam / Junk / Lixo Eletrônico
 
-    # Access
-    inbox = app.mailbox("INBOX")
-
-    # Shortcuts
-    app.inbox
-    app.sent
-    app.trash
-    app.drafts
-    app.spam
+    # Any folder by name
+    work = app.mailbox("INBOX.Work")
 
     # Message operations
-    inbox.mark_seen(uid)
-    inbox.mark_unseen(uid)
-    inbox.flag(uid)
-    inbox.delete(uid)
-    inbox.move(uid, "INBOX.Archive")
-    inbox.copy(uid, "INBOX.Backup")
+    work.mark_seen(uid)
+    work.move(uid, "INBOX.Archive")
+    work.delete(uid)
 ```
 
 ### Custom Storage
@@ -184,16 +191,12 @@ with Email.from_env() as app:
 ```python
 from email_profile import Email, StorageSQLite
 
-# Default: ./email.db
+# Default: saves to ./email.db
 with Email.from_env() as app:
     app.sync()
 
 # Custom path
 with Email.from_env(storage=StorageSQLite("./backup.db")) as app:
-    app.sync()
-
-# In-memory (testing)
-with Email.from_env(storage=StorageSQLite("sqlite:///:memory:")) as app:
     app.sync()
 ```
 
@@ -204,19 +207,18 @@ with Email.from_env(storage=StorageSQLite("sqlite:///:memory:")) as app:
 | **Auto-discovery** | Detects IMAP/SMTP servers from email domain (50+ providers) |
 | **Unified API** | IMAP + SMTP in a single `Email` class |
 | **Query Builder** | Composable search with `Q` (AND, OR, NOT) and validated `Query` kwargs |
-| **Sync** | Incremental backup from server to SQLite with progress bars |
-| **Restore** | Upload emails back to server with duplicate detection |
+| **Sync & Restore** | Incremental backup to SQLite, restore to any server |
 | **Parallel** | Multi-threaded sync and restore with configurable workers |
 | **Progress** | Rich progress bars with per-mailbox status |
 | **Retry** | Exponential backoff on transient failures |
-| **Send** | Send, reply, forward with HTML and attachments |
+| **Send** | Send, reply, forward with HTML, attachments, CC/BCC |
 | **Storage** | Pluggable storage backend (SQLite default) |
 | **Flags** | Read/unread, flag, delete, move, copy operations |
 | **Context Manager** | `with Email(...) as app:` for automatic cleanup |
 
 ## Supported Providers
 
-Auto-discovery works out of the box for these providers and any server with DNS SRV/MX records.
+Auto-discovery works out of the box. Just use your email and password — no server configuration needed.
 
 | | Provider | IMAP Server |
 |---|---|---|
@@ -244,6 +246,8 @@ Auto-discovery works out of the box for these providers and any server with DNS 
 | <img src="https://raw.githubusercontent.com/linux-profile/email-profile/develop/docs/assets/icons/email.svg" width="16"> | UOL | imap.uol.com.br |
 | <img src="https://raw.githubusercontent.com/linux-profile/email-profile/develop/docs/assets/icons/email.svg" width="16"> | Terra | imap.terra.com.br |
 
+Any server with DNS SRV or MX records is also detected automatically.
+
 ## Environment Variables
 
 ```env
@@ -255,15 +259,3 @@ EMAIL_SERVER=imap.example.com  # optional, auto-discovered
 ## License
 
 MIT
-
-## Commit Style
-
-- ⚙️ FEATURE
-- 📝 PEP8
-- 📌 ISSUE
-- 🪲 BUG
-- 📘 DOCS
-- 📦 PyPI
-- ❤️️ TEST
-- ⬆️ CI/CD
-- ⚠️ SECURITY
