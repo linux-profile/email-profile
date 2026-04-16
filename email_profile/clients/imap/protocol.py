@@ -11,6 +11,7 @@ from typing import Optional
 
 _UID_RE = re.compile(r"UID (\d+)")
 _FLAGS_RE = re.compile(r"UID (\d+) FLAGS \(([^)]*)\)")
+_FLAGS_ONLY_RE = re.compile(r"FLAGS \(([^)]*)\)")
 
 
 class ImapFetch:
@@ -85,10 +86,15 @@ class ImapFetch:
 
     @staticmethod
     def parse_flags(text: str) -> Optional[tuple[str, str]]:
-        """Parse FLAGS from a raw bytes or text entry (non-tuple)."""
+        """Parse FLAGS from a raw bytes or text entry."""
         match = _FLAGS_RE.search(text)
         if match:
             return match.group(1), match.group(2)
+
+        match = _FLAGS_ONLY_RE.search(text)
+        if match:
+            return "", match.group(1)
+
         return None
 
     @staticmethod
