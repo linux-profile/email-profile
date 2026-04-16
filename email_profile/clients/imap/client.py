@@ -5,9 +5,9 @@ from __future__ import annotations
 import imaplib
 from typing import Optional
 
-from email_profile._internal import _state
 from email_profile.clients.imap.mailbox import MailBox
 from email_profile.core.errors import ConnectionFailure, NotConnected
+from email_profile.core.status import Status
 
 
 class ImapClient:
@@ -46,7 +46,7 @@ class ImapClient:
             mb.name: mb
             for mb in (
                 MailBox.from_imap_detail(client=client, detail=detail)
-                for detail in _state(client.list())
+                for detail in Status.state(client.list())
             )
         }
         return self

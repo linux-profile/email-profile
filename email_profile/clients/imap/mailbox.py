@@ -8,9 +8,9 @@ import time
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional, Union
 
-from email_profile._internal import _state
 from email_profile.clients.imap.query import Query, QueryLike
 from email_profile.clients.imap.where import Where
+from email_profile.core.status import Status
 from email_profile.core.types import AppendedUID
 from email_profile.retry import with_retry
 
@@ -138,12 +138,12 @@ class MailBox:
 
         do_append = with_retry()(self._client.append)
         status, payload = do_append(_quote(self.name), flags, date_time, raw)
-        _state((status, payload))
+        Status.state((status, payload))
         return _parse_append_uid(payload)
 
     def _store(self, target: UIDLike, command: str, flag: str) -> None:
-        _state(self._client.select(_quote(self.name)))
-        _state(self._client.uid("STORE", _uid_of(target), command, flag))
+        Status.state(self._client.select(_quote(self.name)))
+        Status.state(self._client.uid("STORE", _uid_of(target), command, flag))
 
     def mark_seen(self, target: UIDLike) -> None:
         """Mark a message as read (``\\Seen``)."""
@@ -173,13 +173,13 @@ class MailBox:
 
     def expunge(self) -> None:
         """Permanently remove every message marked as ``\\Deleted``."""
-        _state(self._client.select(_quote(self.name)))
-        _state(self._client.expunge())
+        Status.state(self._client.select(_quote(self.name)))
+        Status.state(self._client.expunge())
 
     def copy(self, target: UIDLike, destination: str) -> None:
         """Copy a message into another mailbox (``UID COPY``)."""
-        _state(self._client.select(_quote(self.name)))
-        _state(self._client.uid("COPY", _uid_of(target), destination))
+        Status.state(self._client.select(_quote(self.name)))
+        Status.state(self._client.uid("COPY", _uid_of(target), destination))
 
     def move(self, target: UIDLike, destination: str) -> None:
         """Move a message into another mailbox.
@@ -187,26 +187,26 @@ class MailBox:
         Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete + expunge
         when the server does not advertise the MOVE extension.
         """
-        _state(self._client.select(_quote(self.name)))
+        Status.state(self._client.select(_quote(self.name)))
         uid = _uid_of(target)
         try:
-            _state(self._client.uid("MOVE", uid, destination))
+            Status.state(self._client.uid("MOVE", uid, destination))
         except Exception:
-            _state(self._client.uid("COPY", uid, destination))
-            _state(self._client.uid("STORE", uid, "+FLAGS", "\\Deleted"))
-            _state(self._client.expunge())
+            Status.state(self._client.uid("COPY", uid, destination))
+            Status.state(self._client.uid("STORE", uid, "+FLAGS", "\\Deleted"))
+            Status.state(self._client.expunge())
 
     def create(self) -> None:
         """Create this mailbox on the server."""
-        _state(self._client.create(_quote(self.name)))
+        Status.state(self._client.create(_quote(self.name)))
 
     def delete_mailbox(self) -> None:
         """Delete this mailbox from the server."""
-        _state(self._client.delete(_quote(self.name)))
+        Status.state(self._client.delete(_quote(self.name)))
 
     def rename_to(self, new_name: str) -> None:
         """Rename this mailbox. Updates ``self.name`` in place."""
-        _state(self._client.rename(_quote(self.name), _quote(new_name)))
+        Status.state(self._client.rename(_quote(self.name), _quote(new_name)))
         self.name = new_name
 
     def __repr__(self) -> str:

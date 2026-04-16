@@ -27,5 +27,9 @@ class RateLimited(Exception):
     """Raised when the server reports a bandwidth or rate limit hit."""
 
 
+class IMAPError(Exception):
+    """Raised when the IMAP server returns a non-OK status."""
+
+
 class Retryable(Exception):
     """Raised when an operation hit a transient failure worth retrying."""

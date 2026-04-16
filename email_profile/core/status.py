@@ -2,21 +2,15 @@
 
 from __future__ import annotations
 
-from email_profile.core.errors import QuotaExceeded, RateLimited
+from dataclasses import dataclass
+
+from email_profile.core.errors import IMAPError, QuotaExceeded, RateLimited
 
 
-class IMAPError(Exception):
-    """Raised when the IMAP server returns a non-OK status."""
-
-
+@dataclass
 class StatusResponse:
-    def __init__(self, ok: bool, message: str) -> None:
-        self.ok = ok
-        self.message = message
-
-    @property
-    def type(self) -> bool:
-        return self.ok
+    ok: bool
+    message: str
 
 
 _QUOTA_HINTS = ("OVERQUOTA", "QUOTA-EXCEEDED", "TOO MUCH MAIL")
@@ -33,6 +27,7 @@ _RATE_HINTS = (
 def _classify(payload: object) -> Exception | None:
     """Detect quota/rate-limit hints in an IMAP response payload."""
     text = ""
+
     if isinstance(payload, list):
         for chunk in payload:
             if isinstance(chunk, bytes):
@@ -43,13 +38,23 @@ def _classify(payload: object) -> Exception | None:
         text = str(payload or "")
 
     upper = text.upper()
+
     for hint in _QUOTA_HINTS:
         if hint in upper:
             return QuotaExceeded(text.strip())
+
     for hint in _RATE_HINTS:
         if hint in upper:
             return RateLimited(text.strip())
+
     return None
+
+
+_STATUS_MESSAGES = {
+    "OK": (True, "Command completed successfully"),
+    "NO": (False, "Command failed"),
+    "BAD": (False, "Command unknown or arguments invalid"),
+}
 
 
 class Status:
@@ -57,18 +62,10 @@ class Status:
     NO = "NO"
     BAD = "BAD"
 
-    _MESSAGES = {
-        OK: (True, "Login completed, now in authenticated state"),
-        NO: (False, "Login failure: user name or password rejected"),
-        BAD: (False, "Command unknown or arguments invalid"),
-    }
-
     @staticmethod
-    def check_status(
-        status: str,
-    ) -> StatusResponse:
+    def check_status(status: str) -> StatusResponse:
         """Return a StatusResponse without raising on failure."""
-        ok, message = Status._MESSAGES.get(status, (False, "Unknown error"))
+        ok, message = _STATUS_MESSAGES.get(status, (False, "Unknown error"))
         return StatusResponse(ok=ok, message=message)
 
     @staticmethod
@@ -77,19 +74,18 @@ class Status:
         payload: object = None,
     ) -> StatusResponse:
         """Return a StatusResponse, raising on failure."""
-        ok, message = Status._MESSAGES.get(status, (False, "Unknown error"))
+        ok, message = _STATUS_MESSAGES.get(status, (False, "Unknown error"))
+
         if not ok:
             specific = _classify(payload)
             if specific is not None:
                 raise specific
             raise IMAPError(message)
+
         return StatusResponse(ok=ok, message=message)
 
     @staticmethod
-    def validate_data(data: list[bytes]) -> list[str]:
-        if not data or data[0] is None:
-            return []
-        items = [x.decode() for x in data[0].split()]
-        if len(items) == 1 and not items[0]:
-            return []
-        return items
+    def state(context: tuple) -> list:
+        """Validate IMAP response and return the payload."""
+        Status.validate_status(context[0], payload=context[1])
+        return context[1]

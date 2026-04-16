@@ -7,10 +7,10 @@ import logging
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Callable, Literal, Optional
 
-from email_profile._internal import _build_serializer, _state
 from email_profile.clients.imap.fetch import F, Fetch
-from email_profile.clients.imap.parser import SearchParser
+from email_profile.clients.imap.parser import FetchParser, SearchParser
 from email_profile.clients.imap.query import Q, QueryLike, _to_expr
+from email_profile.core.status import Status
 from email_profile.serializers.email import Message
 
 if TYPE_CHECKING:
@@ -50,9 +50,9 @@ class Where:
 
         from email_profile.clients.imap.mailbox import _quote
 
-        _state(self._client.select(_quote(self._mailbox.name)))
+        Status.state(self._client.select(_quote(self._mailbox.name)))
 
-        data = _state(self._client.uid("search", None, self._q.mount()))
+        data = Status.state(self._client.uid("search", None, self._q.mount()))
         search = SearchParser(data)
         self._cached_uids = search.uids()
         if len(self._cached_uids) > 50_000:
@@ -191,10 +191,11 @@ class Where:
                     raw_uid, raw_message = entry
 
                     try:
-                        yield _build_serializer(
-                            raw_uid=raw_uid,
-                            raw_message=raw_message,
+                        uid = FetchParser((raw_uid, b""))._parse_uid()
+                        yield Message.from_raw(
+                            uid=uid or "0",
                             mailbox=self._mailbox.name,
+                            raw=raw_message,
                         )
                     except Exception:
                         uid_text = (

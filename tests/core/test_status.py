@@ -1,14 +1,14 @@
 from unittest import TestCase
 
 from email_profile import QuotaExceeded, RateLimited
-from email_profile.core.status import IMAPError, Status
+from email_profile.core.errors import IMAPError
+from email_profile.core.status import Status
 
 
 class TestStatus(TestCase):
     def test_validate_status_ok(self):
         response = Status.validate_status("OK")
         self.assertTrue(response.ok)
-        self.assertTrue(response.type)
 
     def test_validate_status_no_raises(self):
         with self.assertRaises(IMAPError):
@@ -25,15 +25,6 @@ class TestStatus(TestCase):
     def test_check_status_no_returns_response(self):
         response = Status.check_status("NO")
         self.assertFalse(response.ok)
-
-
-class TestValidateData(TestCase):
-    def test_decodes_uids(self):
-        self.assertEqual(Status.validate_data([b"1 2 3"]), ["1", "2", "3"])
-
-    def test_handles_empty(self):
-        self.assertEqual(Status.validate_data([b""]), [])
-        self.assertEqual(Status.validate_data([]), [])
 
 
 class TestClassifyPayload(TestCase):

@@ -13,8 +13,8 @@ from email_profile.core.abc import (
     StorageABC,
 )
 from email_profile.core.credentials import Credentials, EmailFactories
-from email_profile.core.errors import Retryable
-from email_profile.core.status import IMAPError, Status
+from email_profile.core.errors import IMAPError, Retryable
+from email_profile.core.status import Status
 from email_profile.core.types import AppendedUID, IMAPHost, SMTPHost
 from email_profile.models.raw import RawModel
 from email_profile.parser import Attachment, ParsedBody, parse_rfc822

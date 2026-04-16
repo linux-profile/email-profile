@@ -16,8 +16,8 @@ import imaplib
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 
-from email_profile._internal import _state
 from email_profile.clients.imap.parser import FetchParser
+from email_profile.core.status import Status
 from email_profile.retry import with_retry
 
 if TYPE_CHECKING:
@@ -102,10 +102,12 @@ class Fetch:
     def _select(self) -> None:
         from email_profile.clients.imap.mailbox import _quote
 
-        _state(self._client.select(_quote(self._mailbox.name)))
+        Status.state(self._client.select(_quote(self._mailbox.name)))
 
     def _fetch_chunk(self, group: list[str]) -> list:
-        return _state(self._client.uid("fetch", ",".join(group), self._spec))
+        return Status.state(
+            self._client.uid("fetch", ",".join(group), self._spec)
+        )
 
     def chunks(self, uids: list[str]) -> Iterator[list]:
         """Yield raw IMAP response lists per chunk."""

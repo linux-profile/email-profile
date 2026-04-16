@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING, Optional
 
 from rich.progress import Progress
 
-from email_profile._internal import _state
 from email_profile.clients.imap.client import ImapClient
 from email_profile.clients.imap.fetch import Fetch
 from email_profile.clients.imap.mailbox import MailBox, _quote
@@ -19,6 +18,7 @@ from email_profile.clients.imap.parser import (
     EmailParser,
     SearchParser,
 )
+from email_profile.core.status import Status
 
 if TYPE_CHECKING:
     from email_profile.core.abc import StorageABC
@@ -191,9 +191,9 @@ def _ensure_mailbox(session: ImapClient, box_name: str) -> None:
     if box_name in session.mailboxes:
         return
 
-    _state(session.client.create(_quote(box_name)))
+    Status.state(session.client.create(_quote(box_name)))
 
-    details = _state(session.client.list())
+    details = Status.state(session.client.list())
     for detail in details:
         mailbox = MailBox.from_imap_detail(
             client=session.client, detail=detail
@@ -208,7 +208,7 @@ def _ensure_mailbox(session: ImapClient, box_name: str) -> None:
 def _server_message_ids(client: object, mailbox_name: str) -> set[str]:
     ids: set[str] = set()
 
-    _state(client.select(_quote(mailbox_name)))
+    Status.state(client.select(_quote(mailbox_name)))
     status, data = client.uid("search", None, "ALL")
     if status != "OK" or not data or not data[0]:
         return ids
