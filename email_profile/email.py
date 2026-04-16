@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
 from email_profile.backup import RestoreOps
-from email_profile.factories import Credentials, EmailFactories
+from email_profile.credentials import Credentials, EmailFactories
 from email_profile.folders import FolderAccess
 from email_profile.imap_session import IMAPSession
 from email_profile.queries import QueryShortcuts
