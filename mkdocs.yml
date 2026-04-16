@@ -108,6 +108,8 @@ nav:
       - nav/tutorial/mailbox-ops.md
       - nav/tutorial/storage.md
       - nav/tutorial/error-handling.md
+    - Advanced:
+      - nav/tutorial/advanced.md
     - Concepts:
       - nav/concepts/message.md
       - nav/concepts/auto-discovery.md
