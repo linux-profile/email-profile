@@ -206,20 +206,6 @@ class Email:
             max_workers=max_workers,
         )
 
-    def full_sync(
-        self,
-        mailbox: Optional[str] = None,
-        max_workers: int = 5,
-    ) -> SyncResult:
-        """Sync all emails, skipping nothing."""
-        return self._sync.orchestrate(
-            storage=self.storage,
-            mailbox=mailbox,
-            mailbox_names=self._folders.mailboxes() if not mailbox else None,
-            max_workers=max_workers,
-            full=True,
-        )
-
     def restore(
         self,
         mailbox: Optional[str] = None,

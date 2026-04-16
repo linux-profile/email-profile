@@ -267,7 +267,7 @@ class TestRestore(TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "src.db")
             for uid in ("1", "2"):
-                storage.save_raw(
+                storage.save(
                     RawSerializer(
                         message_id=f"<{uid}@x>",
                         uid=uid,

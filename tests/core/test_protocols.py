@@ -14,16 +14,16 @@ class _InMemoryStorage(StorageABC):
     def __init__(self) -> None:
         self._rows: dict[str, RawSerializer] = {}
 
-    def save_raw(self, raw: RawSerializer) -> None:
+    def save(self, raw: RawSerializer) -> None:
         self._rows[raw.message_id] = raw
 
-    def get_raw(self, message_id: str) -> Optional[RawSerializer]:
+    def get(self, message_id: str) -> Optional[RawSerializer]:
         return self._rows.get(message_id)
 
-    def stored_ids(self) -> set[str]:
+    def ids(self) -> set[str]:
         return set(self._rows.keys())
 
-    def stored_uids(self, mailbox: str) -> set[str]:
+    def uids(self, mailbox: str) -> set[str]:
         return {r.uid for r in self._rows.values() if r.mailbox == mailbox}
 
 
@@ -38,7 +38,7 @@ class TestStorageABC(TestCase):
 
     def test_object_missing_methods_does_not_satisfy(self):
         class Partial:
-            def save_raw(self, x):
+            def save(self, x):
                 return x
 
         self.assertNotIsInstance(Partial(), StorageABC)
@@ -51,8 +51,8 @@ class TestInMemoryStorageRoundTrips(TestCase):
             message_id="<test@x>", uid="1", mailbox="INBOX", file="content"
         )
 
-        storage.save_raw(raw)
+        storage.save(raw)
 
-        result = storage.get_raw("<test@x>")
+        result = storage.get("<test@x>")
         self.assertIsNotNone(result)
         self.assertEqual(result.message_id, "<test@x>")

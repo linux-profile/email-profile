@@ -41,7 +41,6 @@ class Sync:
         mailbox: Optional[str] = None,
         mailbox_names: Optional[list[str]] = None,
         max_workers: int = 3,
-        full: bool = False,
     ) -> SyncResult:
         """Sync one or all mailboxes with progress and parallel fetch."""
 
@@ -93,8 +92,7 @@ class Sync:
                         with lock:
                             progress.update(_task, completed=done, total=total)
 
-                    sync_fn = self.full_sync if full else self.sync
-                    result = sync_fn(box, storage, on_progress=on_progress)
+                    result = self.sync(box, storage, on_progress=on_progress)
 
                     with lock:
                         progress.update(task, visible=False)
@@ -149,12 +147,8 @@ class Sync:
         result = SyncResult(mailbox=mailbox.name)
         server_uids = mailbox.where().uids()
 
-        new_uids = _filter_new_uids(
-            mailbox,
-            server_uids,
-            existing_ids=storage.stored_ids(mailbox.name),
-            existing_uids=storage.stored_uids(mailbox.name),
-        )
+        existing_uids = storage.uids(mailbox.name)
+        new_uids = [u for u in server_uids if u not in existing_uids]
 
         total = len(server_uids)
         result.skipped = total - len(new_uids)
@@ -176,38 +170,12 @@ class Sync:
 
         return result
 
-    def full_sync(
-        self,
-        mailbox: MailBox,
-        storage: StorageABC,
-        on_progress: Optional[Callable[[int, int], None]] = None,
-    ) -> SyncResult:
-        """Sync all emails from a mailbox, skipping nothing."""
-
-        result = SyncResult(mailbox=mailbox.name)
-        server_uids = mailbox.where().uids()
-        total = len(server_uids)
-
-        if on_progress is not None:
-            on_progress(0, total)
-
-        if not server_uids:
-            return result
-
-        for done, raw in enumerate(_fetch_raw(mailbox, server_uids), 1):
-            _save_one(storage, raw, result)
-
-            if on_progress is not None:
-                on_progress(done, total)
-
-        return result
-
 
 def _save_one(
     storage: StorageABC, raw: RawSerializer, result: SyncResult
 ) -> None:
     try:
-        inserted = storage.save_raw(raw)
+        inserted = storage.save(raw)
         if inserted:
             result.inserted += 1
         else:
@@ -250,27 +218,3 @@ def _fetch_raw(mailbox: MailBox, uids: list[str]) -> Iterator[RawSerializer]:
                 flags=d.flags() or "",
                 file=d.text(),
             )
-
-
-def _filter_new_uids(
-    mailbox: MailBox,
-    server_uids: list[str],
-    existing_ids: set[str],
-    existing_uids: set[str],
-) -> list[str]:
-    """Return UIDs not yet in storage, using UID match first then Message-ID."""
-
-    new_by_uid = [u for u in server_uids if u not in existing_uids]
-
-    if not new_by_uid or not existing_ids:
-        return new_by_uid
-
-    client = mailbox._client
-    if client is None:
-        return new_by_uid
-
-    _state(client.select(_quote(mailbox.name)))
-
-    known = ImapFetch.fetch_message_ids(client, new_by_uid)
-
-    return [uid for uid in new_by_uid if known.get(uid) not in existing_ids]

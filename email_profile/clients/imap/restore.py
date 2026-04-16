@@ -45,8 +45,8 @@ class Restore:
 
         by_mailbox: dict[str, list[RawSerializer]] = {}
 
-        for message_id in storage.stored_ids():
-            raw = storage.get_raw(message_id)
+        for message_id in storage.ids():
+            raw = storage.get(message_id)
             if raw is None or not raw.file:
                 continue
             if mailbox and raw.mailbox != mailbox:

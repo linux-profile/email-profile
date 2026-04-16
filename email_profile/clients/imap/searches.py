@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Callable, Literal, Optional
 from email_profile._internal import _build_serializer, _state
 from email_profile.clients.imap.fetch import F
 from email_profile.clients.imap.protocol import ImapSearch
-from email_profile.clients.imap.query import Q, QueryLike, _q
+from email_profile.clients.imap.query import Q, QueryLike, _to_expr
 from email_profile.retry import with_retry
 from email_profile.serializers.email import EmailSerializer
 
@@ -41,7 +41,7 @@ class Where:
     ) -> None:
         self._client = client
         self._mailbox = mailbox
-        self._q = _q(query) if query is not None else Q.all()
+        self._q = _to_expr(query) if query is not None else Q.all()
         self._cached_uids: Optional[list[str]] = None
 
     def _uids(self) -> list[str]:

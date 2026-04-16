@@ -32,7 +32,7 @@ class StorageSQLite(StorageABC):
 
         return f"sqlite:///{value}"
 
-    def stored_ids(self, mailbox: Optional[str] = None) -> set[str]:
+    def ids(self, mailbox: Optional[str] = None) -> set[str]:
         """Return stored email IDs."""
         with self._session_factory() as session:
             query = session.query(RawModel.message_id)
@@ -40,7 +40,7 @@ class StorageSQLite(StorageABC):
                 query = query.filter(RawModel.mailbox == mailbox)
             return {row[0] for row in query.all()}
 
-    def stored_uids(self, mailbox: str) -> set[str]:
+    def uids(self, mailbox: str) -> set[str]:
         """Return stored IMAP UIDs for a mailbox."""
         with self._session_factory() as session:
             return {
@@ -50,7 +50,7 @@ class StorageSQLite(StorageABC):
                 .all()
             }
 
-    def save_raw(self, raw: RawSerializer) -> bool:
+    def save(self, raw: RawSerializer) -> bool:
         """Persist the RFC822 source. Returns True if inserted, False if updated."""
         with self._session_factory() as session:
             existing = (
@@ -81,7 +81,7 @@ class StorageSQLite(StorageABC):
             session.commit()
             return True
 
-    def get_raw(self, message_id: str) -> Optional[RawSerializer]:
+    def get(self, message_id: str) -> Optional[RawSerializer]:
         """Retrieve the RFC822 source by email id."""
         with self._session_factory() as session:
             row = (

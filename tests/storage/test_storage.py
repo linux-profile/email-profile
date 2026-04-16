@@ -41,32 +41,32 @@ class TestStorageRaw(TestCase):
     def tearDown(self):
         self._tmp.cleanup()
 
-    def test_save_raw_and_get_raw(self):
+    def test_save_and_get(self):
         raw = _raw("<test@x>")
-        self.storage.save_raw(raw)
-        result = self.storage.get_raw("<test@x>")
+        self.storage.save(raw)
+        result = self.storage.get("<test@x>")
         self.assertIsNotNone(result)
         self.assertEqual(result.message_id, "<test@x>")
         self.assertEqual(result.file, "raw content")
 
-    def test_get_raw_returns_none_for_missing(self):
-        result = self.storage.get_raw("nonexistent")
+    def test_get_returns_none_for_missing(self):
+        result = self.storage.get("nonexistent")
         self.assertIsNone(result)
 
-    def test_save_raw_upserts(self):
-        self.storage.save_raw(_raw("<x@x>", file_content="v1"))
-        self.storage.save_raw(_raw("<x@x>", file_content="v2"))
-        result = self.storage.get_raw("<x@x>")
+    def test_save_upserts(self):
+        self.storage.save(_raw("<x@x>", file_content="v1"))
+        self.storage.save(_raw("<x@x>", file_content="v2"))
+        result = self.storage.get("<x@x>")
         self.assertEqual(result.file, "v2")
 
-    def test_stored_ids(self):
-        self.storage.save_raw(_raw("<a@x>"))
-        self.storage.save_raw(_raw("<b@x>", uid="2"))
-        ids = self.storage.stored_ids()
+    def test_ids(self):
+        self.storage.save(_raw("<a@x>"))
+        self.storage.save(_raw("<b@x>", uid="2"))
+        ids = self.storage.ids()
         self.assertEqual(ids, {"<a@x>", "<b@x>"})
 
-    def test_stored_uids(self):
-        self.storage.save_raw(_raw("<a@x>", uid="10", mailbox="INBOX"))
-        self.storage.save_raw(_raw("<b@x>", uid="20", mailbox="Sent"))
-        self.assertEqual(self.storage.stored_uids("INBOX"), {"10"})
-        self.assertEqual(self.storage.stored_uids("Sent"), {"20"})
+    def test_uids(self):
+        self.storage.save(_raw("<a@x>", uid="10", mailbox="INBOX"))
+        self.storage.save(_raw("<b@x>", uid="20", mailbox="Sent"))
+        self.assertEqual(self.storage.uids("INBOX"), {"10"})
+        self.assertEqual(self.storage.uids("Sent"), {"20"})

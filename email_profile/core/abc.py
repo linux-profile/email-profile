@@ -45,20 +45,20 @@ class StorageABC(ABC):
     """Contract for a message-persistence backend."""
 
     @abstractmethod
-    def save_raw(self, raw: RawSerializer) -> None:
+    def save(self, raw: RawSerializer) -> None:
         """Persist the complete RFC822 source for one email."""
         ...
 
     @abstractmethod
-    def get_raw(self, message_id: str) -> Optional[RawSerializer]:
+    def get(self, message_id: str) -> Optional[RawSerializer]:
         """Retrieve the RFC822 source by email id. None if not stored."""
         ...
 
     @abstractmethod
-    def stored_ids(self, mailbox: Optional[str] = None) -> set[str]: ...
+    def ids(self, mailbox: Optional[str] = None) -> set[str]: ...
 
     @abstractmethod
-    def stored_uids(self, mailbox: str) -> set[str]: ...
+    def uids(self, mailbox: str) -> set[str]: ...
 
 
 class ImapClientABC(ABC):

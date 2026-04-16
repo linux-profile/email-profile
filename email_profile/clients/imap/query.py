@@ -1,14 +1,12 @@
-"""IMAP search query model.
+"""IMAP search query builder.
 
-Two ways to build a search:
-
-1. Declarative (validated kwargs)::
+Build searches with validated kwargs or composable expressions::
 
     Query(subject="hello", unseen=True, since=date(2024, 1, 1))
 
-2. Composable (Q expressions, supports ``&``, ``|``, ``~``)::
+    Query.where.subject("hello") & Query.where.unseen()
 
-    Q.subject("hello") & Q.unseen() & ~Q.from_("spam@x")
+    Query(subject="test").exclude(from_="spam").or_(subject="urgent")
 """
 
 from __future__ import annotations
@@ -27,11 +25,146 @@ def _imap_date(value: date) -> str:
     return value.strftime("%d-%b-%Y")
 
 
-class Query(BaseModel):
-    """Validated IMAP search criteria.
+class _Expr:
+    """Internal composable IMAP search expression."""
 
-    Each non-empty field becomes one IMAP search clause. Empty fields are
-    omitted. When every field is empty, :meth:`mount` returns ``"ALL"``.
+    __slots__ = ("_expr",)
+
+    def __init__(self, expr: str) -> None:
+        self._expr = expr
+
+    def mount(self) -> str:
+        return self._expr or "ALL"
+
+    def exclude(self, **kwargs: object) -> _Expr:
+        return self & ~_Expr(Query(**kwargs).mount())
+
+    def or_(self, **kwargs: object) -> _Expr:
+        return self | _Expr(Query(**kwargs).mount())
+
+    def __and__(self, other: QueryLike) -> _Expr:
+        right = _to_expr(other)._expr
+        return _Expr(f"{self._expr} {right}".strip())
+
+    def __or__(self, other: QueryLike) -> _Expr:
+        right = _to_expr(other)._expr
+        return _Expr(f"OR {self._expr} {right}".strip())
+
+    def __invert__(self) -> _Expr:
+        return _Expr(f"NOT {self._expr}")
+
+    def __repr__(self) -> str:
+        return f"_Expr({self._expr!r})"
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, _Expr) and self._expr == other._expr
+
+    def __hash__(self) -> int:
+        return hash(self._expr)
+
+
+class Q:
+    """Composable query expressions for IMAP search."""
+
+    @staticmethod
+    def subject(value: str) -> _Expr:
+        return _Expr(f'(SUBJECT "{_ascii(value)}")')
+
+    @staticmethod
+    def from_(value: str) -> _Expr:
+        return _Expr(f'(FROM "{_ascii(value)}")')
+
+    @staticmethod
+    def to(value: str) -> _Expr:
+        return _Expr(f'(TO "{_ascii(value)}")')
+
+    @staticmethod
+    def cc(value: str) -> _Expr:
+        return _Expr(f'(CC "{_ascii(value)}")')
+
+    @staticmethod
+    def body(value: str) -> _Expr:
+        return _Expr(f'(BODY "{_ascii(value)}")')
+
+    @staticmethod
+    def text(value: str) -> _Expr:
+        return _Expr(f'(TEXT "{_ascii(value)}")')
+
+    @staticmethod
+    def since(value: date) -> _Expr:
+        return _Expr(f"(SINCE {_imap_date(value)})")
+
+    @staticmethod
+    def before(value: date) -> _Expr:
+        return _Expr(f"(BEFORE {_imap_date(value)})")
+
+    @staticmethod
+    def on(value: date) -> _Expr:
+        return _Expr(f"(ON {_imap_date(value)})")
+
+    @staticmethod
+    def larger(n: int) -> _Expr:
+        return _Expr(f"(LARGER {n})")
+
+    @staticmethod
+    def smaller(n: int) -> _Expr:
+        return _Expr(f"(SMALLER {n})")
+
+    @staticmethod
+    def unseen() -> _Expr:
+        return _Expr("(UNSEEN)")
+
+    @staticmethod
+    def seen() -> _Expr:
+        return _Expr("(SEEN)")
+
+    @staticmethod
+    def answered() -> _Expr:
+        return _Expr("(ANSWERED)")
+
+    @staticmethod
+    def flagged() -> _Expr:
+        return _Expr("(FLAGGED)")
+
+    @staticmethod
+    def deleted() -> _Expr:
+        return _Expr("(DELETED)")
+
+    @staticmethod
+    def undeleted() -> _Expr:
+        return _Expr("(UNDELETED)")
+
+    @staticmethod
+    def all() -> _Expr:
+        return _Expr("ALL")
+
+    @staticmethod
+    def uid(value: str) -> _Expr:
+        return _Expr(f"UID {value}")
+
+    @staticmethod
+    def uid_set(uids: list[str]) -> _Expr:
+        return _Expr(f"UID {','.join(uids)}")
+
+    @staticmethod
+    def header(name: str, value: str) -> _Expr:
+        return _Expr(f'(HEADER {name} "{_ascii(value)}")')
+
+
+class Query(BaseModel):
+    """IMAP search query builder.
+
+    Use kwargs for simple queries::
+
+        Query(subject="hello", unseen=True)
+
+    Use ``Query.where`` for composable expressions::
+
+        Query.where.subject("hello") & Query.where.unseen()
+
+    Chain with ``.exclude()`` and ``.or_()``::
+
+        Query(subject="report").exclude(from_="spam").or_(subject="urgent")
     """
 
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
@@ -123,144 +256,33 @@ class Query(BaseModel):
         )
 
     def mount(self) -> str:
-        """Render this query as an IMAP search criteria string."""
         parts = self._clauses()
         return " ".join(parts) if parts else "ALL"
 
-    def __and__(self, other: QueryLike) -> Q:
-        return Q(self.mount()) & _q(other)
+    def exclude(self, **kwargs: object) -> _Expr:
+        return _Expr(self.mount()) & ~_Expr(Query(**kwargs).mount())
 
-    def __or__(self, other: QueryLike) -> Q:
-        return Q(self.mount()) | _q(other)
+    def or_(self, **kwargs: object) -> _Expr:
+        return _Expr(self.mount()) | _Expr(Query(**kwargs).mount())
 
-    def __invert__(self) -> Q:
-        return ~Q(self.mount())
+    def __and__(self, other: QueryLike) -> _Expr:
+        return _Expr(self.mount()) & _to_expr(other)
 
+    def __or__(self, other: QueryLike) -> _Expr:
+        return _Expr(self.mount()) | _to_expr(other)
 
-class Q:
-    """Composable IMAP search expression. Supports ``&``, ``|``, ``~``."""
-
-    __slots__ = ("_expr",)
-
-    def __init__(self, expr: str) -> None:
-        self._expr = expr
-
-    def mount(self) -> str:
-        return self._expr or "ALL"
-
-    def __and__(self, other: QueryLike) -> Q:
-        right = _q(other)._expr
-        return Q(f"{self._expr} {right}".strip())
-
-    def __or__(self, other: QueryLike) -> Q:
-        right = _q(other)._expr
-        return Q(f"OR {self._expr} {right}".strip())
-
-    def __invert__(self) -> Q:
-        return Q(f"NOT {self._expr}")
-
-    def __repr__(self) -> str:
-        return f"Q({self._expr!r})"
-
-    def __eq__(self, other: object) -> bool:
-        return isinstance(other, Q) and self._expr == other._expr
-
-    def __hash__(self) -> int:
-        return hash(self._expr)
-
-    @staticmethod
-    def subject(value: str) -> Q:
-        return Q(f'(SUBJECT "{_ascii(value)}")')
-
-    @staticmethod
-    def from_(value: str) -> Q:
-        return Q(f'(FROM "{_ascii(value)}")')
-
-    @staticmethod
-    def to(value: str) -> Q:
-        return Q(f'(TO "{_ascii(value)}")')
-
-    @staticmethod
-    def cc(value: str) -> Q:
-        return Q(f'(CC "{_ascii(value)}")')
-
-    @staticmethod
-    def body(value: str) -> Q:
-        return Q(f'(BODY "{_ascii(value)}")')
-
-    @staticmethod
-    def text(value: str) -> Q:
-        return Q(f'(TEXT "{_ascii(value)}")')
-
-    @staticmethod
-    def since(value: date) -> Q:
-        return Q(f"(SINCE {_imap_date(value)})")
-
-    @staticmethod
-    def before(value: date) -> Q:
-        return Q(f"(BEFORE {_imap_date(value)})")
-
-    @staticmethod
-    def on(value: date) -> Q:
-        return Q(f"(ON {_imap_date(value)})")
-
-    @staticmethod
-    def larger(n: int) -> Q:
-        return Q(f"(LARGER {n})")
-
-    @staticmethod
-    def smaller(n: int) -> Q:
-        return Q(f"(SMALLER {n})")
-
-    @staticmethod
-    def unseen() -> Q:
-        return Q("(UNSEEN)")
-
-    @staticmethod
-    def seen() -> Q:
-        return Q("(SEEN)")
-
-    @staticmethod
-    def answered() -> Q:
-        return Q("(ANSWERED)")
-
-    @staticmethod
-    def flagged() -> Q:
-        return Q("(FLAGGED)")
-
-    @staticmethod
-    def all() -> Q:
-        return Q("ALL")
-
-    @staticmethod
-    def uid(value: str) -> Q:
-        return Q(f"UID {value}")
-
-    @staticmethod
-    def uid_set(uids: list[str]) -> Q:
-        return Q(f"UID {','.join(uids)}")
-
-    @staticmethod
-    def header(name: str, value: str) -> Q:
-        return Q(f'(HEADER {name} "{_ascii(value)}")')
-
-    @staticmethod
-    def deleted() -> Q:
-        return Q("(DELETED)")
-
-    @staticmethod
-    def undeleted() -> Q:
-        return Q("(UNDELETED)")
+    def __invert__(self) -> _Expr:
+        return ~_Expr(self.mount())
 
 
-QueryLike = Union[Query, Q, str]
+QueryLike = Union[Query, Q, _Expr, str]
 
 
-def _q(value: QueryLike) -> Q:
-    if isinstance(value, Q):
+def _to_expr(value: QueryLike) -> _Expr:
+    if isinstance(value, _Expr):
         return value
     if isinstance(value, Query):
-        return Q(value.mount())
+        return _Expr(value.mount())
     if isinstance(value, str):
-        return Q(value)
+        return _Expr(value)
     raise TypeError(f"Cannot use {type(value).__name__} as a query")
