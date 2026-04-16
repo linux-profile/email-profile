@@ -154,3 +154,6 @@ nav:
       - nav/reference/credentials.md
       - nav/reference/types.md
       - nav/reference/errors.md
+    - Development:
+      - nav/development/development-guide.md
+      - nav/development/release-notes.md
