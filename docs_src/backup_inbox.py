@@ -1,58 +1,31 @@
-"""Back up your entire INBOX into a local SQLite database.
+"""Back up your entire inbox into a local SQLite database."""
 
-Resumable: re-running picks up where the previous run stopped (skips
-messages whose Message-ID is already persisted).
-
-Reads credentials from a `.env` file at the project root:
-
-    EMAIL_USERNAME=you@yourdomain.com
-    EMAIL_PASSWORD=your-password
-
-Run with:
-
-    poetry run python docs_src/backup_inbox.py
-"""
-
-from email_profile import Email, Storage
-
-DB_PATH = "./inbox.db"
-CHUNK = 100
+from email_profile import Email, StorageSQLite
 
 
 def main() -> None:
-    storage = Storage(DB_PATH)
+    storage = StorageSQLite("./inbox.db")
 
     with Email.from_env() as app:
-        total = app.all().count()
         already = storage.existing_uids("INBOX")
+        total = app.all().count()
+
         print(
-            f"Backing up {total} messages to {DB_PATH} "
-            f"(skipping {len(already)} already persisted)"
+            f"Backing up {total} messages (skipping {len(already)} already saved)"
         )
 
         saved = 0
-        batch = []
 
-        for message in app.all().messages(
-            mode="full",
-            chunk_size=CHUNK,
-            on_progress=lambda d, t: print(f"  fetched {d}/{t}"),
+        for msg in app.all().messages(
+            on_progress=lambda d, t: print(f"  fetched {d}/{t}")
         ):
-            if message.uid in already:
+            if msg.uid in already:
                 continue
 
-            batch.append(message)
+            storage.save(msg)
+            saved += 1
 
-            if len(batch) >= CHUNK:
-                storage.save_many(batch)
-                saved += len(batch)
-                batch = []
-
-        if batch:
-            storage.save_many(batch)
-            saved += len(batch)
-
-        print(f"\nDone — {saved} new messages persisted in {DB_PATH}")
+        print(f"Done — {saved} new messages saved to ./inbox.db")
 
     storage.dispose()
 
