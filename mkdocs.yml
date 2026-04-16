@@ -1,16 +1,137 @@
-site_name: 📩 Email Profile
+site_name: Email Profile
+site_url: https://linux-profile.github.io/email-profile/
+site_author: Fernando Celmer
+
+copyright: Fernando Celmer
 repo_name: linux-profile/email-profile
 repo_url: https://github.com/linux-profile/email-profile
-site_url: https://linuxprofile.com
-copyright: Fernando Celmer
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+  features:
+  - content.tooltips
+  - navigation.footer
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - navigation.path
+  - navigation.indexes
+  - search.share
+  - search.suggest
+
+extra_css:
+  - assets/style.css
+
+markdown_extensions:
+  abbr: null
+  attr_list: null
+  footnotes: null
+  md_in_html: null
+  tables: null
+  toc:
+    permalink: true
+  pymdownx.betterem: null
+  pymdownx.caret: null
+  pymdownx.highlight:
+    line_spans: __span
+  pymdownx.inlinehilite: null
+  pymdownx.keys: null
+  pymdownx.mark: null
+  pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format ''
+  pymdownx.tilde: null
+  pymdownx.blocks.admonition:
+    types:
+    - note
+    - attention
+    - caution
+    - danger
+    - error
+    - tip
+    - hint
+    - warning
+    - info
+    - check
+  pymdownx.blocks.details: null
+  pymdownx.blocks.tab:
+    alternate_style: true
+  pymdownx.emoji:
+    emoji_index: !!python/name:material.extensions.emoji.twemoji
+    emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  mdx_include: null
+  markdown_include_variants: null
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          options:
+            heading_level: 2
+            show_root_heading: true
+            show_if_no_docstring: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
 
 nav:
     - Home: index.md
-    - Getting Started: nav/getting-started.md
-    - Development:
-      - nav/development-guide.md
-      - nav/release-notes.md
-
-theme:
-  name: simple-blog
-  theme_style: light
+    - Tutorial:
+      - nav/tutorial/install.md
+      - nav/tutorial/first-steps.md
+      - nav/tutorial/connect.md
+      - nav/tutorial/read-emails.md
+      - nav/tutorial/query-builder.md
+      - nav/tutorial/send-email.md
+      - nav/tutorial/sync-and-restore.md
+      - nav/tutorial/mailbox-ops.md
+      - nav/tutorial/storage.md
+      - nav/tutorial/error-handling.md
+    - Concepts:
+      - nav/concepts/message.md
+      - nav/concepts/auto-discovery.md
+      - nav/concepts/default-folders.md
+    - Reference:
+      - nav/reference/email.md
+      - nav/reference/query.md
+      - nav/reference/where.md
+      - nav/reference/mailbox.md
+      - Serializers:
+        - nav/reference/email-serializer.md
+        - nav/reference/raw-serializer.md
+        - nav/reference/attachment.md
+      - Sync:
+        - nav/reference/sync.md
+        - nav/reference/restore.md
+        - nav/reference/sync-result.md
+      - Storage:
+        - nav/reference/storage-abc.md
+        - nav/reference/storage.md
+      - Clients:
+        - nav/reference/imap-client.md
+        - nav/reference/smtp-client.md
+        - nav/reference/sender.md
+      - nav/reference/credentials.md
+      - nav/reference/types.md
+      - nav/reference/errors.md

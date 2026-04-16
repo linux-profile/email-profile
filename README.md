@@ -216,9 +216,33 @@ with Email.from_env(storage=StorageSQLite("sqlite:///:memory:")) as app:
 
 ## Supported Providers
 
-Auto-discovery works out of the box for:
+Auto-discovery works out of the box for these providers and any server with DNS SRV/MX records.
 
-Gmail, Outlook, Hotmail, Yahoo, iCloud, Zoho, Fastmail, ProtonMail (Bridge), AOL, Yandex, Mail.ru, GMX, Hostinger, Titan, GoDaddy, Namecheap, Gandi, OVH, Ionos, Rackspace, Locaweb, KingHost, UOL, Terra, and any server with DNS SRV/MX records.
+| | Provider | IMAP Server |
+|---|---|---|
+| <img src="docs/assets/icons/gmail.svg" width="16"> | Gmail | imap.gmail.com |
+| <img src="docs/assets/icons/outlook.svg" width="16"> | Outlook / Hotmail / Live | outlook.office365.com |
+| <img src="docs/assets/icons/yahoo.svg" width="16"> | Yahoo | imap.mail.yahoo.com |
+| <img src="docs/assets/icons/icloud.svg" width="16"> | iCloud | imap.mail.me.com |
+| <img src="docs/assets/icons/zoho.svg" width="16"> | Zoho | imap.zoho.com |
+| <img src="docs/assets/icons/protonmail.svg" width="16"> | ProtonMail (Bridge) | 127.0.0.1:1143 |
+| <img src="docs/assets/icons/aol.svg" width="16"> | AOL | imap.aol.com |
+| <img src="docs/assets/icons/yandex.svg" width="16"> | Yandex | imap.yandex.com |
+| <img src="docs/assets/icons/mailru.svg" width="16"> | Mail.ru | imap.mail.ru |
+| <img src="docs/assets/icons/gmx.svg" width="16"> | GMX | imap.gmx.com |
+| <img src="docs/assets/icons/hostinger.svg" width="16"> | Hostinger | imap.hostinger.com |
+| <img src="docs/assets/icons/godaddy.svg" width="16"> | GoDaddy | imap.secureserver.net |
+| <img src="docs/assets/icons/namecheap.svg" width="16"> | Namecheap | mail.privateemail.com |
+| <img src="docs/assets/icons/gandi.svg" width="16"> | Gandi | mail.gandi.net |
+| <img src="docs/assets/icons/ovh.svg" width="16"> | OVH | ssl0.ovh.net |
+| <img src="docs/assets/icons/ionos.svg" width="16"> | Ionos (1&1) | imap.ionos.com |
+| | Fastmail | imap.fastmail.com |
+| | Rackspace | secure.emailsrvr.com |
+| | Titan | imap.titan.email |
+| | Locaweb | imap.locaweb.com.br |
+| | KingHost | imap.kinghost.net |
+| | UOL | imap.uol.com.br |
+| | Terra | imap.terra.com.br |
 
 ## Environment Variables
 

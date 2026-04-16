@@ -7,7 +7,7 @@ def main() -> None:
     with Email.from_env() as app:
         for msg in app.inbox.where().messages(chunk_size=5):
             print(f"UID: {msg.uid}")
-            print(f"Message-ID: {msg.id}")
+            print(f"Message-ID: {msg.message_id}")
             print(f"Date: {msg.date}")
             print(f"From: {msg.from_}")
             print(f"To: {msg.to_}")
