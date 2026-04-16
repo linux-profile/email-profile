@@ -232,6 +232,26 @@ class Q:
     def all() -> Q:
         return Q("ALL")
 
+    @staticmethod
+    def uid(value: str) -> Q:
+        return Q(f"UID {value}")
+
+    @staticmethod
+    def uid_set(uids: list[str]) -> Q:
+        return Q(f"UID {','.join(uids)}")
+
+    @staticmethod
+    def header(name: str, value: str) -> Q:
+        return Q(f'(HEADER {name} "{_ascii(value)}")')
+
+    @staticmethod
+    def deleted() -> Q:
+        return Q("(DELETED)")
+
+    @staticmethod
+    def undeleted() -> Q:
+        return Q("(UNDELETED)")
+
 
 QueryLike = Union[Query, Q, str]
 

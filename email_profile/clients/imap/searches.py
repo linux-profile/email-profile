@@ -8,6 +8,8 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Callable, Literal, Optional
 
 from email_profile._internal import _build_serializer, _state
+from email_profile.clients.imap.fetch import F
+from email_profile.clients.imap.protocol import ImapSearch
 from email_profile.clients.imap.query import Q, QueryLike, _q
 from email_profile.retry import with_retry
 from email_profile.serializers.email import EmailSerializer
@@ -20,9 +22,9 @@ logger = logging.getLogger(__name__)
 FetchMode = Literal["full", "text", "headers"]
 
 _FETCH_SPECS: dict[str, str] = {
-    "full": "(RFC822)",
-    "text": "(BODY.PEEK[HEADER] BODY.PEEK[TEXT])",
-    "headers": "(BODY.PEEK[HEADER])",
+    "full": F.rfc822().mount(),
+    "text": F.body_text().mount(),
+    "headers": F.all_headers().mount(),
 }
 
 
@@ -51,12 +53,8 @@ class Where:
         _state(self._client.select(_quote(self._mailbox.name)))
 
         data = _state(self._client.uid("search", None, self._q.mount()))
-
-        if not data or not data[0]:
-            self._cached_uids = []
-            return self._cached_uids
-
-        self._cached_uids = data[0].decode().split()
+        search = ImapSearch(data)
+        self._cached_uids = search.uids()
         return self._cached_uids
 
     def clear_cache(self) -> Where:
