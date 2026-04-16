@@ -65,6 +65,10 @@
          <lastmod>2026-04-16</lastmod>
     </url>
     <url>
+         <loc>https://linux-profile.github.io/email-profile/nav/reference/email-parser/</loc>
+         <lastmod>2026-04-16</lastmod>
+    </url>
+    <url>
          <loc>https://linux-profile.github.io/email-profile/nav/reference/email-serializer/</loc>
          <lastmod>2026-04-16</lastmod>
     </url>
@@ -74,6 +78,14 @@
     </url>
     <url>
          <loc>https://linux-profile.github.io/email-profile/nav/reference/errors/</loc>
+         <lastmod>2026-04-16</lastmod>
+    </url>
+    <url>
+         <loc>https://linux-profile.github.io/email-profile/nav/reference/fetch-executor/</loc>
+         <lastmod>2026-04-16</lastmod>
+    </url>
+    <url>
+         <loc>https://linux-profile.github.io/email-profile/nav/reference/fetch-parser/</loc>
          <lastmod>2026-04-16</lastmod>
     </url>
     <url>
@@ -97,7 +109,7 @@
          <lastmod>2026-04-16</lastmod>
     </url>
     <url>
-         <loc>https://linux-profile.github.io/email-profile/nav/reference/protocol/</loc>
+         <loc>https://linux-profile.github.io/email-profile/nav/reference/q/</loc>
          <lastmod>2026-04-16</lastmod>
     </url>
     <url>
@@ -114,6 +126,10 @@
     </url>
     <url>
          <loc>https://linux-profile.github.io/email-profile/nav/reference/restore/</loc>
+         <lastmod>2026-04-16</lastmod>
+    </url>
+    <url>
+         <loc>https://linux-profile.github.io/email-profile/nav/reference/search-parser/</loc>
          <lastmod>2026-04-16</lastmod>
     </url>
     <url>
