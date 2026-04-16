@@ -69,13 +69,12 @@ def _attach(
 ) -> None:
     if isinstance(item, (str, Path)):
         path = Path(item)
-        size = path.stat().st_size
-        if size > max_size:
+        data = path.read_bytes()
+        if len(data) > max_size:
             raise ValueError(
-                f"Attachment {path.name!r} is {size / 1024 / 1024:.1f}MB, "
+                f"Attachment {path.name!r} is {len(data) / 1024 / 1024:.1f}MB, "
                 f"exceeds {max_size / 1024 / 1024:.0f}MB limit."
             )
-        data = path.read_bytes()
         filename = path.name
         ctype, _ = mimetypes.guess_type(filename)
     elif isinstance(item, tuple) and len(item) == 2:
