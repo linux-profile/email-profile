@@ -15,7 +15,7 @@ class StatusResponse:
         self.message = message
 
     @property
-    def type(self) -> bool:  # legacy alias
+    def type(self) -> bool:
         return self.ok
 
 

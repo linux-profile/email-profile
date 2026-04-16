@@ -380,7 +380,6 @@ class Email:
         if not uids:
             return ids
 
-        # Pull only the Message-ID header — cheap.
         status, fetched = client.uid(
             "fetch", ",".join(uids), "(BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])"
         )
