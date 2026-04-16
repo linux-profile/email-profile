@@ -10,7 +10,7 @@ from email_profile import Email
 
 def main() -> None:
     with Email() as app:
-        print(f"Connected as {app._user}")
+        print(f"Connected as {app.user}")
         print(f"Unread: {app.unread().count()}")
 
 

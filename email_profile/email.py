@@ -82,6 +82,31 @@ class Email:
         self._client: Optional[imaplib.IMAP4_SSL] = None
         self._mailboxes: dict[str, MailBox] = {}
 
+    @property
+    def server(self) -> str:
+        """The IMAP server hostname."""
+        return self._server
+
+    @property
+    def user(self) -> str:
+        """The authenticated user / email address."""
+        return self._user
+
+    @property
+    def port(self) -> int:
+        """The IMAP port in use."""
+        return self._port
+
+    @property
+    def ssl(self) -> bool:
+        """Whether the connection uses SSL."""
+        return self._ssl
+
+    @property
+    def is_connected(self) -> bool:
+        """``True`` while an IMAP session is open."""
+        return self._client is not None
+
     @staticmethod
     def _build_from_env(
         server_var: str = "EMAIL_SERVER",
@@ -384,5 +409,5 @@ class Email:
         self.close()
 
     def __repr__(self) -> str:
-        state = "connected" if self._client else "disconnected"
-        return f"Email(server={self._server!r}, user={self._user!r}, {state})"
+        state = "connected" if self.is_connected else "disconnected"
+        return f"Email(server={self.server!r}, user={self.user!r}, {state})"
