@@ -136,8 +136,8 @@ class TestUidsCache(TestCase):
         w.exists()
         self.assertEqual(len(self._search_calls()), 1)
 
-    def test_refresh_invalidates_cache(self):
+    def test_clear_cache_invalidates_cache(self):
         w = self.app.inbox.where()
         w.count()
-        w.refresh().count()
+        w.clear_cache().count()
         self.assertEqual(len(self._search_calls()), 2)
