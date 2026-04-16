@@ -81,7 +81,7 @@ class TestFromEmail(TestCase):
         from email_profile import IMAPHost
 
         with patch(
-            "email_profile.factories.resolve_imap_host",
+            "email_profile.credentials.resolve_imap_host",
             return_value=IMAPHost("imap.test", port=993),
         ):
             app = Email.from_email("a@test.example", "pw")
@@ -224,7 +224,7 @@ class TestConstructorOverloads(TestCase):
         from email_profile import IMAPHost
 
         with patch(
-            "email_profile.factories.resolve_imap_host",
+            "email_profile.credentials.resolve_imap_host",
             return_value=IMAPHost("imap.test"),
         ):
             app = Email("u@test.example", "pw")
@@ -244,7 +244,7 @@ class TestConstructorOverloads(TestCase):
             ),
             patch("email_profile.email.EmailFactories.from_env") as build,
         ):
-            from email_profile.factories import Credentials
+            from email_profile.credentials import Credentials
 
             build.return_value = Credentials(
                 server="imap.x.com", user="u@x.com", password="pw"
