@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from email import message_from_bytes
 from email.header import decode_header
@@ -11,6 +12,8 @@ from pathlib import Path
 from typing import Optional, Union
 
 from pydantic import BaseModel, ConfigDict
+
+logger = logging.getLogger(__name__)
 
 _NAMED_HEADERS = frozenset(
     name.lower()
@@ -108,11 +111,23 @@ def _decode_payload(part: PyEmailMessage) -> str:
 
     if isinstance(payload, bytes):
         charset = part.get_content_charset() or "utf-8"
+        fallbacks = [charset, "utf-8", "latin-1", "windows-1252"]
+        seen: set[str] = set()
 
-        try:
-            return payload.decode(charset, errors="replace")
-        except (LookupError, TypeError):
-            return payload.decode("utf-8", errors="replace")
+        for enc in fallbacks:
+            if enc in seen:
+                continue
+            seen.add(enc)
+            try:
+                return payload.decode(enc)
+            except (UnicodeDecodeError, LookupError):
+                continue
+
+        logger.warning(
+            "Could not decode payload with charsets %s, using replacement characters.",
+            list(seen),
+        )
+        return payload.decode("utf-8", errors="replace")
 
     return str(payload)
 
