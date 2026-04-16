@@ -1,8 +1,15 @@
+import tempfile
 from email.message import EmailMessage
+from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from email_profile.clients.smtp.client import SmtpClient, _build_message
+from email_profile.clients.smtp.client import (
+    MAX_ATTACHMENT_SIZE,
+    SmtpClient,
+    _attach,
+    _build_message,
+)
 from email_profile.core.types import SMTPHost
 
 
@@ -96,6 +103,40 @@ class TestSmtpClientStartTLS(TestCase):
             SmtpClient(host=host, user="u", password="pw").connect()
         fake.starttls.assert_called_once()
         fake.login.assert_called_once_with("u", "pw")
+
+
+class TestAttachmentSizeValidation(TestCase):
+    def test_bytes_tuple_exceeds_limit(self):
+        msg = EmailMessage()
+        big = b"x" * (MAX_ATTACHMENT_SIZE + 1)
+        with self.assertRaises(ValueError) as ctx:
+            _attach(msg, ("big.bin", big))
+        self.assertIn("big.bin", str(ctx.exception))
+        self.assertIn("exceeds", str(ctx.exception))
+
+    def test_bytes_triple_exceeds_limit(self):
+        msg = EmailMessage()
+        big = b"x" * (MAX_ATTACHMENT_SIZE + 1)
+        with self.assertRaises(ValueError):
+            _attach(msg, ("big.bin", big, "application/octet-stream"))
+
+    def test_file_path_exceeds_limit(self):
+        msg = EmailMessage()
+        with tempfile.NamedTemporaryFile(suffix=".bin", delete=False) as f:
+            f.write(b"x" * 1024)
+            path = Path(f.name)
+        try:
+            with self.assertRaises(ValueError) as ctx:
+                _attach(msg, path, max_size=512)
+            self.assertIn("exceeds", str(ctx.exception))
+        finally:
+            path.unlink()
+
+    def test_small_attachment_accepted(self):
+        msg = EmailMessage()
+        _attach(msg, ("ok.txt", b"hello"))
+        parts = list(msg.iter_attachments())
+        self.assertEqual(len(parts), 1)
 
 
 class TestSmtpClientErrors(TestCase):
