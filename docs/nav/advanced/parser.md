@@ -15,7 +15,7 @@ print(parsed.attachments)
 print(parsed.headers)
 ```
 
-Returns a `ParsedBody` with all essential fields, metadata, and a `headers` bag for everything else.
+Returns a [`ParsedBody`](../reference/attachment.md) with all essential fields, metadata, and a `headers` bag for everything else.
 
 ## Reference
 

@@ -1,6 +1,6 @@
 # Direct IMAP Client
 
-Use `ImapClient` directly when you need full control over the IMAP session.
+Use [`ImapClient`](../reference/imap-client.md) directly when you need full control over the IMAP session.
 
 ```python
 from email_profile.advanced import ImapClient

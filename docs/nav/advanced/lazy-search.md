@@ -1,6 +1,6 @@
 # Lazy Search (Where)
 
-The `Where` object doesn't hit the server until you ask for results. UIDs are cached after the first call.
+The [`Where`](../reference/where.md) object doesn't hit the server until you ask for results. UIDs are cached after the first call.
 
 ```python
 from email_profile.advanced import ImapClient

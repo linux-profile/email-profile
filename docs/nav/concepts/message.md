@@ -1,6 +1,6 @@
 # Message
 
-When you read an email, email-profile returns a `Message` object. It contains all the parsed fields from the RFC822 source plus the raw content.
+When you read an email, email-profile returns a [`Message`](../reference/email-serializer.md) object. It contains all the parsed fields from the RFC822 source plus the raw content.
 
 ## Fields
 

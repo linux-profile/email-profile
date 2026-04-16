@@ -1,6 +1,6 @@
 # Custom Storage Backend
 
-email-profile uses `StorageABC` as the contract for persistence. The default implementation is `StorageSQLite`, but you can replace it with any backend — PostgreSQL, Redis, S3, MongoDB, or even a plain dict.
+email-profile uses [`StorageABC`](../reference/storage-abc.md) as the contract for persistence. The default implementation is [`StorageSQLite`](../reference/storage.md), but you can replace it with any backend — PostgreSQL, Redis, S3, MongoDB, or even a plain dict.
 
 ## The Contract
 
@@ -15,7 +15,7 @@ Your storage must implement 4 methods:
 
 ## The Data Model
 
-Every email is stored as a `RawSerializer`:
+Every email is stored as a [`RawSerializer`](../reference/raw-serializer.md):
 
 ```python
 RawSerializer(

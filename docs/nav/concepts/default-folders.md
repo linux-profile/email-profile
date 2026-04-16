@@ -1,6 +1,6 @@
 # Default Folders
 
-When you connect to an email server, email-profile automatically maps the standard folders to properties on the `Email` object.
+When you connect to an email server, email-profile automatically maps the standard folders to properties on the [`Email`](../reference/email.md) object.
 
 ## How it Works
 

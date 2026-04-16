@@ -14,7 +14,7 @@ Access your inbox and iterate over messages.
 
 ## 3. Search
 
-Use the `Q` builder for composable queries.
+Use the [`Q`](../reference/query.md) builder for composable queries.
 
 {* ./docs_src/query_builder.py ln[8:17] *}
 

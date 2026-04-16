@@ -1,6 +1,6 @@
 # Direct SMTP Client
 
-Use `SmtpClient` for batch sending with a single connection.
+Use [`SmtpClient`](../reference/smtp-client.md) for batch sending with a single connection.
 
 ```python
 from email_profile.advanced import SmtpClient
