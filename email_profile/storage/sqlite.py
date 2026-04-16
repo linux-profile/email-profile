@@ -6,6 +6,8 @@ import logging
 from pathlib import Path
 from typing import Optional, Union
 
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+
 from email_profile.core.abc import StorageABC
 from email_profile.models.raw import RawModel
 from email_profile.serializers.raw import RawSerializer
@@ -53,33 +55,24 @@ class StorageSQLite(StorageABC):
     def save(self, raw: RawSerializer) -> bool:
         """Persist the RFC822 source. Returns True if inserted, False if updated."""
         with self._session_factory() as session:
-            existing = (
-                session.query(RawModel)
-                .filter(
-                    RawModel.uid == raw.uid,
-                    RawModel.mailbox == raw.mailbox,
-                )
-                .first()
+            stmt = sqlite_insert(RawModel).values(
+                message_id=raw.message_id,
+                uid=raw.uid,
+                mailbox=raw.mailbox,
+                flags=raw.flags,
+                file=raw.file,
             )
-
-            if existing:
-                existing.message_id = raw.message_id
-                existing.flags = raw.flags
-                existing.file = raw.file
-                session.commit()
-                return False
-
-            session.add(
-                RawModel(
-                    message_id=raw.message_id,
-                    uid=raw.uid,
-                    mailbox=raw.mailbox,
-                    flags=raw.flags,
-                    file=raw.file,
-                )
+            stmt = stmt.on_conflict_do_update(
+                index_elements=["uid", "mailbox"],
+                set_={
+                    "message_id": stmt.excluded.message_id,
+                    "flags": stmt.excluded.flags,
+                    "file": stmt.excluded.file,
+                },
             )
+            result = session.execute(stmt)
             session.commit()
-            return True
+            return result.rowcount == 1
 
     def get(self, message_id: str) -> Optional[RawSerializer]:
         """Retrieve the RFC822 source by email id."""
