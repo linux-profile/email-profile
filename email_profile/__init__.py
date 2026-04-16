@@ -25,32 +25,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
 
-from email_profile.dump import MessageDumper
-from email_profile.email import Email
-from email_profile.eml import EmailModel, EmailSerializer
-from email_profile.errors import (
+from email_profile.core.errors import (
     ConnectionFailure,
     NotConnected,
     QuotaExceeded,
     RateLimited,
-    Retryable,
 )
-from email_profile.mailbox import AppendedUID, MailBox
-from email_profile.parser import Attachment, ParsedBody, parse_rfc822
-from email_profile.protocols import StorageProtocol
-from email_profile.providers import (
-    IMAPHost,
-    ProviderResolutionError,
-    resolve_imap_host,
-    resolve_smtp_host,
-)
+from email_profile.email import Email
 from email_profile.query import Q, Query
-from email_profile.retry import with_retry
-from email_profile.searches import Where
-from email_profile.smtp_client import SmtpClient
-from email_profile.status import IMAPError, Status
-from email_profile.storage import Storage
-from email_profile.types import SMTPHost
+from email_profile.serializers.email import EmailSerializer
+from email_profile.storage.sqlite import StorageSQLite
 
 __all__ = [
     "ConnectionFailure",
@@ -61,5 +45,5 @@ __all__ = [
     "Query",
     "QuotaExceeded",
     "RateLimited",
-    "Storage",
+    "StorageSQLite",
 ]

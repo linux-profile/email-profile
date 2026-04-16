@@ -5,8 +5,8 @@ from __future__ import annotations
 from email import message_from_bytes
 from email.utils import parseaddr, parsedate_to_datetime
 
-from email_profile.eml import EmailSerializer
-from email_profile.status import Status
+from email_profile.core.status import Status
+from email_profile.serializers.email import EmailSerializer
 
 
 def _state(context: tuple) -> list:

@@ -7,7 +7,7 @@ import time
 from functools import wraps
 from typing import Any, Callable
 
-from email_profile.errors import QuotaExceeded, RateLimited
+from email_profile.core.errors import QuotaExceeded, RateLimited
 
 logger = logging.getLogger(__name__)
 

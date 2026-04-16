@@ -8,9 +8,9 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Callable, Literal, Optional
 
 from email_profile._internal import _build_serializer, _state
-from email_profile.eml import EmailSerializer
 from email_profile.query import Q, QueryLike, _q
 from email_profile.retry import with_retry
+from email_profile.serializers.email import EmailSerializer
 
 if TYPE_CHECKING:
     from email_profile.mailbox import MailBox

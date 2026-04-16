@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from email_profile.imap_client import ImapClient
+    from email_profile.clients.imap_client import ImapClient
     from email_profile.mailbox import MailBox
 
 

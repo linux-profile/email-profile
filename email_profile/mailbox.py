@@ -9,13 +9,13 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Optional, Union
 
 from email_profile._internal import _state
+from email_profile.core.types import AppendedUID
 from email_profile.query import Query, QueryLike
 from email_profile.retry import with_retry
 from email_profile.searches import Where
-from email_profile.types import AppendedUID
 
 if TYPE_CHECKING:
-    from email_profile.eml import EmailSerializer
+    from email_profile.serializers.email import EmailSerializer
 
 
 MessageLike = Union["EmailSerializer", bytes, str]
@@ -24,7 +24,7 @@ UIDLike = Union["EmailSerializer", str, int]
 
 def _uid_of(target: UIDLike) -> str:
     """Extract the IMAP UID as a string from a serializer, int or str."""
-    from email_profile.eml import EmailSerializer
+    from email_profile.serializers.email import EmailSerializer
 
     if isinstance(target, EmailSerializer):
         return target.uid
@@ -109,7 +109,7 @@ class MailBox:
         (RFC 4315). Returns ``None`` otherwise — the message is still saved.
         """
 
-        from email_profile.eml import EmailSerializer
+        from email_profile.serializers.email import EmailSerializer
 
         if isinstance(message, EmailSerializer):
             raw = message.file.encode("utf-8")

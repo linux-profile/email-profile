@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from email_profile.types import IMAPHost, SMTPHost
+from email_profile.core.types import IMAPHost, SMTPHost
 
 try:
     import dns.resolver

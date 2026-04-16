@@ -5,10 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
-from email_profile.imap_client import ImapClient
+from email_profile.clients.imap_client import ImapClient
 
 if TYPE_CHECKING:
-    from email_profile.protocols import StorageProtocol
+    from email_profile.core.abc import StorageABC
 
 
 class RestoreOps:
@@ -19,7 +19,7 @@ class RestoreOps:
 
     def restore(
         self,
-        storage: StorageProtocol,
+        storage: StorageABC,
         mailbox: Optional[str] = None,
         target: Optional[str] = None,
         skip_duplicates: bool = True,

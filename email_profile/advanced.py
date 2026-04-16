@@ -1,47 +1,52 @@
-"""Advanced / power-user symbols.
-
-Anything that is not part of the "read inbox in 4 lines" experience lives
-here. The top-level ``email_profile`` module only exposes the essentials;
-everything else is available from this submodule::
-
-    from email_profile.advanced import resolve_imap_host, Where, MailBox
-"""
+"""Advanced / power-user symbols."""
 
 from __future__ import annotations
 
-from email_profile.dump import MessageDumper
-from email_profile.eml import EmailModel
-from email_profile.errors import Retryable
-from email_profile.mailbox import AppendedUID, MailBox
+from email_profile.clients.imap_client import ImapClient
+from email_profile.clients.smtp_client import SmtpClient
+from email_profile.core.abc import (
+    ImapClientProtocol,
+    SenderProtocol,
+    SmtpClientProtocol,
+    StorageABC,
+)
+from email_profile.core.credentials import Credentials, EmailFactories
+from email_profile.core.errors import Retryable
+from email_profile.core.status import IMAPError, Status
+from email_profile.core.types import AppendedUID, IMAPHost, SMTPHost
+from email_profile.mailbox import MailBox
+from email_profile.models.email import EmailModel
 from email_profile.parser import Attachment, ParsedBody, parse_rfc822
-from email_profile.protocols import StorageProtocol
 from email_profile.providers import (
-    IMAPHost,
     ProviderResolutionError,
     resolve_imap_host,
     resolve_smtp_host,
 )
 from email_profile.retry import with_retry
 from email_profile.searches import Where
-from email_profile.smtp_client import SmtpClient
-from email_profile.status import IMAPError, Status
-from email_profile.types import SMTPHost
+from email_profile.storage.dump import MessageDumper
 
 __all__ = [
     "AppendedUID",
     "Attachment",
+    "Credentials",
+    "EmailFactories",
     "EmailModel",
     "IMAPError",
     "IMAPHost",
+    "ImapClient",
+    "ImapClientProtocol",
     "MailBox",
     "MessageDumper",
     "ParsedBody",
     "ProviderResolutionError",
     "Retryable",
     "SMTPHost",
+    "SenderProtocol",
     "SmtpClient",
+    "SmtpClientProtocol",
     "Status",
-    "StorageProtocol",
+    "StorageABC",
     "Where",
     "parse_rfc822",
     "resolve_imap_host",
