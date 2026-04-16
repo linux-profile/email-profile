@@ -86,13 +86,12 @@ class Where:
 
         original = self._cached_uids
         self._cached_uids = [uids[-1]]
-
-        for msg in self.messages(chunk_size=1):
+        try:
+            for msg in self.messages(chunk_size=1):
+                return msg
+            return None
+        finally:
             self._cached_uids = original
-            return msg
-
-        self._cached_uids = original
-        return None
 
     def list(self) -> list[Message]:
         return list(self.messages())
@@ -112,13 +111,15 @@ class Where:
 
         original = self._cached_uids
         self._cached_uids = selected
-        result = list(self.messages())
-        self._cached_uids = original
+        try:
+            result = list(self.messages())
 
-        if isinstance(index, int):
-            return result[0] if result else None
+            if isinstance(index, int):
+                return result[0] if result else None
 
-        return result
+            return result
+        finally:
+            self._cached_uids = original
 
     def __iter__(self) -> Iterator[Message]:
         return self.messages()
