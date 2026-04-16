@@ -22,8 +22,8 @@ class TestStatus(TestCase):
         with self.assertRaises(IMAPError):
             Status.validate_status("XYZ")
 
-    def test_validate_status_no_raise_returns_response(self):
-        response = Status.validate_status("NO", raise_error=False)
+    def test_check_status_no_returns_response(self):
+        response = Status.check_status("NO")
         self.assertFalse(response.ok)
 
 
