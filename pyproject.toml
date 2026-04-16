@@ -5,7 +5,7 @@ authors = [
   { name="Fernando Celmer", email="email@fernandocelmer.com" },
 ]
 license = {file = "LICENSE"}
-description = "📩 Read, search, back up and restore IMAP mailboxes from Python — works with Gmail, Outlook, iCloud, Hostinger and any custom domain."
+description = "The simplest way to work with email in Python. Read, search, send, sync, backup and restore — IMAP + SMTP in one library."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
@@ -18,28 +18,44 @@ dependencies = [
 keywords = [
   "email",
   "imap",
+  "smtp",
   "mailbox",
   "inbox",
   "backup",
   "restore",
+  "sync",
+  "send",
+  "reply",
+  "forward",
   "rfc822",
   "eml",
   "attachments",
   "search",
+  "query",
   "gmail",
   "outlook",
+  "yahoo",
+  "icloud",
   "hostinger",
+  "auto-discovery",
+  "progress",
+  "sqlite",
+  "migration",
 ]
 classifiers = [
-  'Development Status :: 4 - Beta',
+  "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
   "License :: OSI Approved :: MIT License",
-  'Intended Audience :: Developers',
-  'Natural Language :: English',
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "Natural Language :: English",
   "Topic :: Communications :: Email",
   "Topic :: Communications :: Email :: Post-Office :: IMAP",
+  "Topic :: Communications :: Email :: Email Clients (MUA)",
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: System :: Archiving :: Backup",
+  "Typing :: Typed",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -50,46 +66,63 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://github.com/linux-profile/email-profile"
-Issues = "https://github.com/linux-profile/email-profile/issues"
+Documentation = "https://linux-profile.github.io/email-profile/"
 Repository = "https://github.com/linux-profile/email-profile"
-Documentation = "https://github.com/linux-profile/email-profile/blob/master/README.md"
+Issues = "https://github.com/linux-profile/email-profile/issues"
+Changelog = "https://linux-profile.github.io/email-profile/nav/development/release-notes/"
 
 [tool.poetry]
 name = "email-profile"
 version = "0.6.0"
-description = "📩 Read, search, back up and restore IMAP mailboxes from Python — works with Gmail, Outlook, iCloud, Hostinger and any custom domain."
+description = "The simplest way to work with email in Python. Read, search, send, sync, backup and restore — IMAP + SMTP in one library."
 authors = ["Fernando Celmer <email@fernandocelmer.com>"]
 readme = "README.md"
 license = "MIT"
 package-mode = true
 homepage = "https://github.com/linux-profile/email-profile"
-documentation = "https://github.com/linux-profile/email-profile/blob/master/README.md"
+documentation = "https://linux-profile.github.io/email-profile/"
 repository = "https://github.com/linux-profile/email-profile"
 keywords = [
   "email",
   "imap",
+  "smtp",
   "mailbox",
   "inbox",
   "backup",
   "restore",
+  "sync",
+  "send",
+  "reply",
+  "forward",
   "rfc822",
   "eml",
   "attachments",
   "search",
+  "query",
   "gmail",
   "outlook",
+  "yahoo",
+  "icloud",
   "hostinger",
+  "auto-discovery",
+  "progress",
+  "sqlite",
+  "migration",
 ]
 classifiers = [
-  'Development Status :: 4 - Beta',
+  "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
   "License :: OSI Approved :: MIT License",
-  'Intended Audience :: Developers',
-  'Natural Language :: English',
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "Natural Language :: English",
   "Topic :: Communications :: Email",
   "Topic :: Communications :: Email :: Post-Office :: IMAP",
+  "Topic :: Communications :: Email :: Email Clients (MUA)",
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: System :: Archiving :: Backup",
+  "Typing :: Typed",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
