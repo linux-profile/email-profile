@@ -55,6 +55,16 @@ class StorageSQLite(StorageABC):
     def save(self, raw: RawSerializer) -> bool:
         """Persist the RFC822 source. Returns True if inserted, False if updated."""
         with self._session_factory() as session:
+            exists = (
+                session.query(RawModel.uid)
+                .filter(
+                    RawModel.uid == raw.uid,
+                    RawModel.mailbox == raw.mailbox,
+                )
+                .first()
+                is not None
+            )
+
             stmt = sqlite_insert(RawModel).values(
                 message_id=raw.message_id,
                 uid=raw.uid,
@@ -70,9 +80,9 @@ class StorageSQLite(StorageABC):
                     "file": stmt.excluded.file,
                 },
             )
-            result = session.execute(stmt)
+            session.execute(stmt)
             session.commit()
-            return result.rowcount == 1
+            return not exists
 
     def get(self, message_id: str) -> Optional[RawSerializer]:
         """Retrieve the RFC822 source by email id."""
