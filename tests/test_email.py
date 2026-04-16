@@ -81,7 +81,7 @@ class TestFromEmail(TestCase):
         from email_profile import IMAPHost
 
         with patch(
-            "email_profile.factories.resolve_imap_host",
+            "email_profile.credentials.resolve_imap_host",
             return_value=IMAPHost("imap.test", port=993),
         ):
             app = Email.from_email("a@test.example", "pw")
