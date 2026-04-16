@@ -38,6 +38,7 @@ class Sync:
         mailbox: Optional[str] = None,
         mailbox_names: Optional[list[str]] = None,
         max_workers: int = 3,
+        skip_duplicates: bool = True,
     ) -> SyncResult:
         """Sync one or all mailboxes with progress and parallel fetch."""
 
@@ -89,7 +90,12 @@ class Sync:
                         with lock:
                             progress.update(_task, completed=done, total=total)
 
-                    result = self.sync(box, storage, on_progress=on_progress)
+                    result = self.sync(
+                        box,
+                        storage,
+                        on_progress=on_progress,
+                        skip_duplicates=skip_duplicates,
+                    )
 
                     with lock:
                         progress.update(task, visible=False)
@@ -138,16 +144,29 @@ class Sync:
         mailbox: MailBox,
         storage: StorageABC,
         on_progress: Optional[Callable[[int, int], None]] = None,
+        skip_duplicates: bool = True,
     ) -> SyncResult:
         """Sync one mailbox from IMAP into local storage."""
 
         result = SyncResult(mailbox=mailbox.name)
         server_uids = mailbox.where().uids()
-
-        existing_uids = storage.uids(mailbox.name)
-        new_uids = [u for u in server_uids if u not in existing_uids]
-
         total = len(server_uids)
+
+        client = mailbox._client
+        if client is None:
+            return result
+
+        if skip_duplicates:
+            existing_ids = storage.ids(mailbox.name)
+            server_msg_ids = Fetch.fetch_message_ids(client, server_uids)
+            new_uids = [
+                uid
+                for uid, mid in server_msg_ids.items()
+                if mid not in existing_ids
+            ]
+        else:
+            new_uids = server_uids
+
         result.skipped = total - len(new_uids)
 
         if on_progress is not None:
@@ -157,10 +176,6 @@ class Sync:
             return result
 
         done = result.skipped
-
-        client = mailbox._client
-        if client is None:
-            return result
 
         fetch = Fetch(
             client=client,
