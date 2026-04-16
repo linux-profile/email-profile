@@ -98,8 +98,8 @@ class Restore:
                         session,
                         box_name,
                         message_ids,
-                        storage,
-                        skip_duplicates,
+                        storage=storage,
+                        skip_duplicates=skip_duplicates,
                     )
 
                     with lock:
@@ -148,6 +148,7 @@ class Restore:
         session: ImapClient,
         box_name: str,
         message_ids: list[str],
+        *,
         storage: StorageABC,
         skip_duplicates: bool = True,
     ) -> dict[str, int]:
