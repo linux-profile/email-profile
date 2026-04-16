@@ -18,3 +18,9 @@ for name, mailbox in client.mailboxes.items():
 
 client.close()
 ```
+
+## Reference
+
+- [ImapClient](../reference/imap-client.md)
+- [MailBox](../reference/mailbox.md)
+- [Where](../reference/where.md)

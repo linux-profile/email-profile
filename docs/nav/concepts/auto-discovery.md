@@ -42,3 +42,9 @@ Any server with proper DNS SRV or MX records is also detected automatically.
 ## Usage
 
 {* ./docs_src/auto_discovery.py *}
+
+## Reference
+
+- [Email](../reference/email.md)
+- [Types](../reference/types.md)
+- [Credentials](../reference/credentials.md)

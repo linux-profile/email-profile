@@ -33,3 +33,9 @@ Backup your mailbox to a local SQLite database.
 ## Full Code
 
 {* ./docs_src/quickstart.py *}
+
+## Reference
+
+- [Email](../reference/email.md)
+- [Query & Q](../reference/query.md)
+- [Message](../reference/email-serializer.md)

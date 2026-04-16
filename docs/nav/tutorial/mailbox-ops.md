@@ -19,3 +19,9 @@
 ## Full Code
 
 {* ./docs_src/mailbox_ops.py *}
+
+## Reference
+
+- [Email](../reference/email.md)
+- [MailBox](../reference/mailbox.md)
+- [Where](../reference/where.md)

@@ -31,3 +31,9 @@ EMAIL_SERVER=imap.example.com  # optional, auto-discovered
 ## Full Code
 
 {* ./docs_src/connect.py *}
+
+## Reference
+
+- [Email](../reference/email.md)
+- [Credentials](../reference/credentials.md)
+- [Errors](../reference/errors.md)

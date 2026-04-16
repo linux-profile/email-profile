@@ -23,3 +23,10 @@
 ## Full Code
 
 {* ./docs_src/sync_and_restore.py *}
+
+## Reference
+
+- [Email](../reference/email.md)
+- [Sync](../reference/sync.md)
+- [Restore](../reference/restore.md)
+- [SyncResult](../reference/sync-result.md)

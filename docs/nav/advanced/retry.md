@@ -11,3 +11,7 @@ def flaky_operation():
 ```
 
 Automatically retries on transient errors. Backs off exponentially between attempts. Does not retry on `QuotaExceeded`.
+
+## Reference
+
+- [Errors](../reference/errors.md)

@@ -77,3 +77,8 @@ msg = Message.from_raw(
     raw=b"From: alice@x.com\r\nSubject: Hello\r\n\r\nHi!",
 )
 ```
+
+## Reference
+
+- [Message](../reference/email-serializer.md)
+- [Attachment](../reference/attachment.md)

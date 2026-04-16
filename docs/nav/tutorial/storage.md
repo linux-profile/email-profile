@@ -17,3 +17,9 @@ By default, emails are stored in `./email.db` (SQLite).
 ## Full Code
 
 {* ./docs_src/storage.py *}
+
+## Reference
+
+- [StorageSQLite](../reference/storage.md)
+- [StorageABC](../reference/storage-abc.md)
+- [Email](../reference/email.md)

@@ -19,3 +19,8 @@ with SmtpClient(host, user="user@gmail.com", password="app_password") as smtp:
         )
         smtp.send(msg)
 ```
+
+## Reference
+
+- [SmtpClient](../reference/smtp-client.md)
+- [Types](../reference/types.md)

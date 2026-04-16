@@ -46,3 +46,8 @@ with Email.from_env() as app:
     for name in app.mailboxes():
         print(name)
 ```
+
+## Reference
+
+- [Email](../reference/email.md)
+- [MailBox](../reference/mailbox.md)

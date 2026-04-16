@@ -15,3 +15,8 @@
 ## Full Code
 
 {* ./docs_src/error_handling.py *}
+
+## Reference
+
+- [Errors](../reference/errors.md)
+- [Email](../reference/email.md)

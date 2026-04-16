@@ -59,3 +59,9 @@ with Email.from_env(storage=storage) as app:
 4. **`uids()` filters by mailbox** — this is how sync knows which emails to skip
 5. **`ids()` with `mailbox=None`** returns all message_ids across all mailboxes
 6. **Thread safety** — sync runs with multiple threads, your storage must handle concurrent writes
+
+## Reference
+
+- [StorageABC](../reference/storage-abc.md)
+- [StorageSQLite](../reference/storage.md)
+- [RawSerializer](../reference/raw-serializer.md)

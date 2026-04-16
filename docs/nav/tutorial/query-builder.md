@@ -44,3 +44,9 @@ print(msg.from_)
 ## Full Code
 
 {* ./docs_src/query_builder.py *}
+
+## Reference
+
+- [Query & Q](../reference/query.md)
+- [Where](../reference/where.md)
+- [Email](../reference/email.md)

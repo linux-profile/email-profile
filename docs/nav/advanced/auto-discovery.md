@@ -18,3 +18,8 @@ The resolution follows this order:
 2. DNS SRV records (`_imaps._tcp.<domain>`)
 3. MX record hints
 4. Convention fallback (`imap.<domain>`)
+
+## Reference
+
+- [Types](../reference/types.md)
+- [Credentials](../reference/credentials.md)

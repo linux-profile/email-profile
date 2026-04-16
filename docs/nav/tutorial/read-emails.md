@@ -19,3 +19,10 @@
 ## Full Code
 
 {* ./docs_src/read_emails.py *}
+
+## Reference
+
+- [Email](../reference/email.md)
+- [Message](../reference/email-serializer.md)
+- [Where](../reference/where.md)
+- [MailBox](../reference/mailbox.md)

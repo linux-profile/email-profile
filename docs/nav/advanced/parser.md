@@ -16,3 +16,8 @@ print(parsed.headers)
 ```
 
 Returns a `ParsedBody` with all essential fields, metadata, and a `headers` bag for everything else.
+
+## Reference
+
+- [Attachment](../reference/attachment.md)
+- [Message](../reference/email-serializer.md)

@@ -27,3 +27,9 @@
 ## Full Code
 
 {* ./docs_src/send_email.py *}
+
+## Reference
+
+- [Email](../reference/email.md)
+- [Sender](../reference/sender.md)
+- [Message](../reference/email-serializer.md)
