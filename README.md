@@ -236,13 +236,13 @@ Auto-discovery works out of the box for these providers and any server with DNS 
 | <img src="docs/assets/icons/gandi.svg" width="16"> | Gandi | mail.gandi.net |
 | <img src="docs/assets/icons/ovh.svg" width="16"> | OVH | ssl0.ovh.net |
 | <img src="docs/assets/icons/ionos.svg" width="16"> | Ionos (1&1) | imap.ionos.com |
-| | Fastmail | imap.fastmail.com |
-| | Rackspace | secure.emailsrvr.com |
-| | Titan | imap.titan.email |
-| | Locaweb | imap.locaweb.com.br |
-| | KingHost | imap.kinghost.net |
-| | UOL | imap.uol.com.br |
-| | Terra | imap.terra.com.br |
+| <img src="docs/assets/icons/email.svg" width="16"> | Fastmail | imap.fastmail.com |
+| <img src="docs/assets/icons/email.svg" width="16"> | Rackspace | secure.emailsrvr.com |
+| <img src="docs/assets/icons/email.svg" width="16"> | Titan | imap.titan.email |
+| <img src="docs/assets/icons/email.svg" width="16"> | Locaweb | imap.locaweb.com.br |
+| <img src="docs/assets/icons/email.svg" width="16"> | KingHost | imap.kinghost.net |
+| <img src="docs/assets/icons/email.svg" width="16"> | UOL | imap.uol.com.br |
+| <img src="docs/assets/icons/email.svg" width="16"> | Terra | imap.terra.com.br |
 
 ## Environment Variables
 
