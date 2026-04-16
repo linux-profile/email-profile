@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import re
 from email import message_from_bytes
 from email.utils import parseaddr, parsedate_to_datetime
 
 from email_profile.core.status import Status
 from email_profile.serializers.email import EmailSerializer
+
+_UID_RE = re.compile(rb"UID (\d+)")
 
 
 def _state(context: tuple) -> list:
@@ -28,8 +31,11 @@ def _build_serializer(
         except (TypeError, ValueError):
             parsed_date = None
 
+    match = _UID_RE.search(raw_uid)
+    uid = match.group(1).decode() if match else raw_uid.decode().split()[0]
+
     return EmailSerializer.from_raw(
-        uid=raw_uid.decode().split()[0],
+        uid=uid,
         mailbox=mailbox,
         raw=raw_message,
         message_id=content.get("Message-ID"),
