@@ -13,6 +13,7 @@ dependencies = [
   "sqlalchemy",
   "dnspython",
   "python-dotenv",
+  "rich",
 ]
 keywords = [
   "email",
@@ -103,6 +104,7 @@ pydantic = "^2.7"
 sqlalchemy = "^2.0"
 dnspython = "^2.6"
 python-dotenv = "^1.0"
+rich = "^14.0"
 
 [tool.poetry.group.dev.dependencies]
 build = "^1.2"
