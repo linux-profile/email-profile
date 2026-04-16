@@ -104,10 +104,12 @@ nav:
       - nav/tutorial/read-emails.md
       - nav/tutorial/query-builder.md
       - nav/tutorial/send-email.md
-      - nav/tutorial/sync-and-restore.md
       - nav/tutorial/mailbox-ops.md
       - nav/tutorial/storage.md
       - nav/tutorial/error-handling.md
+    - Backup:
+      - nav/tutorial/sync.md
+      - nav/tutorial/restore.md
     - Advanced:
       - nav/advanced/imap-client.md
       - nav/advanced/smtp-client.md
