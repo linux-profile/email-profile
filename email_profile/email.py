@@ -207,6 +207,7 @@ class Email:
         self,
         mailbox: Optional[str] = None,
         max_workers: int = 3,
+        skip_duplicates: bool = True,
     ) -> SyncResult:
         """Sync server state into local storage."""
         return self._sync.orchestrate(
@@ -214,6 +215,7 @@ class Email:
             mailbox=mailbox,
             mailbox_names=self._folders.mailboxes() if not mailbox else None,
             max_workers=max_workers,
+            skip_duplicates=skip_duplicates,
         )
 
     def restore(
