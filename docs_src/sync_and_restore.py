@@ -5,7 +5,7 @@ from email_profile import Email
 
 def main() -> None:
     with Email.from_env() as app:
-        # Sync all mailboxes
+        # Sync all mailboxes (compares by Message-ID)
         result = app.sync()
         print(f"Synced: {result.inserted} new, {result.skipped} skipped")
 
@@ -13,7 +13,10 @@ def main() -> None:
         result = app.sync(mailbox="INBOX")
         print(f"INBOX: {result.inserted} new")
 
-        # Restore all mailboxes to server
+        # Force re-download (skip duplicate check)
+        result = app.sync(skip_duplicates=False)
+
+        # Restore all mailboxes to server (compares by Message-ID)
         count = app.restore()
         print(f"Restored {count} emails")
 
@@ -21,7 +24,7 @@ def main() -> None:
         count = app.restore(mailbox="INBOX")
         print(f"Restored {count} to INBOX")
 
-        # Restore without duplicate check (faster)
+        # Force re-upload (skip duplicate check)
         count = app.restore(skip_duplicates=False)
 
         # Control parallelism

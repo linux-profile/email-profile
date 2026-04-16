@@ -1,20 +1,27 @@
-"""Custom storage configuration."""
+"""Custom storage configuration.
+
+Storage is lazily initialized — the database file is only created
+when sync() or restore() is first called, not on Email() construction.
+"""
 
 from email_profile import Email, StorageSQLite
 
 
 def main() -> None:
-
-    # Default storage (./email.db)
+    # Default storage (./email.db, created on first sync/restore)
     with Email.from_env() as app:
-        print(f"Storage: {app.storage}")
+        app.sync()  # email.db is created here, not before
 
     # Custom storage path
-    with Email.from_env(storage=StorageSQLite("./backup.db")) as app:
+    storage = StorageSQLite("./backup.db")
+    with Email.from_env() as app:
+        app.storage = storage
         app.sync()
 
     # In-memory storage (for testing)
-    with Email.from_env(storage=StorageSQLite("sqlite:///:memory:")) as app:
+    storage = StorageSQLite("sqlite:///:memory:")
+    with Email.from_env() as app:
+        app.storage = storage
         app.sync()
 
 

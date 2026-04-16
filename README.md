@@ -161,12 +161,15 @@ Sync your entire mailbox to a local SQLite database. Incremental — only downlo
 
 ```python
 with Email.from_env() as app:
-    # Backup everything
+    # Backup everything (compares by Message-ID, skips duplicates)
     result = app.sync()
     print(f"{result.inserted} new, {result.skipped} skipped")
 
     # Backup one mailbox
     result = app.sync(mailbox="INBOX")
+
+    # Force re-download (skip duplicate check)
+    result = app.sync(skip_duplicates=False)
 
     # Restore to server (e.g. after migrating)
     count = app.restore()
@@ -196,15 +199,18 @@ with Email.from_env() as app:
 
 ### Custom Storage
 
+Storage is lazily initialized — `email.db` is only created when `sync()` or `restore()` is first called.
+
 ```python
 from email_profile import Email, StorageSQLite
 
-# Default: saves to ./email.db
+# Default: saves to ./email.db on first sync
 with Email.from_env() as app:
     app.sync()
 
 # Custom path
-with Email.from_env(storage=StorageSQLite("./backup.db")) as app:
+with Email.from_env() as app:
+    app.storage = StorageSQLite("./backup.db")
     app.sync()
 ```
 

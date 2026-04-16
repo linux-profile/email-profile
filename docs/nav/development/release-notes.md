@@ -9,7 +9,7 @@
 - ⚙️ Add Query builder with `exclude()` and `or_()` chaining
 - ⚙️ Add Q composable expressions (AND, OR, NOT)
 - ⚙️ Add F fetch spec builder
-- ⚙️ Add ImapFetch, ImapSearch, EmailParser protocol parsers
+- ⚙️ Add FetchParser, SearchParser, EmailParser protocol parsers
 - ⚙️ Add auto-discovery for 50+ email providers (DNS SRV, MX, known hosts)
 - ⚙️ Rename EmailSerializer to Message
 - ⚙️ Add `Where.first()`, `last()`, `list()`, `[index]`, `len()`, `bool()`

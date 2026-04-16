@@ -1,14 +1,10 @@
 """Sync your inbox with the local SQLite database."""
 
-import logging
-
 from email_profile import Email
-
-logging.basicConfig(level=logging.ERROR)
 
 
 def main() -> None:
-    with Email().from_env() as app:
+    with Email.from_env() as app:
         stats = app.sync("INBOX")
         print(
             f"Synced: "

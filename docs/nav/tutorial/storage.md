@@ -2,17 +2,17 @@
 
 ## Default Storage
 
-By default, emails are stored in `./email.db` (SQLite).
+By default, emails are stored in `./email.db` (SQLite). The database file is lazily created — only when `sync()` or `restore()` is first called.
 
-{* ./docs_src/storage.py ln[8:10] *}
+{* ./docs_src/storage.py ln[9:11] *}
 
 ## Custom Path
 
-{* ./docs_src/storage.py ln[12:14] *}
+{* ./docs_src/storage.py ln[13:16] *}
 
 ## In-Memory (testing)
 
-{* ./docs_src/storage.py ln[16:18] *}
+{* ./docs_src/storage.py ln[18:21] *}
 
 ## Full Code
 

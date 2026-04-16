@@ -125,9 +125,11 @@ nav:
     - Reference:
       - nav/reference/email.md
       - nav/reference/query.md
+      - nav/reference/q.md
       - nav/reference/where.md
       - nav/reference/mailbox.md
       - nav/reference/folder-access.md
+      - nav/reference/fetch-executor.md
       - nav/reference/fetch.md
       - Serializers:
         - nav/reference/email-serializer.md
@@ -146,11 +148,13 @@ nav:
         - nav/reference/imap-client.md
         - nav/reference/smtp-client.md
         - nav/reference/sender.md
-      - Protocol:
-        - nav/reference/protocol.md
-        - nav/reference/status.md
+      - Parsers:
+        - nav/reference/fetch-parser.md
+        - nav/reference/search-parser.md
+        - nav/reference/email-parser.md
       - Abstract:
         - nav/reference/abc-clients.md
+      - nav/reference/status.md
       - nav/reference/credentials.md
       - nav/reference/types.md
       - nav/reference/errors.md

@@ -1,6 +1,6 @@
 # Sync
 
-Sync downloads emails from your IMAP server to a local SQLite database. It's incremental — only new emails are downloaded. Already synced emails are skipped based on their IMAP UID.
+Sync downloads emails from your IMAP server to a local SQLite database. It's incremental — only new emails are downloaded. Already synced emails are skipped by comparing their Message-ID with what's already stored locally.
 
 ## Why Sync?
 
@@ -16,6 +16,14 @@ Sync downloads emails from your IMAP server to a local SQLite database. It's inc
 ## Sync One Mailbox
 
 {* ./docs_src/sync_and_restore.py ln[12:14] *}
+
+## Skip Duplicates
+
+By default, sync checks if an email already exists locally (by Message-ID) and skips it. Disable this to force re-download:
+
+```python
+result = app.sync(skip_duplicates=False)
+```
 
 ## Parallel Workers
 
@@ -52,12 +60,14 @@ print(result.has_errors)
 
 ## Where are emails stored?
 
-By default, in `./email.db` (SQLite). You can change this:
+By default, in `./email.db` (SQLite). The database file is only created when `sync()` or `restore()` is first called — not on `Email()` construction.
 
 ```python
 from email_profile import Email, StorageSQLite
 
-with Email.from_env(storage=StorageSQLite("./backup.db")) as app:
+storage = StorageSQLite("./backup.db")
+with Email.from_env() as app:
+    app.storage = storage
     app.sync()
 ```
 

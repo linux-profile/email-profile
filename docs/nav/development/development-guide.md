@@ -137,7 +137,6 @@ pre-commit run --all-files
 ```
 email_profile/
 ├── email.py                  # Main facade (Email class)
-├── _internal.py              # Shared helpers
 ├── parser.py                 # RFC822 parser
 ├── providers.py              # Auto-discovery (DNS SRV, MX, known hosts)
 ├── retry.py                  # Exponential backoff
@@ -148,9 +147,9 @@ email_profile/
 │   │   ├── mailbox.py        # Folder operations
 │   │   ├── folders.py        # Folder mapping (EN/PT/ES)
 │   │   ├── query.py          # Query builder (Q, Query)
-│   │   ├── searches.py       # Lazy search (Where)
-│   │   ├── fetch.py          # Fetch spec builder (F)
-│   │   ├── protocol.py       # IMAP response parsers
+│   │   ├── where.py          # Lazy search (Where)
+│   │   ├── fetch.py          # Fetch spec builder (F, Fetch)
+│   │   ├── parser.py         # IMAP response parsers
 │   │   ├── sync.py           # Server → storage
 │   │   └── restore.py        # Storage → server
 │   └── smtp/

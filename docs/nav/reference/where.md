@@ -1,3 +1,3 @@
 # Where
 
-::: email_profile.clients.imap.searches.Where
+::: email_profile.clients.imap.where.Where
