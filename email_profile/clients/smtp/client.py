@@ -87,6 +87,7 @@ class SmtpClient:
 
     def __init__(
         self,
+        *,
         host: SMTPHost,
         user: str,
         password: str,

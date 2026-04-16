@@ -13,11 +13,11 @@ from rich.progress import Progress
 
 from email_profile._internal import _state
 from email_profile.clients.imap.client import ImapClient
+from email_profile.clients.imap.fetch import Fetch
 from email_profile.clients.imap.mailbox import MailBox, _quote
-from email_profile.clients.imap.protocol import (
+from email_profile.clients.imap.parser import (
     EmailParser,
-    ImapFetch,
-    ImapSearch,
+    SearchParser,
 )
 from email_profile.serializers.raw import RawSerializer
 
@@ -196,11 +196,11 @@ def _server_message_ids(client: object, mailbox_name: str) -> set[str]:
     if status != "OK" or not data or not data[0]:
         return ids
 
-    search = ImapSearch(data)
+    search = SearchParser(data)
     if search.is_empty():
         return ids
 
-    msg_ids = ImapFetch.fetch_message_ids(client, search.uids())
+    msg_ids = Fetch.fetch_message_ids(client, search.uids())
     ids.update(msg_ids.values())
 
     return ids

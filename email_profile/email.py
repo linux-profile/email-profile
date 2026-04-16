@@ -9,8 +9,8 @@ from email_profile.clients.imap.client import ImapClient
 from email_profile.clients.imap.folders import FolderAccess
 from email_profile.clients.imap.queries import QueryShortcuts
 from email_profile.clients.imap.restore import Restore
-from email_profile.clients.imap.searches import Where
 from email_profile.clients.imap.sync import Sync
+from email_profile.clients.imap.where import Where
 from email_profile.clients.smtp.client import AttachmentLike
 from email_profile.clients.smtp.sender import Sender
 from email_profile.core.abc import StorageABC, SyncResult
@@ -60,7 +60,17 @@ class Email:
         self._sync = Sync(self._session)
         self._restore = Restore(self._session)
         self._sender = Sender(self._session, self._folders)
-        self.storage = storage or StorageSQLite()
+        self._storage = storage
+
+    @property
+    def storage(self) -> StorageABC:
+        if self._storage is None:
+            self._storage = StorageSQLite()
+        return self._storage
+
+    @storage.setter
+    def storage(self, value: StorageABC) -> None:
+        self._storage = value
 
     @staticmethod
     def _resolve(

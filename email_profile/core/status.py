@@ -64,13 +64,21 @@ class Status:
     }
 
     @staticmethod
+    def check_status(
+        status: str,
+    ) -> StatusResponse:
+        """Return a StatusResponse without raising on failure."""
+        ok, message = Status._MESSAGES.get(status, (False, "Unknown error"))
+        return StatusResponse(ok=ok, message=message)
+
+    @staticmethod
     def validate_status(
         status: str,
-        raise_error: bool = True,
         payload: object = None,
     ) -> StatusResponse:
+        """Return a StatusResponse, raising on failure."""
         ok, message = Status._MESSAGES.get(status, (False, "Unknown error"))
-        if raise_error and not ok:
+        if not ok:
             specific = _classify(payload)
             if specific is not None:
                 raise specific
