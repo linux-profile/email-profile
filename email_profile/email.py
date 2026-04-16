@@ -60,7 +60,17 @@ class Email:
         self._sync = Sync(self._session)
         self._restore = Restore(self._session)
         self._sender = Sender(self._session, self._folders)
-        self.storage = storage or StorageSQLite()
+        self._storage = storage
+
+    @property
+    def storage(self) -> StorageABC:
+        if self._storage is None:
+            self._storage = StorageSQLite()
+        return self._storage
+
+    @storage.setter
+    def storage(self, value: StorageABC) -> None:
+        self._storage = value
 
     @staticmethod
     def _resolve(
