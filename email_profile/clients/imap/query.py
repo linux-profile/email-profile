@@ -14,7 +14,7 @@ from __future__ import annotations
 from datetime import date
 from typing import Optional, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 def _ascii(value: str) -> str:
@@ -194,7 +194,7 @@ class Query(BaseModel):
     deleted: Optional[bool] = None
     draft: Optional[bool] = None
 
-    unseen: bool = False
+    unseen: Optional[bool] = None
 
     def _date_clauses(self) -> list[str]:
         fields = (
@@ -229,6 +229,12 @@ class Query(BaseModel):
             f"({name} {value})" for name, value in fields if value is not None
         ]
 
+    @model_validator(mode="after")
+    def _check_seen_unseen(self) -> Query:
+        if self.seen is True and self.unseen is True:
+            raise ValueError("Cannot set both seen=True and unseen=True.")
+        return self
+
     def _flag_clauses(self) -> list[str]:
         fields = (
             (self.seen, "SEEN"),
@@ -241,9 +247,7 @@ class Query(BaseModel):
         for flag, name in fields:
             if flag is True:
                 parts.append(f"({name})")
-            elif flag is False:
-                parts.append(f"(UN{name})")
-        if self.unseen:
+        if self.unseen is True:
             parts.append("(UNSEEN)")
         return parts
 
