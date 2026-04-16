@@ -194,7 +194,7 @@ class Query(BaseModel):
     deleted: Optional[bool] = None
     draft: Optional[bool] = None
 
-    unseen: bool = False
+    unseen: Optional[bool] = None
 
     def _date_clauses(self) -> list[str]:
         fields = (
@@ -243,8 +243,10 @@ class Query(BaseModel):
                 parts.append(f"({name})")
             elif flag is False:
                 parts.append(f"(UN{name})")
-        if self.unseen:
+        if self.unseen is True:
             parts.append("(UNSEEN)")
+        elif self.unseen is False:
+            parts.append("(SEEN)")
         return parts
 
     def _clauses(self) -> list[str]:
