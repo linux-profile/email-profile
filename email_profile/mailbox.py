@@ -19,6 +19,16 @@ if TYPE_CHECKING:
 
 
 MessageLike = Union["EmailSerializer", bytes, str]
+UIDLike = Union["EmailSerializer", str, int]
+
+
+def _uid_of(target: UIDLike) -> str:
+    """Extract the IMAP UID as a string from a serializer, int or str."""
+    from email_profile.eml import EmailSerializer
+
+    if isinstance(target, EmailSerializer):
+        return target.uid
+    return str(target)
 
 
 _APPENDUID_RE = re.compile(rb"APPENDUID (\d+) (\d+)")
@@ -123,6 +133,74 @@ class MailBox:
         status, payload = do_append(self.name, flags, date_time, raw)
         _state((status, payload))
         return _parse_append_uid(payload)
+
+    def _store(self, target: UIDLike, command: str, flag: str) -> None:
+        _state(self._client.select(self.name))
+        _state(self._client.uid("STORE", _uid_of(target), command, flag))
+
+    def mark_seen(self, target: UIDLike) -> None:
+        """Mark a message as read (``\\Seen``)."""
+        self._store(target, "+FLAGS", "\\Seen")
+
+    def mark_unseen(self, target: UIDLike) -> None:
+        """Mark a message as unread."""
+        self._store(target, "-FLAGS", "\\Seen")
+
+    def flag(self, target: UIDLike) -> None:
+        """Flag a message (``\\Flagged``)."""
+        self._store(target, "+FLAGS", "\\Flagged")
+
+    def unflag(self, target: UIDLike) -> None:
+        """Remove the ``\\Flagged`` flag."""
+        self._store(target, "-FLAGS", "\\Flagged")
+
+    def delete(self, target: UIDLike, expunge: bool = False) -> None:
+        """Mark a message as deleted. Call :meth:`expunge` to commit."""
+        self._store(target, "+FLAGS", "\\Deleted")
+        if expunge:
+            self.expunge()
+
+    def undelete(self, target: UIDLike) -> None:
+        """Unmark a message as deleted before the next expunge."""
+        self._store(target, "-FLAGS", "\\Deleted")
+
+    def expunge(self) -> None:
+        """Permanently remove every message marked as ``\\Deleted``."""
+        _state(self._client.select(self.name))
+        _state(self._client.expunge())
+
+    def copy(self, target: UIDLike, destination: str) -> None:
+        """Copy a message into another mailbox (``UID COPY``)."""
+        _state(self._client.select(self.name))
+        _state(self._client.uid("COPY", _uid_of(target), destination))
+
+    def move(self, target: UIDLike, destination: str) -> None:
+        """Move a message into another mailbox.
+
+        Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete + expunge
+        when the server does not advertise the MOVE extension.
+        """
+        _state(self._client.select(self.name))
+        uid = _uid_of(target)
+        try:
+            _state(self._client.uid("MOVE", uid, destination))
+        except Exception:
+            _state(self._client.uid("COPY", uid, destination))
+            _state(self._client.uid("STORE", uid, "+FLAGS", "\\Deleted"))
+            _state(self._client.expunge())
+
+    def create(self) -> None:
+        """Create this mailbox on the server."""
+        _state(self._client.create(self.name))
+
+    def delete_mailbox(self) -> None:
+        """Delete this mailbox from the server."""
+        _state(self._client.delete(self.name))
+
+    def rename_to(self, new_name: str) -> None:
+        """Rename this mailbox. Updates ``self.name`` in place."""
+        _state(self._client.rename(self.name, new_name))
+        self.name = new_name
 
     def __repr__(self) -> str:
         return f"MailBox(name={self.name!r}, flags={self.flags})"
