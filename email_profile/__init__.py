@@ -33,13 +33,13 @@ from email_profile.core.errors import (
     RateLimited,
 )
 from email_profile.email import Email
-from email_profile.serializers.email import EmailSerializer
+from email_profile.serializers.email import Message
 from email_profile.storage.sqlite import StorageSQLite
 
 __all__ = [
     "ConnectionFailure",
     "Email",
-    "EmailSerializer",
+    "Message",
     "NotConnected",
     "Q",
     "Query",

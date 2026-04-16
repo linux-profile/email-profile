@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
     from email_profile.clients.imap.mailbox import MailBox
     from email_profile.core.types import SMTPHost
-    from email_profile.serializers.email import EmailSerializer
+    from email_profile.serializers.email import Message
 
 
 class Email:
@@ -260,7 +260,7 @@ class Email:
 
     def reply(
         self,
-        original: EmailSerializer,
+        original: Message,
         body: str = "",
         *,
         html: Optional[str] = None,
@@ -279,7 +279,7 @@ class Email:
 
     def forward(
         self,
-        original: EmailSerializer,
+        original: Message,
         to: Union[str, list[str]],
         body: str = "",
         *,

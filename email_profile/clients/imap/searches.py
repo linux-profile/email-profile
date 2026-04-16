@@ -12,7 +12,7 @@ from email_profile.clients.imap.fetch import F
 from email_profile.clients.imap.protocol import ImapSearch
 from email_profile.clients.imap.query import Q, QueryLike, _to_expr
 from email_profile.retry import with_retry
-from email_profile.serializers.email import EmailSerializer
+from email_profile.serializers.email import Message
 
 if TYPE_CHECKING:
     from email_profile.clients.imap.mailbox import MailBox
@@ -71,8 +71,57 @@ class Where:
         return self.count() > 0
 
     def uids(self) -> list[str]:
-        """Matching IMAP UIDs — no body fetched."""
         return list(self._uids())
+
+    def first(self) -> Optional[Message]:
+        for msg in self.messages(chunk_size=1):
+            return msg
+        return None
+
+    def last(self) -> Optional[Message]:
+        uids = self._uids()
+
+        if not uids:
+            return None
+
+        original = self._cached_uids
+        self._cached_uids = [uids[-1]]
+
+        for msg in self.messages(chunk_size=1):
+            self._cached_uids = original
+            return msg
+
+        self._cached_uids = original
+        return None
+
+    def list(self) -> list[Message]:
+        return list(self.messages())
+
+    def __len__(self) -> int:
+        return self.count()
+
+    def __bool__(self) -> bool:
+        return self.exists()
+
+    def __getitem__(self, index: int | slice) -> Message | list[Message]:
+        uids = self._uids()
+        selected = uids[index]
+
+        if isinstance(selected, str):
+            selected = [selected]
+
+        original = self._cached_uids
+        self._cached_uids = selected
+        result = list(self.messages())
+        self._cached_uids = original
+
+        if isinstance(index, int):
+            return result[0] if result else None
+
+        return result
+
+    def __iter__(self) -> Iterator[Message]:
+        return self.messages()
 
     def messages(
         self,
@@ -80,7 +129,7 @@ class Where:
         mode: FetchMode = "full",
         chunk_size: Optional[int] = None,
         on_progress: Optional[Callable[[int, int], None]] = None,
-    ) -> Iterator[EmailSerializer]:
+    ) -> Iterator[Message]:
         """Stream matching messages, fetched in chunks. Wrap in ``list()``
         if you need a materialized list.
 

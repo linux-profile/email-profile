@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
     from email_profile.clients.imap.folders import FolderAccess
     from email_profile.core.types import SMTPHost
-    from email_profile.serializers.email import EmailSerializer
+    from email_profile.serializers.email import Message
 
 
 class Sender:
@@ -87,7 +87,7 @@ class Sender:
 
     def reply(
         self,
-        original: EmailSerializer,
+        original: Message,
         body: str = "",
         *,
         html: Optional[str] = None,
@@ -104,10 +104,10 @@ class Sender:
         cc = original.cc if reply_all else None
 
         headers: dict[str, str] = {}
-        if original.id:
-            headers["In-Reply-To"] = original.id
+        if original.message_id:
+            headers["In-Reply-To"] = original.message_id
             refs = (original.references or "").split()
-            refs.append(original.id)
+            refs.append(original.message_id)
             headers["References"] = " ".join(refs)
 
         self.send(
@@ -123,7 +123,7 @@ class Sender:
 
     def forward(
         self,
-        original: EmailSerializer,
+        original: Message,
         to: Union[str, list[str]],
         body: str = "",
         *,

@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from email_profile import Email, EmailSerializer, Q, Query
+from email_profile import Email, Message, Q, Query
 from tests.conftest import SAMPLE_RFC822, make_fake_client
 
 
@@ -52,9 +52,7 @@ class TestMailBoxAppend(TestCase):
         self._patcher.stop()
 
     def test_calls_imap_append(self):
-        msg = EmailSerializer.from_raw(
-            uid="1", mailbox="INBOX", raw=SAMPLE_RFC822
-        )
+        msg = Message.from_raw(uid="1", mailbox="INBOX", raw=SAMPLE_RFC822)
         self.app.inbox.append(msg)
         self.fake.append.assert_called_once()
 

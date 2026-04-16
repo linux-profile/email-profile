@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from email_profile.clients.imap.protocol import EmailParser, ImapFetch
+from email_profile.clients.imap.protocol import ImapFetch
 from email_profile.core.status import Status
-from email_profile.serializers.email import EmailSerializer
+from email_profile.serializers.email import Message
 
 
 def _state(context: tuple) -> list:
@@ -15,17 +15,11 @@ def _state(context: tuple) -> list:
 
 def _build_serializer(
     raw_uid: bytes, raw_message: bytes, mailbox: str
-) -> EmailSerializer:
+) -> Message:
     uid = ImapFetch((raw_uid, b"")).uid()
 
-    parsed = EmailParser(raw_message)
-
-    return EmailSerializer.from_raw(
+    return Message.from_raw(
         uid=uid or "0",
         mailbox=mailbox,
         raw=raw_message,
-        message_id=parsed.message_id(),
-        date=parsed.date(),
-        from_=parsed.from_(),
-        to_=parsed.to(),
     )

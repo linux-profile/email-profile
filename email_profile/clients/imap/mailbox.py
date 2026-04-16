@@ -15,11 +15,11 @@ from email_profile.core.types import AppendedUID
 from email_profile.retry import with_retry
 
 if TYPE_CHECKING:
-    from email_profile.serializers.email import EmailSerializer
+    from email_profile.serializers.email import Message
 
 
-MessageLike = Union["EmailSerializer", bytes, str]
-UIDLike = Union["EmailSerializer", str, int]
+MessageLike = Union["Message", bytes, str]
+UIDLike = Union["Message", str, int]
 
 
 def _quote(name: str) -> str:
@@ -30,9 +30,9 @@ def _quote(name: str) -> str:
 
 def _uid_of(target: UIDLike) -> str:
     """Extract the IMAP UID as a string from a serializer, int or str."""
-    from email_profile.serializers.email import EmailSerializer
+    from email_profile.serializers.email import Message
 
-    if isinstance(target, EmailSerializer):
+    if isinstance(target, Message):
         return target.uid
     return str(target)
 
@@ -115,9 +115,9 @@ class MailBox:
         (RFC 4315). Returns ``None`` otherwise — the message is still saved.
         """
 
-        from email_profile.serializers.email import EmailSerializer
+        from email_profile.serializers.email import Message
 
-        if isinstance(message, EmailSerializer):
+        if isinstance(message, Message):
             raw = message.file.encode("utf-8")
             if date is None:
                 date = message.date
@@ -127,7 +127,7 @@ class MailBox:
             raw = message
         else:
             raise TypeError(
-                "append expects EmailSerializer, bytes or str — "
+                "append expects Message, bytes or str — "
                 f"got {type(message).__name__}"
             )
 

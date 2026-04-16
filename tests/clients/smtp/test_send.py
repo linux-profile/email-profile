@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
-from email_profile import Email, EmailSerializer
+from email_profile import Email, Message
 from email_profile.core.types import SMTPHost
 from tests.conftest import SAMPLE_RFC822, make_fake_client
 
@@ -89,10 +89,10 @@ class TestSend(_SendTest):
 
 class TestReply(_SendTest):
     def test_reply_preserves_threading(self):
-        original = EmailSerializer.from_raw(
+        original = Message.from_raw(
             uid="1", mailbox="INBOX", raw=SAMPLE_RFC822
         )
-        original_id = original.id
+        original_id = original.message_id
 
         self.app.reply(original, body="thanks")
 
@@ -103,7 +103,7 @@ class TestReply(_SendTest):
 
     def test_reply_does_not_double_re_prefix(self):
         raw = SAMPLE_RFC822.replace(b"Subject: Hello", b"Subject: Re: hi")
-        original = EmailSerializer.from_raw(uid="1", mailbox="INBOX", raw=raw)
+        original = Message.from_raw(uid="1", mailbox="INBOX", raw=raw)
         self.app.reply(original, body="ok", save_to_sent=False)
         sent = self.smtp.send_message.call_args[0][0]
         self.assertFalse(sent["Subject"].lower().startswith("re: re:"))
@@ -111,7 +111,7 @@ class TestReply(_SendTest):
 
 class TestForward(_SendTest):
     def test_forward_prefixes_subject(self):
-        original = EmailSerializer.from_raw(
+        original = Message.from_raw(
             uid="1", mailbox="INBOX", raw=SAMPLE_RFC822
         )
         self.app.forward(original, to="carol@x")
@@ -119,12 +119,10 @@ class TestForward(_SendTest):
         self.assertTrue(sent["Subject"].startswith("Fwd:"))
 
     def test_forward_quotes_original(self):
-        original = EmailSerializer.from_raw(
+        original = Message.from_raw(
             uid="1",
             mailbox="INBOX",
             raw=SAMPLE_RFC822,
-            from_="alice@example.com",
-            to_="bob@example.com",
         )
         self.app.forward(original, to="carol@x", body="please see below")
         sent = self.smtp.send_message.call_args[0][0]

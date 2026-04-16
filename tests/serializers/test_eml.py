@@ -1,24 +1,20 @@
 from unittest import TestCase
 
 from email_profile.models.raw import RawModel
-from email_profile.serializers.email import EmailSerializer
+from email_profile.serializers.email import Message
 from email_profile.serializers.raw import RawSerializer
 from tests.conftest import SAMPLE_RFC822
 
 
 class TestFromRaw(TestCase):
     def test_round_trips_basic_fields(self):
-        msg = EmailSerializer.from_raw(
-            uid="42", mailbox="INBOX", raw=SAMPLE_RFC822
-        )
+        msg = Message.from_raw(uid="42", mailbox="INBOX", raw=SAMPLE_RFC822)
         self.assertEqual(msg.uid, "42")
         self.assertEqual(msg.mailbox, "INBOX")
         self.assertEqual(msg.subject, "Hello")
 
     def test_attaches_parsed_body(self):
-        msg = EmailSerializer.from_raw(
-            uid="1", mailbox="INBOX", raw=SAMPLE_RFC822
-        )
+        msg = Message.from_raw(uid="1", mailbox="INBOX", raw=SAMPLE_RFC822)
         self.assertIn("Hi Bob", msg.body_text_plain)
 
 

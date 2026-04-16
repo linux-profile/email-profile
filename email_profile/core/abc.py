@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from email.message import EmailMessage
 from typing import Optional, Union
 
-from email_profile.serializers.email import EmailSerializer
+from email_profile.serializers.email import Message
 from email_profile.serializers.raw import RawSerializer
 
 
@@ -128,7 +128,7 @@ class SenderABC(ABC):
     @abstractmethod
     def reply(
         self,
-        original: EmailSerializer,
+        original: Message,
         body: str = "",
         *,
         save_to_sent: bool = True,
@@ -137,7 +137,7 @@ class SenderABC(ABC):
     @abstractmethod
     def forward(
         self,
-        original: EmailSerializer,
+        original: Message,
         to: Union[str, list[str]],
         body: str = "",
         *,

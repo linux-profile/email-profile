@@ -5,21 +5,20 @@ from __future__ import annotations
 from datetime import datetime
 from hashlib import sha256
 from typing import Optional, Union
-from uuid import uuid4
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from email_profile.parser import Attachment, ParsedBody, parse_rfc822
 
 
-class EmailSerializer(BaseModel):
+class Message(BaseModel):
     """One email message as a validated DTO."""
 
     model_config = ConfigDict(
         populate_by_name=True, arbitrary_types_allowed=True
     )
 
-    id: Optional[str] = None
+    message_id: Optional[str] = None
     uid: str
     date: Optional[datetime] = None
     mailbox: str
@@ -42,16 +41,9 @@ class EmailSerializer(BaseModel):
     list_id: Optional[str] = None
     list_unsubscribe: Optional[str] = None
 
-    headers: dict[str, Union[str, list[str]]] = {}
-
     attachments: list[Attachment] = []
 
-    @field_validator("id", mode="before")
-    @classmethod
-    def _default_id(cls, value: Optional[str]) -> str:
-        if not value:
-            return uuid4().hex
-        return value
+    headers: dict[str, Union[str, list[str]]] = {}
 
     @classmethod
     def from_raw(
@@ -60,29 +52,21 @@ class EmailSerializer(BaseModel):
         uid: str,
         mailbox: str,
         raw: bytes,
-        message_id: Optional[str] = None,
-        date: Optional[datetime] = None,
-        from_: Optional[str] = None,
-        to_: Optional[str] = None,
-        file: Optional[str] = None,
-    ) -> EmailSerializer:
+    ) -> Message:
         """Parse RFC822 bytes into a serializer."""
-
         parsed: ParsedBody = parse_rfc822(raw)
 
-        fallback_id = message_id or sha256(raw).hexdigest()
-
         return cls(
-            id=fallback_id,
+            message_id=parsed.message_id or sha256(raw).hexdigest(),
             uid=uid,
             mailbox=mailbox,
-            date=date,
-            **{"from": from_, "to": to_},
+            date=parsed.date,
+            **{"from": parsed.from_, "to": parsed.to_},
             cc=parsed.cc,
             bcc=parsed.bcc,
             reply_to=parsed.reply_to,
             subject=parsed.subject,
-            file=file or raw.decode("utf-8", errors="replace"),
+            file=raw.decode("utf-8", errors="replace"),
             body_text_plain=parsed.body_text_plain,
             body_text_html=parsed.body_text_html,
             content_type=parsed.content_type,
@@ -98,6 +82,6 @@ class EmailSerializer(BaseModel):
         date = self.date.isoformat() if self.date else "?"
         subj = (self.subject or "")[:40]
         return (
-            f"EmailSerializer(uid={self.uid!r}, from={self.from_!r}, "
+            f"Message(uid={self.uid!r}, from={self.from_!r}, "
             f"date={date}, subject={subj!r})"
         )
