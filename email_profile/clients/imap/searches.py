@@ -8,12 +8,12 @@ from collections.abc import Iterator
 from typing import TYPE_CHECKING, Callable, Literal, Optional
 
 from email_profile._internal import _build_serializer, _state
-from email_profile.query import Q, QueryLike, _q
+from email_profile.clients.imap.query import Q, QueryLike, _q
 from email_profile.retry import with_retry
 from email_profile.serializers.email import EmailSerializer
 
 if TYPE_CHECKING:
-    from email_profile.mailbox import MailBox
+    from email_profile.clients.imap.mailbox import MailBox
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,9 @@ class Where:
         if self._cached_uids is not None:
             return self._cached_uids
 
-        _state(self._client.select(self._mailbox.name))
+        from email_profile.clients.imap.mailbox import _quote
+
+        _state(self._client.select(_quote(self._mailbox.name)))
 
         data = _state(self._client.uid("search", None, self._q.mount()))
 
@@ -98,8 +100,7 @@ class Where:
         spec = _FETCH_SPECS.get(mode)
         if spec is None:
             raise ValueError(
-                f"Unknown fetch mode {mode!r}. Use one of: "
-                f"{sorted(_FETCH_SPECS)}"
+                f"Unknown fetch mode {mode!r}. Use one of: {sorted(_FETCH_SPECS)}"
             )
 
         size = chunk_size or self.CHUNK_SIZE

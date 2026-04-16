@@ -9,7 +9,7 @@ class TestMailBoxWhere(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -41,7 +41,7 @@ class TestMailBoxAppend(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()

@@ -9,7 +9,7 @@ class TestConnection(TestCase):
     def test_does_not_connect_eagerly(self):
         fake = make_fake_client()
         with patch(
-            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
             return_value=fake,
         ):
             Email("imap.x", "u", "p")
@@ -18,7 +18,7 @@ class TestConnection(TestCase):
     def test_mailbox_requires_connection(self):
         fake = make_fake_client()
         with patch(
-            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
             return_value=fake,
         ):
             app = Email("imap.x", "u", "p")
@@ -29,7 +29,7 @@ class TestConnection(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -42,7 +42,7 @@ class TestConnection(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -99,7 +99,7 @@ class TestMailboxProperties(TestCase):
     def setUp(self):
         self.fake = make_fake_client(mailboxes=GMAIL_LIST)
         self._patcher = patch(
-            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -129,7 +129,7 @@ class TestQueryShortcuts(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -177,7 +177,7 @@ class TestPublicProperties(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -247,7 +247,7 @@ class TestNoop(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -279,7 +279,7 @@ class TestRestore(TestCase):
             fake = make_fake_client()
             with (
                 patch(
-                    "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+                    "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
                     return_value=fake,
                 ),
                 Email("imap.x", "u", "p") as app,

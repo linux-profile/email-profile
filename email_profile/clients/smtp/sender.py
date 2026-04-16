@@ -5,8 +5,8 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING, Optional, Union
 
-from email_profile.clients.imap_client import ImapClient
-from email_profile.clients.smtp_client import (
+from email_profile.clients.imap.client import ImapClient
+from email_profile.clients.smtp.client import (
     AttachmentLike,
     SmtpClient,
     _build_message,
@@ -16,8 +16,8 @@ from email_profile.providers import resolve_smtp_host
 if TYPE_CHECKING:
     from email.message import EmailMessage
 
+    from email_profile.clients.imap.folders import FolderAccess
     from email_profile.core.types import SMTPHost
-    from email_profile.folders import FolderAccess
     from email_profile.serializers.email import EmailSerializer
 
 

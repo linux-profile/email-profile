@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from email_profile.clients.imap_client import ImapClient
-from email_profile.clients.smtp_client import SmtpClient
+from email_profile.clients.imap.client import ImapClient
+from email_profile.clients.imap.mailbox import MailBox
+from email_profile.clients.imap.searches import Where
+from email_profile.clients.smtp.client import SmtpClient
 from email_profile.core.abc import (
     ImapClientProtocol,
     SenderProtocol,
@@ -14,8 +16,7 @@ from email_profile.core.credentials import Credentials, EmailFactories
 from email_profile.core.errors import Retryable
 from email_profile.core.status import IMAPError, Status
 from email_profile.core.types import AppendedUID, IMAPHost, SMTPHost
-from email_profile.mailbox import MailBox
-from email_profile.models.email import EmailModel
+from email_profile.models.raw import EmailModel
 from email_profile.parser import Attachment, ParsedBody, parse_rfc822
 from email_profile.providers import (
     ProviderResolutionError,
@@ -23,7 +24,6 @@ from email_profile.providers import (
     resolve_smtp_host,
 )
 from email_profile.retry import with_retry
-from email_profile.searches import Where
 
 __all__ = [
     "AppendedUID",

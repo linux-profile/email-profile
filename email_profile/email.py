@@ -5,22 +5,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Union
 
-from email_profile.clients.imap_client import ImapClient
-from email_profile.clients.smtp_client import AttachmentLike
+from email_profile.clients.imap.client import ImapClient
+from email_profile.clients.imap.folders import FolderAccess
+from email_profile.clients.imap.queries import QueryShortcuts
+from email_profile.clients.imap.searches import Where
+from email_profile.clients.imap.sync import Restore, Sync
+from email_profile.clients.smtp.client import AttachmentLike
+from email_profile.clients.smtp.sender import Sender
 from email_profile.core.abc import StorageABC, SyncResult
 from email_profile.core.credentials import Credentials, EmailFactories
-from email_profile.folders import FolderAccess
-from email_profile.queries import QueryShortcuts
-from email_profile.searches import Where
-from email_profile.sender import Sender
 from email_profile.storage.sqlite import StorageSQLite
-from email_profile.sync import RestoreOps, SyncOps
 
 if TYPE_CHECKING:
     from email.message import EmailMessage
 
+    from email_profile.clients.imap.mailbox import MailBox
     from email_profile.core.types import SMTPHost
-    from email_profile.mailbox import MailBox
     from email_profile.serializers.email import EmailSerializer
 
 
@@ -56,8 +56,8 @@ class Email:
         )
         self._folders = FolderAccess(self._session)
         self._queries = QueryShortcuts(self._folders)
-        self._sync = SyncOps(self._session)
-        self._restore = RestoreOps(self._session)
+        self._sync = Sync(self._session)
+        self._restore = Restore(self._session)
         self._sender = Sender(self._session, self._folders)
         self.storage = storage or StorageSQLite()
 

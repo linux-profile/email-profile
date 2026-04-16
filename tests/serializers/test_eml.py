@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from email_profile.models.email import RawModel
+from email_profile.models.raw import RawModel
 from email_profile.serializers.email import EmailSerializer
 from email_profile.serializers.raw import RawSerializer
 from tests.conftest import SAMPLE_RFC822

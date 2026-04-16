@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
-from email_profile.folders import FolderAccess
-from email_profile.searches import Where
+from email_profile.clients.imap.folders import FolderAccess
+from email_profile.clients.imap.searches import Where
 
 
 class QueryShortcuts:

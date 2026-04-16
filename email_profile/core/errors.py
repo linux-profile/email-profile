@@ -15,8 +15,7 @@ class NotConnected(RuntimeError):
 
     def __init__(self) -> None:
         super().__init__(
-            "Email client is not connected. "
-            "Call .connect() or use a `with` block."
+            "Email client is not connected. Call .connect() or use a `with` block."
         )
 
 

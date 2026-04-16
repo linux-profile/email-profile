@@ -25,6 +25,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
 
+from email_profile.clients.imap.query import Q, Query
 from email_profile.core.errors import (
     ConnectionFailure,
     NotConnected,
@@ -32,7 +33,6 @@ from email_profile.core.errors import (
     RateLimited,
 )
 from email_profile.email import Email
-from email_profile.query import Q, Query
 from email_profile.serializers.email import EmailSerializer
 from email_profile.storage.sqlite import StorageSQLite
 

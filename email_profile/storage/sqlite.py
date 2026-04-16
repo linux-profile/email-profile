@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Optional, Union
 
 from email_profile.core.abc import StorageABC
-from email_profile.models.email import RawModel
+from email_profile.models.raw import RawModel
 from email_profile.serializers.raw import RawSerializer
 from email_profile.storage.db import Base, make_session
 

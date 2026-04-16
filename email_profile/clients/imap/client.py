@@ -6,8 +6,8 @@ import imaplib
 from typing import Optional
 
 from email_profile._internal import _state
+from email_profile.clients.imap.mailbox import MailBox
 from email_profile.core.errors import ConnectionFailure, NotConnected
-from email_profile.mailbox import MailBox
 
 
 class ImapClient:

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from email_profile.folders import (
+from email_profile.clients.imap.folders import (
     INBOX_HINTS,
     SENT_HINTS,
     SPAM_HINTS,

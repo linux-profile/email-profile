@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import logging
 import re
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from email import message_from_string
@@ -15,9 +16,9 @@ from typing import TYPE_CHECKING, Callable, Optional
 from rich.progress import Progress
 
 from email_profile._internal import _state
-from email_profile.clients.imap_client import ImapClient
+from email_profile.clients.imap.client import ImapClient
+from email_profile.clients.imap.mailbox import MailBox, _quote
 from email_profile.core.abc import SyncResult
-from email_profile.mailbox import MailBox
 from email_profile.serializers.raw import RawSerializer
 
 if TYPE_CHECKING:
@@ -26,7 +27,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class SyncOps:
+class Sync:
     """Sync server state into local storage (server -> storage)."""
 
     def __init__(self, session: ImapClient) -> None:
@@ -50,34 +51,72 @@ class SyncOps:
         lock = Lock()
         progress = Progress()
 
-        def sync_one(name: str) -> SyncResult:
-            session = ImapClient(
-                server=self._session.server,
-                user=self._session.user,
-                password=self._session.password,
-                port=self._session.port,
-                ssl=self._session.ssl,
-            )
-            session.connect()
+        def sync_one(name: str, retries: int = 3) -> SyncResult:
+            task = None
 
-            try:
-                box = session.mailboxes[name]
-                server_count = box.where().count()
+            for attempt in range(retries):
+                session = ImapClient(
+                    server=self._session.server,
+                    user=self._session.user,
+                    password=self._session.password,
+                    port=self._session.port,
+                    ssl=self._session.ssl,
+                )
 
-                with lock:
-                    task = progress.add_task(
-                        f"[cyan]{name}",
-                        total=max(server_count, 1),
-                        completed=server_count if server_count == 0 else 0,
-                    )
-
-                def on_progress(done: int, total: int) -> None:
+                try:
+                    session.connect()
+                except Exception:
+                    if attempt < retries - 1:
+                        time.sleep(2**attempt)
+                        continue
                     with lock:
-                        progress.update(task, completed=done, total=total)
+                        progress.console.print(
+                            f"  [red]✗[/] {name} — connection failed ({retries} attempts)"
+                        )
+                    return SyncResult(mailbox=name)
 
-                return self.sync(box, storage, on_progress=on_progress)
-            finally:
-                session.close()
+                try:
+                    box = session.mailboxes[name]
+                    server_count = box.where().count()
+
+                    with lock:
+                        task = progress.add_task(
+                            f"  [cyan]{name}",
+                            total=max(server_count, 1),
+                            completed=1 if server_count == 0 else 0,
+                        )
+
+                    def on_progress(done: int, total: int, _task=task) -> None:
+                        with lock:
+                            progress.update(_task, completed=done, total=total)
+
+                    result = self.sync(box, storage, on_progress=on_progress)
+
+                    with lock:
+                        progress.update(task, visible=False)
+                        progress.console.print(
+                            f"  [green]✓[/] {name} — "
+                            f"{result.inserted} new, "
+                            f"{result.skipped} skipped"
+                        )
+
+                    return result
+                except Exception:
+                    if attempt < retries - 1:
+                        time.sleep(2**attempt)
+                        continue
+                    if task is not None:
+                        with lock:
+                            progress.update(task, visible=False)
+                    with lock:
+                        progress.console.print(
+                            f"  [red]✗[/] {name} — sync failed ({retries} attempts)"
+                        )
+                    return SyncResult(mailbox=name)
+                finally:
+                    session.close()
+
+            return SyncResult(mailbox=name)
 
         with progress:
             if len(names) == 1:
@@ -166,7 +205,7 @@ class SyncOps:
         if client is None:
             return {}
 
-        _state(client.select(mailbox.name))
+        _state(client.select(_quote(mailbox.name)))
         result: dict[str, str] = {}
         chunk_size = 500
 
@@ -196,7 +235,8 @@ class SyncOps:
     def _filter_new_uids(
         mailbox: MailBox,
         uids: list[str],
-        existing: set[str],
+        existing_ids: set[str],
+        existing_uids: set[str],
     ) -> list[str]:
         """Fetch only Message-IDs from server and return UIDs not in storage."""
 
@@ -207,7 +247,7 @@ class SyncOps:
         if client is None:
             return uids
 
-        _state(client.select(mailbox.name))
+        _state(client.select(_quote(mailbox.name)))
 
         new_uids: list[str] = []
         chunk_size = 500
@@ -229,6 +269,10 @@ class SyncOps:
                     continue
 
                 raw_uid = entry[0].decode().split()[0]
+
+                if raw_uid in existing_uids:
+                    continue
+
                 text = entry[1].decode("utf-8", errors="replace")
                 msg_id = None
 
@@ -237,13 +281,15 @@ class SyncOps:
                         msg_id = line.split(":", 1)[1].strip()
                         break
 
-                if msg_id is None or msg_id not in existing:
-                    new_uids.append(raw_uid)
+                if msg_id is not None and msg_id in existing_ids:
+                    continue
+
+                new_uids.append(raw_uid)
 
         return new_uids
 
 
-class RestoreOps:
+class Restore:
     """Restore from local storage/files back to an IMAP server (storage -> server)."""
 
     def __init__(self, session: ImapClient) -> None:
@@ -282,7 +328,7 @@ class RestoreOps:
 
             for box_name, raws in by_mailbox.items():
                 if box_name not in self._session.mailboxes:
-                    _state(self._session.client.create(box_name))
+                    _state(self._session.client.create(_quote(box_name)))
 
                     details = _state(self._session.client.list())
                     for detail in details:
@@ -332,7 +378,7 @@ class RestoreOps:
         if client is None:
             return ids
 
-        _state(client.select(mailbox_name))
+        _state(client.select(_quote(mailbox_name)))
         status, data = client.uid("search", None, "ALL")
         if status != "OK" or not data or not data[0]:
             return ids

@@ -9,15 +9,15 @@ from tests.conftest import SAMPLE_RFC822, make_fake_client
 def _smtp_patches(fake_smtp):
     return (
         patch(
-            "email_profile.clients.smtp_client.smtplib.SMTP_SSL",
+            "email_profile.clients.smtp.client.smtplib.SMTP_SSL",
             return_value=fake_smtp,
         ),
         patch(
-            "email_profile.clients.smtp_client.smtplib.SMTP",
+            "email_profile.clients.smtp.client.smtplib.SMTP",
             return_value=fake_smtp,
         ),
         patch(
-            "email_profile.sender.resolve_smtp_host",
+            "email_profile.clients.smtp.sender.resolve_smtp_host",
             return_value=SMTPHost("smtp.test", port=465, ssl=True),
         ),
     )
@@ -29,7 +29,7 @@ class _SendTest(TestCase):
         self.smtp = MagicMock()
 
         self._imap_patch = patch(
-            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
             return_value=self.imap,
         )
         ssl_patch, plain_patch, resolve_patch = _smtp_patches(self.smtp)

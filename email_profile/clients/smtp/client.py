@@ -145,7 +145,4 @@ class SmtpClient:
 
     def __repr__(self) -> str:
         state = "connected" if self.is_connected else "disconnected"
-        return (
-            f"SmtpClient(host={self._host.host!r}, "
-            f"user={self._user!r}, {state})"
-        )
+        return f"SmtpClient(host={self._host.host!r}, user={self._user!r}, {state})"
