@@ -6,10 +6,12 @@ from __future__ import annotations
 import logging
 import re
 import time
+from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
-from email import message_from_string
+from email import message_from_bytes, message_from_string
 from email.utils import parsedate_to_datetime
+from hashlib import sha256
 from threading import Lock
 from typing import TYPE_CHECKING, Callable, Optional
 
@@ -39,6 +41,7 @@ class Sync:
         mailbox: Optional[str] = None,
         mailbox_names: Optional[list[str]] = None,
         max_workers: int = 3,
+        full: bool = False,
     ) -> SyncResult:
         """Sync one or all mailboxes with progress and parallel fetch."""
 
@@ -90,15 +93,20 @@ class Sync:
                         with lock:
                             progress.update(_task, completed=done, total=total)
 
-                    result = self.sync(box, storage, on_progress=on_progress)
+                    sync_fn = self.full_sync if full else self.sync
+                    result = sync_fn(box, storage, on_progress=on_progress)
 
                     with lock:
                         progress.update(task, visible=False)
-                        progress.console.print(
+                        msg = (
                             f"  [green]✓[/] {name} — "
                             f"{result.inserted} new, "
+                            f"{result.updated} updated, "
                             f"{result.skipped} skipped"
                         )
+                        if result.has_errors:
+                            msg += f", [red]{len(result.errors)} errors[/]"
+                        progress.console.print(msg)
 
                     return result
                 except Exception:
@@ -118,18 +126,15 @@ class Sync:
 
             return SyncResult(mailbox=name)
 
-        with progress:
-            if len(names) == 1:
-                combined = sync_one(names[0])
-            else:
-                with ThreadPoolExecutor(
-                    max_workers=min(max_workers, len(names))
-                ) as pool:
-                    futures = {
-                        pool.submit(sync_one, name): name for name in names
-                    }
-                    for future in as_completed(futures):
-                        combined = combined.merge(future.result())
+        with (
+            progress,
+            ThreadPoolExecutor(
+                max_workers=min(max_workers, len(names))
+            ) as pool,
+        ):
+            futures = {pool.submit(sync_one, name): name for name in names}
+            for future in as_completed(futures):
+                combined = combined.merge(future.result())
 
         return combined
 
@@ -144,12 +149,12 @@ class Sync:
         result = SyncResult(mailbox=mailbox.name)
 
         server_uids = mailbox.where().uids()
-        existing = storage.stored_ids()
 
         new_uids = self._filter_new_uids(
             mailbox,
             server_uids,
-            existing,
+            existing_ids=storage.stored_ids(mailbox.name),
+            existing_uids=storage.stored_uids(mailbox.name),
         )
 
         total = len(server_uids)
@@ -162,27 +167,20 @@ class Sync:
             return result
 
         uid_flags = self._fetch_flags(mailbox, new_uids)
-
-        query = mailbox.where()
-        query._cached_uids = new_uids
         done = result.skipped
 
-        for msg in query.messages():
+        for raw in self._fetch_raw(mailbox, new_uids, uid_flags):
             done += 1
 
             try:
-                storage.save_raw(
-                    RawSerializer(
-                        message_id=msg.id,
-                        uid=msg.uid,
-                        mailbox=mailbox.name,
-                        flags=uid_flags.get(msg.uid, ""),
-                        file=msg.file,
-                    )
-                )
-                result.inserted += 1
+                inserted = storage.save_raw(raw)
+                if inserted:
+                    result.inserted += 1
+                else:
+                    result.updated += 1
             except Exception as exc:
-                result.errors.append(f"{msg.id}: {exc}")
+                logger.error("Failed to save %s: %s", raw.message_id, exc)
+                result.errors.append(f"{raw.message_id}: {exc}")
 
             if on_progress is not None:
                 on_progress(done, total)
@@ -196,6 +194,99 @@ class Sync:
         )
 
         return result
+
+    def full_sync(
+        self,
+        mailbox: MailBox,
+        storage: StorageABC,
+        on_progress: Optional[Callable[[int, int], None]] = None,
+    ) -> SyncResult:
+        """Sync all emails from a mailbox, skipping nothing."""
+
+        result = SyncResult(mailbox=mailbox.name)
+
+        server_uids = mailbox.where().uids()
+        total = len(server_uids)
+
+        if on_progress is not None:
+            on_progress(0, total)
+
+        if not server_uids:
+            return result
+
+        uid_flags = self._fetch_flags(mailbox, server_uids)
+
+        for done, raw in enumerate(
+            self._fetch_raw(mailbox, server_uids, uid_flags), 1
+        ):
+            try:
+                inserted = storage.save_raw(raw)
+                if inserted:
+                    result.inserted += 1
+                else:
+                    result.updated += 1
+            except Exception as exc:
+                logger.error("Failed to save %s: %s", raw.message_id, exc)
+                result.errors.append(f"{raw.message_id}: {exc}")
+
+            if on_progress is not None:
+                on_progress(done, total)
+
+        logger.info(
+            "Full synced %s: %d inserted, %d updated, %d errors",
+            result.mailbox,
+            result.inserted,
+            result.updated,
+            len(result.errors),
+        )
+
+        return result
+
+    @staticmethod
+    def _fetch_raw(
+        mailbox: MailBox,
+        uids: list[str],
+        uid_flags: dict[str, str],
+    ) -> Iterator[RawSerializer]:
+        """Fetch RFC822 content and yield RawSerializer without parsing."""
+
+        client = mailbox._client
+        if client is None:
+            return
+
+        _state(client.select(_quote(mailbox.name)))
+        chunk_size = 100
+
+        for start in range(0, len(uids), chunk_size):
+            group = uids[start : start + chunk_size]
+
+            status, fetched = client.uid("fetch", ",".join(group), "(RFC822)")
+            if status != "OK":
+                continue
+
+            for entry in fetched:
+                if not isinstance(entry, tuple):
+                    continue
+
+                header = entry[0].decode()
+                uid_match = re.search(r"UID (\d+)", header)
+                uid = uid_match.group(1) if uid_match else header.split()[0]
+
+                raw_bytes = entry[1]
+                file = raw_bytes.decode("utf-8", errors="replace")
+
+                msg = message_from_bytes(raw_bytes)
+                message_id = msg.get("Message-ID")
+                if not message_id:
+                    message_id = sha256(raw_bytes).hexdigest()
+
+                yield RawSerializer(
+                    message_id=message_id,
+                    uid=uid,
+                    mailbox=mailbox.name,
+                    flags=uid_flags.get(uid, ""),
+                    file=file,
+                )
 
     @staticmethod
     def _fetch_flags(mailbox: MailBox, uids: list[str]) -> dict[str, str]:
@@ -268,7 +359,11 @@ class Sync:
                 if not isinstance(entry, tuple):
                     continue
 
-                raw_uid = entry[0].decode().split()[0]
+                header = entry[0].decode()
+                uid_match = re.search(r"UID (\d+)", header)
+                raw_uid = (
+                    uid_match.group(1) if uid_match else header.split()[0]
+                )
 
                 if raw_uid in existing_uids:
                     continue
@@ -332,11 +427,11 @@ class Restore:
 
                     details = _state(self._session.client.list())
                     for detail in details:
-                        mb = MailBox.from_imap_detail(
+                        mailbox = MailBox.from_imap_detail(
                             client=self._session.client, detail=detail
                         )
-                        if mb.name == box_name:
-                            self._session.mailboxes[box_name] = mb
+                        if mailbox.name == box_name:
+                            self._session.mailboxes[box_name] = mailbox
                             break
 
                     logger.info("Created mailbox %r on server", box_name)
