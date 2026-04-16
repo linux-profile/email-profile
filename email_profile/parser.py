@@ -111,7 +111,7 @@ def _decode_payload(part: PyEmailMessage) -> str:
 
     if isinstance(payload, bytes):
         charset = part.get_content_charset() or "utf-8"
-        fallbacks = [charset, "utf-8", "latin-1", "windows-1252"]
+        fallbacks = [charset, "utf-8", "windows-1252", "latin-1"]
         seen: set[str] = set()
 
         for enc in fallbacks:
