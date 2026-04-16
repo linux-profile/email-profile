@@ -15,6 +15,7 @@ class ImapClient:
 
     def __init__(
         self,
+        *,
         server: str,
         user: str,
         password: str,

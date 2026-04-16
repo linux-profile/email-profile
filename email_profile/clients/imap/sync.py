@@ -12,11 +12,9 @@ from typing import TYPE_CHECKING, Callable, Optional
 
 from rich.progress import Progress
 
-from email_profile._internal import _state
 from email_profile.clients.imap.client import ImapClient
-from email_profile.clients.imap.fetch import F
-from email_profile.clients.imap.mailbox import MailBox, _quote
-from email_profile.clients.imap.protocol import ImapFetch
+from email_profile.clients.imap.fetch import F, Fetch
+from email_profile.clients.imap.mailbox import MailBox
 from email_profile.core.abc import SyncResult
 from email_profile.serializers.raw import RawSerializer
 
@@ -163,7 +161,15 @@ class Sync:
 
         for raw in _fetch_raw(mailbox, new_uids):
             done += 1
-            _save_one(storage, raw, result)
+
+            try:
+                if storage.save(raw):
+                    result.inserted += 1
+                else:
+                    result.updated += 1
+            except Exception as exc:
+                logger.error("Failed to save %s: %s", raw.message_id, exc)
+                result.errors.append(f"{raw.message_id}: {exc}")
 
             if on_progress is not None:
                 on_progress(done, total)
@@ -171,68 +177,24 @@ class Sync:
         return result
 
 
-def _save_one(
-    storage: StorageABC, raw: RawSerializer, result: SyncResult
-) -> None:
-    try:
-        inserted = storage.save(raw)
-        if inserted:
-            result.inserted += 1
-        else:
-            result.updated += 1
-    except Exception as exc:
-        logger.error("Failed to save %s: %s", raw.message_id, exc)
-        result.errors.append(f"{raw.message_id}: {exc}")
-
-
 def _fetch_raw(mailbox: MailBox, uids: list[str]) -> Iterator[RawSerializer]:
     """Fetch RFC822 + FLAGS and yield RawSerializer."""
-
     client = mailbox._client
     if client is None:
         return
 
-    _state(client.select(_quote(mailbox.name)))
-    spec = (F.rfc822() + F.flags()).mount()
+    fetch = Fetch(
+        client=client,
+        mailbox=mailbox,
+        spec=F.rfc822() + F.flags(),
+        chunk_size=CHUNK_FETCH,
+    )
 
-    for start in range(0, len(uids), CHUNK_FETCH):
-        group = uids[start : start + CHUNK_FETCH]
-
-        status, fetched = client.uid("fetch", ",".join(group), spec)
-        if status != "OK":
-            continue
-
-        i = 0
-
-        while i < len(fetched):
-            entry = fetched[i]
-            i += 1
-
-            if not ImapFetch.is_valid(entry):
-                continue
-
-            d = ImapFetch(entry)
-            uid = d.uid()
-            if uid is None:
-                continue
-
-            flags = d.flags() or ""
-
-            if (
-                not flags
-                and i < len(fetched)
-                and isinstance(fetched[i], bytes)
-            ):
-                text = ImapFetch._decode(fetched[i])
-                parsed = ImapFetch.parse_flags(text)
-                if parsed:
-                    flags = parsed[1]
-                i += 1
-
-            yield RawSerializer(
-                message_id=d.message_id_or_hash(),
-                uid=uid,
-                mailbox=mailbox.name,
-                flags=flags,
-                file=d.text(),
-            )
+    for entry in fetch.parsed(uids):
+        yield RawSerializer(
+            message_id=entry.message_id,
+            uid=entry.uid,
+            mailbox=mailbox.name,
+            flags=entry.flags,
+            file=entry.text(),
+        )

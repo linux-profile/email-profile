@@ -9,8 +9,8 @@ from email_profile.clients.imap.client import ImapClient
 from email_profile.clients.imap.folders import FolderAccess
 from email_profile.clients.imap.queries import QueryShortcuts
 from email_profile.clients.imap.restore import Restore
-from email_profile.clients.imap.searches import Where
 from email_profile.clients.imap.sync import Sync
+from email_profile.clients.imap.where import Where
 from email_profile.clients.smtp.client import AttachmentLike
 from email_profile.clients.smtp.sender import Sender
 from email_profile.core.abc import StorageABC, SyncResult
