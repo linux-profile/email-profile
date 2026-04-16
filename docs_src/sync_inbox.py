@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.ERROR)
 
 def main() -> None:
     with Email().from_env() as app:
-        stats = app.full_sync()
+        stats = app.sync("INBOX")
         print(
             f"Synced: "
             f"{stats.inserted} new, "
