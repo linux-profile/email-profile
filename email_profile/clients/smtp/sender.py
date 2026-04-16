@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import contextlib
+import logging
 from typing import TYPE_CHECKING, Optional, Union
+
+from rich.console import Console
 
 from email_profile.clients.imap.client import ImapClient
 from email_profile.clients.smtp.client import (
@@ -19,6 +22,10 @@ if TYPE_CHECKING:
     from email_profile.clients.imap.folders import FolderAccess
     from email_profile.core.types import SMTPHost
     from email_profile.serializers.email import Message
+
+
+logger = logging.getLogger(__name__)
+console = Console()
 
 
 class Sender:
@@ -74,12 +81,20 @@ class Sender:
         if not message.get("From"):
             message["From"] = self._session.user
 
-        with SmtpClient(
-            host=self.smtp_host(),
-            user=self._session.user,
-            password=self._session.password,
-        ) as client:
-            client.send(message)
+        to = message.get("To", "")
+
+        try:
+            with SmtpClient(
+                host=self.smtp_host(),
+                user=self._session.user,
+                password=self._session.password,
+            ) as client:
+                client.send(message)
+        except Exception as exc:
+            console.print(f"  [red]✗[/] Failed to send to {to} — {exc}")
+            raise
+
+        console.print(f"  [green]✓[/] Email sent to {to}")
 
         if save_to_sent and self._session.is_connected:
             with contextlib.suppress(KeyError):

@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import logging
 import time
-from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 from typing import TYPE_CHECKING, Callable, Optional
@@ -159,8 +158,27 @@ class Sync:
 
         done = result.skipped
 
-        for raw in _fetch_raw(mailbox, new_uids):
+        client = mailbox._client
+        if client is None:
+            return result
+
+        fetch = Fetch(
+            client=client,
+            mailbox=mailbox,
+            spec=F.rfc822() + F.flags(),
+            chunk_size=CHUNK_FETCH,
+        )
+
+        for entry in fetch.parsed(new_uids):
             done += 1
+
+            raw = RawSerializer(
+                message_id=entry.message_id,
+                uid=entry.uid,
+                mailbox=mailbox.name,
+                flags=entry.flags,
+                file=entry.text(),
+            )
 
             try:
                 if storage.save(raw):
@@ -175,26 +193,3 @@ class Sync:
                 on_progress(done, total)
 
         return result
-
-
-def _fetch_raw(mailbox: MailBox, uids: list[str]) -> Iterator[RawSerializer]:
-    """Fetch RFC822 + FLAGS and yield RawSerializer."""
-    client = mailbox._client
-    if client is None:
-        return
-
-    fetch = Fetch(
-        client=client,
-        mailbox=mailbox,
-        spec=F.rfc822() + F.flags(),
-        chunk_size=CHUNK_FETCH,
-    )
-
-    for entry in fetch.parsed(uids):
-        yield RawSerializer(
-            message_id=entry.message_id,
-            uid=entry.uid,
-            mailbox=mailbox.name,
-            flags=entry.flags,
-            file=entry.text(),
-        )
