@@ -41,14 +41,27 @@ def make_fake_client(
     client.login.return_value = ("OK", [b"Logged in"])
     client.list.return_value = ("OK", list(mailboxes))
     client.select.return_value = ("OK", [b"1"])
-    client.uid.side_effect = lambda command, *args: {  # noqa: ARG005
-        "search": ("OK", [b" ".join(uids or [b"1", b"2"])]),
-        "fetch": (
-            "OK",
-            fetch or [(b"1 (RFC822 {%d}" % len(SAMPLE_RFC822), SAMPLE_RFC822)],
-        ),
-    }[command]
+
+    def uid_side_effect(command, *args):  # noqa: ARG001
+        cmd = command.upper()
+        if cmd == "SEARCH":
+            return ("OK", [b" ".join(uids or [b"1", b"2"])])
+        if cmd == "FETCH":
+            return (
+                "OK",
+                fetch
+                or [(b"1 (RFC822 {%d}" % len(SAMPLE_RFC822), SAMPLE_RFC822)],
+            )
+        if cmd in {"STORE", "COPY", "MOVE"}:
+            return ("OK", [b"Done"])
+        return ("OK", [])
+
+    client.uid.side_effect = uid_side_effect
     client.append.return_value = ("OK", [b"APPEND completed"])
+    client.expunge.return_value = ("OK", [b"Expunged"])
+    client.create.return_value = ("OK", [b"Created"])
+    client.delete.return_value = ("OK", [b"Deleted"])
+    client.rename.return_value = ("OK", [b"Renamed"])
     client.logout.return_value = ("BYE", [b"Logging out"])
     return client
 
