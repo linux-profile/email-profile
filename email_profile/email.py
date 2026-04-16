@@ -225,11 +225,13 @@ class Email:
         mailbox: Optional[str] = None,
         storage: Optional[StorageABC] = None,
         skip_duplicates: bool = True,
+        max_workers: int = 3,
     ) -> int:
-        return self._restore.restore(
+        return self._restore.orchestrate(
             storage=storage or self.storage,
             mailbox=mailbox,
             skip_duplicates=skip_duplicates,
+            max_workers=max_workers,
         )
 
     def smtp_host(self) -> SMTPHost:

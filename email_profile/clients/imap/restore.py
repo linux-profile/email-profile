@@ -33,14 +33,14 @@ class Restore:
     def __init__(self, session: ImapClient) -> None:
         self._session = session
 
-    def restore(
+    def orchestrate(
         self,
         storage: StorageABC,
         mailbox: Optional[str] = None,
         skip_duplicates: bool = True,
         max_workers: int = 3,
     ) -> int:
-        """Re-upload every message persisted in storage to this server."""
+        """Restore all mailboxes with progress and parallel upload."""
         self._session.require()
 
         by_mailbox: dict[str, list[RawSerializer]] = {}
@@ -82,62 +82,32 @@ class Restore:
                         continue
                     with lock:
                         progress.console.print(
-                            f"  [red]✗[/] {box_name} — connection failed ({retries} attempts)"
+                            f"  [red]✗[/] {box_name} — "
+                            f"connection failed ({retries} attempts)"
                         )
                     return 0
 
                 try:
-                    if box_name not in session.mailboxes:
-                        _state(session.client.create(_quote(box_name)))
-                        details = _state(session.client.list())
-                        for detail in details:
-                            mb = MailBox.from_imap_detail(
-                                client=session.client, detail=detail
-                            )
-                            if mb.name == box_name:
-                                session.mailboxes[box_name] = mb
-                                break
+                    _ensure_mailbox(session, box_name)
 
                     with lock:
                         task = progress.add_task(
                             f"  [cyan]{box_name}", total=len(raws)
                         )
 
-                    server_ids: set[str] = set()
-                    if skip_duplicates:
-                        server_ids = _server_message_ids(
-                            session.client, box_name
-                        )
-
-                    uploaded = 0
-                    skipped = 0
-
-                    for raw in raws:
-                        if skip_duplicates:
-                            if raw.message_id in server_ids:
-                                skipped += 1
-                                with lock:
-                                    progress.advance(task)
-                                continue
-                            server_ids.add(raw.message_id)
-
-                        date = EmailParser(raw.file).date()
-                        session.mailboxes[box_name].append(
-                            raw.file, flags=raw.flags, date=date
-                        )
-                        uploaded += 1
-                        with lock:
-                            progress.advance(task)
+                    result = self.restore_mailbox(
+                        session, box_name, raws, skip_duplicates
+                    )
 
                     with lock:
                         progress.update(task, visible=False)
                         progress.console.print(
                             f"  [green]✓[/] {box_name} — "
-                            f"{uploaded} uploaded, "
-                            f"{skipped} skipped"
+                            f"{result['uploaded']} uploaded, "
+                            f"{result['skipped']} skipped"
                         )
 
-                    return uploaded
+                    return result["uploaded"]
                 except Exception:
                     if attempt < retries - 1:
                         time.sleep(2**attempt)
@@ -147,7 +117,8 @@ class Restore:
                             progress.update(task, visible=False)
                     with lock:
                         progress.console.print(
-                            f"  [red]✗[/] {box_name} — restore failed ({retries} attempts)"
+                            f"  [red]✗[/] {box_name} — "
+                            f"restore failed ({retries} attempts)"
                         )
                     return 0
                 finally:
@@ -169,6 +140,54 @@ class Restore:
                 total_count += future.result()
 
         return total_count
+
+    @staticmethod
+    def restore_mailbox(
+        session: ImapClient,
+        box_name: str,
+        raws: list[RawSerializer],
+        skip_duplicates: bool = True,
+    ) -> dict[str, int]:
+        """Restore a single mailbox. Returns {'uploaded': N, 'skipped': N}."""
+
+        server_ids: set[str] = set()
+        if skip_duplicates:
+            server_ids = _server_message_ids(session.client, box_name)
+
+        uploaded = 0
+        skipped = 0
+
+        for raw in raws:
+            if skip_duplicates and raw.message_id in server_ids:
+                skipped += 1
+                continue
+            server_ids.add(raw.message_id)
+
+            date = EmailParser(raw.file).date()
+            session.mailboxes[box_name].append(
+                raw.file, flags=raw.flags, date=date
+            )
+            uploaded += 1
+
+        return {"uploaded": uploaded, "skipped": skipped}
+
+
+def _ensure_mailbox(session: ImapClient, box_name: str) -> None:
+    if box_name in session.mailboxes:
+        return
+
+    _state(session.client.create(_quote(box_name)))
+
+    details = _state(session.client.list())
+    for detail in details:
+        mailbox = MailBox.from_imap_detail(
+            client=session.client, detail=detail
+        )
+        if mailbox.name == box_name:
+            session.mailboxes[box_name] = mailbox
+            break
+
+    logger.info("Created mailbox %r on server", box_name)
 
 
 def _server_message_ids(client: object, mailbox_name: str) -> set[str]:
