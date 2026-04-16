@@ -67,13 +67,13 @@ class Sync:
 
                 try:
                     session.connect()
-                except Exception:
+                except Exception as exc:
                     if attempt < retries - 1:
                         time.sleep(2**attempt)
                         continue
                     with lock:
                         progress.console.print(
-                            f"  [red]✗[/] {name} — connection failed ({retries} attempts)"
+                            f"  [red]✗[/] {name} — connection failed: {exc}"
                         )
                     return SyncResult(mailbox=name)
 
@@ -107,7 +107,7 @@ class Sync:
                         progress.console.print(msg)
 
                     return result
-                except Exception:
+                except Exception as exc:
                     if attempt < retries - 1:
                         time.sleep(2**attempt)
                         continue
@@ -116,7 +116,7 @@ class Sync:
                             progress.update(task, visible=False)
                     with lock:
                         progress.console.print(
-                            f"  [red]✗[/] {name} — sync failed ({retries} attempts)"
+                            f"  [red]✗[/] {name} — sync failed: {exc}"
                         )
                     return SyncResult(mailbox=name)
                 finally:
@@ -202,7 +202,12 @@ def _fetch_raw(mailbox: MailBox, uids: list[str]) -> Iterator[RawSerializer]:
         if status != "OK":
             continue
 
-        for entry in fetched:
+        i = 0
+
+        while i < len(fetched):
+            entry = fetched[i]
+            i += 1
+
             if not ImapFetch.is_valid(entry):
                 continue
 
@@ -211,10 +216,23 @@ def _fetch_raw(mailbox: MailBox, uids: list[str]) -> Iterator[RawSerializer]:
             if uid is None:
                 continue
 
+            flags = d.flags() or ""
+
+            if (
+                not flags
+                and i < len(fetched)
+                and isinstance(fetched[i], bytes)
+            ):
+                text = ImapFetch._decode(fetched[i])
+                parsed = ImapFetch.parse_flags(text)
+                if parsed:
+                    flags = parsed[1]
+                i += 1
+
             yield RawSerializer(
                 message_id=d.message_id_or_hash(),
                 uid=uid,
                 mailbox=mailbox.name,
-                flags=d.flags() or "",
+                flags=flags,
                 file=d.text(),
             )
