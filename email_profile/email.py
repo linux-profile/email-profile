@@ -6,21 +6,22 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
 from email_profile.backup import RestoreOps
-from email_profile.credentials import Credentials, EmailFactories
+from email_profile.clients.imap_client import ImapClient
+from email_profile.clients.smtp_client import AttachmentLike
+from email_profile.core.abc import StorageABC
+from email_profile.core.credentials import Credentials, EmailFactories
 from email_profile.folders import FolderAccess
-from email_profile.imap_client import ImapClient
 from email_profile.queries import QueryShortcuts
 from email_profile.searches import Where
 from email_profile.sender import Sender
-from email_profile.smtp_client import AttachmentLike
+from email_profile.storage.sqlite import StorageSQLite
 
 if TYPE_CHECKING:
     from email.message import EmailMessage
 
-    from email_profile.eml import EmailSerializer
+    from email_profile.core.types import SMTPHost
     from email_profile.mailbox import MailBox
-    from email_profile.protocols import StorageProtocol
-    from email_profile.types import SMTPHost
+    from email_profile.serializers.email import EmailSerializer
 
 
 class Email:
@@ -42,20 +43,22 @@ class Email:
         password: Optional[str] = None,
         port: int = 993,
         ssl: bool = True,
+        storage: Optional[StorageABC] = None,
     ) -> None:
-        creds = self._resolve(server, user, password, port, ssl)
+        connection = self._resolve(server, user, password, port, ssl)
 
         self._session = ImapClient(
-            server=creds.server,
-            user=creds.user,
-            password=creds.password,
-            port=creds.port,
-            ssl=creds.ssl,
+            server=connection.server,
+            user=connection.user,
+            password=connection.password,
+            port=connection.port,
+            ssl=connection.ssl,
         )
         self._folders = FolderAccess(self._session)
         self._queries = QueryShortcuts(self._folders)
         self._backup = RestoreOps(self._session)
         self._sender = Sender(self._session, self._folders)
+        self.storage = storage or StorageSQLite()
 
     @staticmethod
     def _resolve(
@@ -136,42 +139,6 @@ class Email:
             server=creds.server, user=creds.user, password=creds.password
         )
 
-    @classmethod
-    def from_provider(cls, provider: str, user: str, password: str) -> Email:
-        """Build an Email for a known provider (gmail, outlook, ...)."""
-        creds = EmailFactories.from_provider(provider, user, password)
-        return cls(
-            server=creds.server, user=creds.user, password=creds.password
-        )
-
-    @classmethod
-    def gmail(cls, user: str, password: str) -> Email:
-        return cls.from_provider("gmail", user, password)
-
-    @classmethod
-    def outlook(cls, user: str, password: str) -> Email:
-        return cls.from_provider("outlook", user, password)
-
-    @classmethod
-    def icloud(cls, user: str, password: str) -> Email:
-        return cls.from_provider("icloud", user, password)
-
-    @classmethod
-    def yahoo(cls, user: str, password: str) -> Email:
-        return cls.from_provider("yahoo", user, password)
-
-    @classmethod
-    def hostinger(cls, user: str, password: str) -> Email:
-        return cls.from_provider("hostinger", user, password)
-
-    @classmethod
-    def zoho(cls, user: str, password: str) -> Email:
-        return cls.from_provider("zoho", user, password)
-
-    @classmethod
-    def fastmail(cls, user: str, password: str) -> Email:
-        return cls.from_provider("fastmail", user, password)
-
     def connect(self) -> Email:
         self._session.connect()
         return self
@@ -226,7 +193,7 @@ class Email:
 
     def restore(
         self,
-        storage: StorageProtocol,
+        storage: StorageABC,
         mailbox: Optional[str] = None,
         target: Optional[str] = None,
         skip_duplicates: bool = True,

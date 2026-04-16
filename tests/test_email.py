@@ -9,7 +9,8 @@ class TestConnection(TestCase):
     def test_does_not_connect_eagerly(self):
         fake = make_fake_client()
         with patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL", return_value=fake
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            return_value=fake,
         ):
             Email("imap.x", "u", "p")
         fake.login.assert_not_called()
@@ -17,7 +18,8 @@ class TestConnection(TestCase):
     def test_mailbox_requires_connection(self):
         fake = make_fake_client()
         with patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL", return_value=fake
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
+            return_value=fake,
         ):
             app = Email("imap.x", "u", "p")
         with self.assertRaises(NotConnected):
@@ -27,7 +29,7 @@ class TestConnection(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -40,7 +42,7 @@ class TestConnection(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -49,39 +51,12 @@ class TestConnection(TestCase):
             app.mailbox("Trash")
 
 
-class TestProviderFactories(TestCase):
-    def test_gmail(self):
-        self.assertEqual(Email.gmail("u", "p").server, "imap.gmail.com")
-
-    def test_outlook(self):
-        self.assertEqual(
-            Email.outlook("u", "p").server, "outlook.office365.com"
-        )
-
-    def test_icloud(self):
-        self.assertEqual(Email.icloud("u", "p").server, "imap.mail.me.com")
-
-    def test_yahoo(self):
-        self.assertEqual(Email.yahoo("u", "p").server, "imap.mail.yahoo.com")
-
-    def test_hostinger(self):
-        self.assertEqual(
-            Email.hostinger("u", "p").server, "imap.hostinger.com"
-        )
-
-    def test_zoho(self):
-        self.assertEqual(Email.zoho("u", "p").server, "imap.zoho.com")
-
-    def test_fastmail(self):
-        self.assertEqual(Email.fastmail("u", "p").server, "imap.fastmail.com")
-
-
 class TestFromEmail(TestCase):
     def test_uses_resolver(self):
-        from email_profile import IMAPHost
+        from email_profile.core.types import IMAPHost
 
         with patch(
-            "email_profile.credentials.resolve_imap_host",
+            "email_profile.core.credentials.resolve_imap_host",
             return_value=IMAPHost("imap.test", port=993),
         ):
             app = Email.from_email("a@test.example", "pw")
@@ -124,7 +99,7 @@ class TestMailboxProperties(TestCase):
     def setUp(self):
         self.fake = make_fake_client(mailboxes=GMAIL_LIST)
         self._patcher = patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -154,7 +129,7 @@ class TestQueryShortcuts(TestCase):
     def setUp(self):
         self.fake = make_fake_client()
         self._patcher = patch(
-            "email_profile.imap_client.imaplib.IMAP4_SSL",
+            "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
             return_value=self.fake,
         )
         self._patcher.start()
@@ -202,7 +177,7 @@ class TestPublicProperties(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -221,10 +196,10 @@ class TestConstructorOverloads(TestCase):
         self.assertEqual(app.server, "imap.x.com")
 
     def test_two_args_with_email_auto_discovers(self):
-        from email_profile import IMAPHost
+        from email_profile.core.types import IMAPHost
 
         with patch(
-            "email_profile.credentials.resolve_imap_host",
+            "email_profile.core.credentials.resolve_imap_host",
             return_value=IMAPHost("imap.test"),
         ):
             app = Email("u@test.example", "pw")
@@ -244,7 +219,7 @@ class TestConstructorOverloads(TestCase):
             ),
             patch("email_profile.email.EmailFactories.from_env") as build,
         ):
-            from email_profile.credentials import Credentials
+            from email_profile.core.credentials import Credentials
 
             build.return_value = Credentials(
                 server="imap.x.com", user="u@x.com", password="pw"
@@ -272,7 +247,7 @@ class TestNoop(TestCase):
         fake = make_fake_client()
         with (
             patch(
-                "email_profile.imap_client.imaplib.IMAP4_SSL",
+                "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
                 return_value=fake,
             ),
             Email("imap.x", "u", "p") as app,
@@ -286,7 +261,8 @@ class TestRestore(TestCase):
         import tempfile
         from pathlib import Path
 
-        from email_profile import EmailSerializer, Storage
+        from email_profile import EmailSerializer
+        from email_profile import StorageSQLite as Storage
 
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "src.db")
@@ -303,7 +279,7 @@ class TestRestore(TestCase):
             fake = make_fake_client()
             with (
                 patch(
-                    "email_profile.imap_client.imaplib.IMAP4_SSL",
+                    "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
                     return_value=fake,
                 ),
                 Email("imap.x", "u", "p") as app,
@@ -318,7 +294,8 @@ class TestRestore(TestCase):
         import tempfile
         from pathlib import Path
 
-        from email_profile import EmailSerializer, Storage
+        from email_profile import EmailSerializer
+        from email_profile import StorageSQLite as Storage
 
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "src.db")
@@ -331,7 +308,7 @@ class TestRestore(TestCase):
             fake = make_fake_client()
             with (
                 patch(
-                    "email_profile.imap_client.imaplib.IMAP4_SSL",
+                    "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
                     return_value=fake,
                 ),
                 Email("imap.x", "u", "p") as app,
@@ -357,7 +334,7 @@ class TestRestore(TestCase):
             fake = make_fake_client()
             with (
                 patch(
-                    "email_profile.imap_client.imaplib.IMAP4_SSL",
+                    "email_profile.clients.imap_client.imaplib.IMAP4_SSL",
                     return_value=fake,
                 ),
                 Email("imap.x", "u", "p") as app,
