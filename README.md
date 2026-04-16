@@ -1,5 +1,11 @@
 # email-profile
 
+[![PyPI](https://img.shields.io/pypi/v/email-profile)](https://pypi.org/project/email-profile/)
+[![Python](https://img.shields.io/pypi/pyversions/email-profile)](https://pypi.org/project/email-profile/)
+[![Tests](https://img.shields.io/github/actions/workflow/status/linux-profile/email-profile/test.yml?branch=develop&label=tests)](https://github.com/linux-profile/email-profile/actions)
+[![License](https://img.shields.io/github/license/linux-profile/email-profile)](LICENSE)
+[![Downloads](https://img.shields.io/pypi/dm/email-profile)](https://pypi.org/project/email-profile/)
+
 The simplest way to work with email in Python. No boilerplate, no low-level IMAP commands, no headaches.
 
 Just connect, read, search, send, backup, and restore — with one class.
