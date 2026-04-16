@@ -19,10 +19,13 @@ from email_profile.providers import (
     IMAPHost,
     ProviderResolutionError,
     resolve_imap_host,
+    resolve_smtp_host,
 )
 from email_profile.retry import with_retry
 from email_profile.searches import Where
+from email_profile.smtp import SmtpClient
 from email_profile.status import IMAPError, Status
+from email_profile.types import SMTPHost
 
 __all__ = [
     "AppendedUID",
@@ -35,10 +38,13 @@ __all__ = [
     "ParsedBody",
     "ProviderResolutionError",
     "Retryable",
+    "SMTPHost",
+    "SmtpClient",
     "Status",
     "StorageProtocol",
     "Where",
     "parse_rfc822",
     "resolve_imap_host",
+    "resolve_smtp_host",
     "with_retry",
 ]
