@@ -15,6 +15,16 @@ class IMAPHost:
 
 
 @dataclass(frozen=True)
+class SMTPHost:
+    """The SMTP host + port + SSL/STARTTLS mode for outgoing mail."""
+
+    host: str
+    port: int = 465
+    ssl: bool = True
+    starttls: bool = False
+
+
+@dataclass(frozen=True)
 class AppendedUID:
     """Result of a successful IMAP APPEND when the server supports UIDPLUS."""
 
