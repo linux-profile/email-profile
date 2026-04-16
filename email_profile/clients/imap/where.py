@@ -168,6 +168,7 @@ class Where:
         )
 
         done = 0
+        exhausted = False
 
         try:
             for fetched in fetcher.chunks(uids):
@@ -206,8 +207,10 @@ class Where:
                             self._mailbox.name,
                         )
                         continue
+            exhausted = True
         finally:
-            self.clear_cache()
+            if exhausted:
+                self.clear_cache()
 
     def __repr__(self) -> str:
         return (
