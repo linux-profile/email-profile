@@ -35,11 +35,7 @@ class FetchParser:
         text = self._decode(self._header)
         match = _UID_RE.search(text)
 
-        if match:
-            return match.group(1)
-
-        parts = text.split()
-        return parts[0] if parts else None
+        return match.group(1) if match else None
 
     def _parse_header_flags(self) -> Optional[str]:
         text = self._decode(self._header)
