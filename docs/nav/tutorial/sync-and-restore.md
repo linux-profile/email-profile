@@ -4,6 +4,10 @@
 
 {* ./docs_src/sync_and_restore.py ln[8:10] *}
 
+### Output
+
+<img src="../../assets/sync-demo.svg" alt="Sync demo">
+
 ## Sync One Mailbox
 
 {* ./docs_src/sync_and_restore.py ln[12:14] *}
@@ -11,6 +15,10 @@
 ## Restore (local database to server)
 
 {* ./docs_src/sync_and_restore.py ln[16:18] *}
+
+### Output
+
+<img src="../../assets/restore-demo.svg" alt="Restore demo">
 
 ## Restore One Mailbox
 

@@ -166,6 +166,8 @@ with Email.from_env() as app:
     count = app.restore()
 ```
 
+<img src="https://raw.githubusercontent.com/linux-profile/email-profile/develop/docs/assets/sync-demo.svg" alt="Sync demo">
+
 ### Mailbox Operations
 
 ```python
