@@ -1,0 +1,3491 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Fernando Celmer">
+      
+      
+        <link rel="canonical" href="https://linux-profile.github.io/email-profile/nav/tutorial/query-builder/">
+      
+      
+        <link rel="prev" href="../read-emails/">
+      
+      
+        <link rel="next" href="../send-email/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Query Builder - Email Profile</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../assets/style.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#query-builder" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Email Profile" class="md-header__button md-logo" aria-label="Email Profile" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Email Profile
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Query Builder
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/linux-profile/email-profile" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    linux-profile/email-profile
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../install/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../sync/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Backup
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../advanced/imap-client/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Advanced
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../concepts/message/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/email/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Email Profile" class="md-nav__button md-logo" aria-label="Email Profile" data-md-component="logo">
+      
+  <img src="../../../assets/logo.svg" alt="logo">
+
+    </a>
+    Email Profile
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/linux-profile/email-profile" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    linux-profile/email-profile
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorial
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-steps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First Steps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../connect/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../read-emails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Read Emails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Builder
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Builder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-builder-composable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q Builder (composable)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#or" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NOT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date Range
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#size-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size Filter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-validated-kwargs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query (validated kwargs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exclude-and-or-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exclude and OR chaining
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Result
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../send-email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Send Emails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mailbox-ops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mailbox Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../error-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Backup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Restore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/imap-client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Direct IMAP Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/smtp-client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Direct SMTP Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/custom-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Storage Backend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/auto-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto-Discovery Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC822 Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/retry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retry Decorator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/lazy-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lazy Search (Where)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Message
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/auto-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auto-Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/default-folders/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Default Folders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Email
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query &amp; Q
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/where/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Where
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mailbox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailBox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/folder-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FolderAccess
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/fetch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    F (Fetch Builder)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_7" id="__nav_6_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Serializers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Serializers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/email-serializer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Message
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/raw-serializer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RawSerializer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/parsed-body/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ParsedBody
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/attachment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attachment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sync
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Restore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sync-result/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SyncResult
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_9" id="__nav_6_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/storage-abc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StorageABC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StorageSQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/raw-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RawModel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_10" id="__nav_6_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clients
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Clients
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/imap-client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ImapClient
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/smtp-client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SmtpClient
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sender/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sender
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_11" id="__nav_6_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocol
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Protocol
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocol Parsers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_12" id="__nav_6_12_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abstract
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Abstract
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/abc-clients/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abstract Clients
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/credentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-builder-composable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q Builder (composable)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#or" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NOT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#date-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date Range
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#size-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size Filter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-validated-kwargs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query (validated kwargs)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exclude-and-or-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exclude and OR chaining
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Result
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../install/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="query-builder">Query Builder<a class="headerlink" href="#query-builder" title="Permanent link">&para;</a></h1>
+<h2 id="shortcuts">Shortcuts<a class="headerlink" href="#shortcuts" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><span class="c1"># Code above omitted 👆</span>
+</span><span id="__span-0-2">
+</span><span id="__span-0-3">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-0-4">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-5">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-6">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-7">
+</span><span id="__span-0-8"><span class="c1"># Code below omitted 👇</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary>👀 Full file preview</summary>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-1-2">
+</span><span id="__span-1-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-1-4">
+</span><span id="__span-1-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-1-6">
+</span><span id="__span-1-7">
+</span><span id="__span-1-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-1-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-1-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-14">
+</span><span id="__span-1-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-1-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-1-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-18">
+</span><span id="__span-1-19">        <span class="c1"># OR</span>
+</span><span id="__span-1-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-1-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-22">
+</span><span id="__span-1-23">        <span class="c1"># NOT</span>
+</span><span id="__span-1-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-1-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-26">
+</span><span id="__span-1-27">        <span class="c1"># Date range</span>
+</span><span id="__span-1-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-1-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-30">
+</span><span id="__span-1-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-1-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-1-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-34">
+</span><span id="__span-1-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-1-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-1-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-38">
+</span><span id="__span-1-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-1-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-1-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-1-42">
+</span><span id="__span-1-43">
+</span><span id="__span-1-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-1-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</details>
+<h2 id="q-builder-composable">Q Builder (composable)<a class="headerlink" href="#q-builder-composable" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><span class="c1"># Code above omitted 👆</span>
+</span><span id="__span-2-2">
+</span><span id="__span-2-3">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-2-4">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-2-5">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-6">
+</span><span id="__span-2-7"><span class="c1"># Code below omitted 👇</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary>👀 Full file preview</summary>
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-3-2">
+</span><span id="__span-3-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-3-4">
+</span><span id="__span-3-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-3-6">
+</span><span id="__span-3-7">
+</span><span id="__span-3-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-3-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-3-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-14">
+</span><span id="__span-3-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-3-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-3-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-18">
+</span><span id="__span-3-19">        <span class="c1"># OR</span>
+</span><span id="__span-3-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-3-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-22">
+</span><span id="__span-3-23">        <span class="c1"># NOT</span>
+</span><span id="__span-3-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-3-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-26">
+</span><span id="__span-3-27">        <span class="c1"># Date range</span>
+</span><span id="__span-3-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-3-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-30">
+</span><span id="__span-3-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-3-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-3-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-34">
+</span><span id="__span-3-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-3-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-3-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-3-38">
+</span><span id="__span-3-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-3-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-3-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-3-42">
+</span><span id="__span-3-43">
+</span><span id="__span-3-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-3-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</details>
+<h2 id="or">OR<a class="headerlink" href="#or" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><span class="c1"># Code above omitted 👆</span>
+</span><span id="__span-4-2">
+</span><span id="__span-4-3">        <span class="c1"># OR</span>
+</span><span id="__span-4-4">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-4-5">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-6">
+</span><span id="__span-4-7"><span class="c1"># Code below omitted 👇</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary>👀 Full file preview</summary>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-5-2">
+</span><span id="__span-5-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-5-4">
+</span><span id="__span-5-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-5-6">
+</span><span id="__span-5-7">
+</span><span id="__span-5-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-5-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-5-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-5-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-14">
+</span><span id="__span-5-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-5-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-5-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-18">
+</span><span id="__span-5-19">        <span class="c1"># OR</span>
+</span><span id="__span-5-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-5-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-22">
+</span><span id="__span-5-23">        <span class="c1"># NOT</span>
+</span><span id="__span-5-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-5-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-26">
+</span><span id="__span-5-27">        <span class="c1"># Date range</span>
+</span><span id="__span-5-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-5-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-30">
+</span><span id="__span-5-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-5-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-5-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-34">
+</span><span id="__span-5-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-5-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-5-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-38">
+</span><span id="__span-5-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-5-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-5-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-5-42">
+</span><span id="__span-5-43">
+</span><span id="__span-5-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-5-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</details>
+<h2 id="not">NOT<a class="headerlink" href="#not" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><span class="c1"># Code above omitted 👆</span>
+</span><span id="__span-6-2">
+</span><span id="__span-6-3">        <span class="c1"># NOT</span>
+</span><span id="__span-6-4">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-6-5">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-6-6">
+</span><span id="__span-6-7"><span class="c1"># Code below omitted 👇</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary>👀 Full file preview</summary>
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-7-2">
+</span><span id="__span-7-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-7-4">
+</span><span id="__span-7-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-7-6">
+</span><span id="__span-7-7">
+</span><span id="__span-7-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-7-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-7-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-7-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-14">
+</span><span id="__span-7-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-7-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-7-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-18">
+</span><span id="__span-7-19">        <span class="c1"># OR</span>
+</span><span id="__span-7-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-7-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-22">
+</span><span id="__span-7-23">        <span class="c1"># NOT</span>
+</span><span id="__span-7-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-7-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-26">
+</span><span id="__span-7-27">        <span class="c1"># Date range</span>
+</span><span id="__span-7-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-7-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-30">
+</span><span id="__span-7-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-7-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-7-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-34">
+</span><span id="__span-7-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-7-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-7-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-38">
+</span><span id="__span-7-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-7-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-7-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-7-42">
+</span><span id="__span-7-43">
+</span><span id="__span-7-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-7-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</details>
+<h2 id="date-range">Date Range<a class="headerlink" href="#date-range" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><span class="c1"># Code above omitted 👆</span>
+</span><span id="__span-8-2">
+</span><span id="__span-8-3">        <span class="c1"># Date range</span>
+</span><span id="__span-8-4">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-8-5">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-8-6">
+</span><span id="__span-8-7"><span class="c1"># Code below omitted 👇</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary>👀 Full file preview</summary>
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-9-2">
+</span><span id="__span-9-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-9-4">
+</span><span id="__span-9-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-9-6">
+</span><span id="__span-9-7">
+</span><span id="__span-9-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-9-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-9-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-9-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-14">
+</span><span id="__span-9-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-9-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-9-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-18">
+</span><span id="__span-9-19">        <span class="c1"># OR</span>
+</span><span id="__span-9-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-9-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-22">
+</span><span id="__span-9-23">        <span class="c1"># NOT</span>
+</span><span id="__span-9-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-9-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-26">
+</span><span id="__span-9-27">        <span class="c1"># Date range</span>
+</span><span id="__span-9-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-9-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-30">
+</span><span id="__span-9-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-9-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-9-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-34">
+</span><span id="__span-9-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-9-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-9-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-9-38">
+</span><span id="__span-9-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-9-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-9-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-9-42">
+</span><span id="__span-9-43">
+</span><span id="__span-9-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-9-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</details>
+<h2 id="size-filter">Size Filter<a class="headerlink" href="#size-filter" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:1"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><span class="c1"># Code above omitted 👆</span>
+</span><span id="__span-10-2">
+</span><span id="__span-10-3">        <span class="c1"># Size filter</span>
+</span><span id="__span-10-4">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-10-5">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-6">
+</span><span id="__span-10-7"><span class="c1"># Code below omitted 👇</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary>👀 Full file preview</summary>
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-11-2">
+</span><span id="__span-11-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-11-4">
+</span><span id="__span-11-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-11-6">
+</span><span id="__span-11-7">
+</span><span id="__span-11-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-11-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-11-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-11-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-14">
+</span><span id="__span-11-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-11-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-11-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-18">
+</span><span id="__span-11-19">        <span class="c1"># OR</span>
+</span><span id="__span-11-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-11-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-22">
+</span><span id="__span-11-23">        <span class="c1"># NOT</span>
+</span><span id="__span-11-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-11-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-26">
+</span><span id="__span-11-27">        <span class="c1"># Date range</span>
+</span><span id="__span-11-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-11-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-30">
+</span><span id="__span-11-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-11-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-11-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-34">
+</span><span id="__span-11-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-11-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-11-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-38">
+</span><span id="__span-11-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-11-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-11-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-11-42">
+</span><span id="__span-11-43">
+</span><span id="__span-11-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-11-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</details>
+<h2 id="query-validated-kwargs">Query (validated kwargs)<a class="headerlink" href="#query-validated-kwargs" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:1"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><span class="c1"># Code above omitted 👆</span>
+</span><span id="__span-12-2">
+</span><span id="__span-12-3">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-12-4">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-12-5">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-12-6">
+</span><span id="__span-12-7"><span class="c1"># Code below omitted 👇</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<details>
+<summary>👀 Full file preview</summary>
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-13-2">
+</span><span id="__span-13-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-13-4">
+</span><span id="__span-13-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-13-6">
+</span><span id="__span-13-7">
+</span><span id="__span-13-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-13-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-13-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-13-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-14">
+</span><span id="__span-13-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-13-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-13-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-18">
+</span><span id="__span-13-19">        <span class="c1"># OR</span>
+</span><span id="__span-13-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-13-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-22">
+</span><span id="__span-13-23">        <span class="c1"># NOT</span>
+</span><span id="__span-13-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-13-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-26">
+</span><span id="__span-13-27">        <span class="c1"># Date range</span>
+</span><span id="__span-13-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-13-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-30">
+</span><span id="__span-13-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-13-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-13-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-34">
+</span><span id="__span-13-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-13-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-13-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-13-38">
+</span><span id="__span-13-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-13-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-13-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-13-42">
+</span><span id="__span-13-43">
+</span><span id="__span-13-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-13-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</details>
+<h2 id="exclude-and-or-chaining">Exclude and OR chaining<a class="headerlink" href="#exclude-and-or-chaining" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;spam&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">or_</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;urgent&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="first-result">First Result<a class="headerlink" href="#first-result" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><span class="n">msg</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;meeting&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+</span><span id="__span-15-2"><span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">from_</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="full-code">Full Code<a class="headerlink" href="#full-code" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:1"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Python 3.8+</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><span class="sd">&quot;&quot;&quot;Search emails with Q builder and Query.&quot;&quot;&quot;</span>
+</span><span id="__span-16-2">
+</span><span id="__span-16-3"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="__span-16-4">
+</span><span id="__span-16-5"><span class="kn">from</span><span class="w"> </span><span class="nn">email_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">Query</span>
+</span><span id="__span-16-6">
+</span><span id="__span-16-7">
+</span><span id="__span-16-8"><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-16-9">    <span class="k">with</span> <span class="n">Email</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span> <span class="k">as</span> <span class="n">app</span><span class="p">:</span>
+</span><span id="__span-16-10">        <span class="c1"># Shortcuts</span>
+</span><span id="__span-16-11">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unread: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">unread</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-12">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recent 7 days: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">recent</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-13">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search &#39;invoice&#39;: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;invoice&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-14">
+</span><span id="__span-16-15">        <span class="c1"># Q builder (composable)</span>
+</span><span id="__span-16-16">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">subject</span><span class="p">(</span><span class="s2">&quot;meeting&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">()</span>
+</span><span id="__span-16-17">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unseen meetings: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-18">
+</span><span id="__span-16-19">        <span class="c1"># OR</span>
+</span><span id="__span-16-20">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;alice@x.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="o">.</span><span class="n">from_</span><span class="p">(</span><span class="s2">&quot;bob@x.com&quot;</span><span class="p">)</span>
+</span><span id="__span-16-21">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;From Alice or Bob: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-22">
+</span><span id="__span-16-23">        <span class="c1"># NOT</span>
+</span><span id="__span-16-24">        <span class="n">q</span> <span class="o">=</span> <span class="o">~</span><span class="n">Q</span><span class="o">.</span><span class="n">seen</span><span class="p">()</span>
+</span><span id="__span-16-25">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not seen: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-26">
+</span><span id="__span-16-27">        <span class="c1"># Date range</span>
+</span><span id="__span-16-28">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">since</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">))</span>
+</span><span id="__span-16-29">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year 2025: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-30">
+</span><span id="__span-16-31">        <span class="c1"># Size filter</span>
+</span><span id="__span-16-32">        <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">larger</span><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+</span><span id="__span-16-33">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Larger than 1MB: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-34">
+</span><span id="__span-16-35">        <span class="c1"># Query (Pydantic, validated)</span>
+</span><span id="__span-16-36">        <span class="n">query</span> <span class="o">=</span> <span class="n">Query</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="n">unseen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</span><span id="__span-16-37">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Query: </span><span class="si">{</span><span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-16-38">
+</span><span id="__span-16-39">        <span class="c1"># Check if exists</span>
+</span><span id="__span-16-40">        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">unseen</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="__span-16-41">            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have unread emails!&quot;</span><span class="p">)</span>
+</span><span id="__span-16-42">
+</span><span id="__span-16-43">
+</span><span id="__span-16-44"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-16-45">    <span class="n">main</span><span class="p">()</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../reference/query/">Query &amp; Q</a></li>
+<li><a href="../../reference/where/">Where</a></li>
+<li><a href="../../reference/email/">Email</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../read-emails/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Read Emails">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Read Emails
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../send-email/" class="md-footer__link md-footer__link--next" aria-label="Next: Send Emails">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Send Emails
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Fernando Celmer
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.tooltips", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
