@@ -1,6 +1,6 @@
 # ruff: noqa: F401
 # flake8: noqa: F401
-__version__ = "1.0.0.dev1"
+__version__ = "1.0.0"
 
 __author__ = "Fernando Celmer <email@fernandocelmer.com>"
 __copyright__ = """MIT License
