@@ -86,6 +86,31 @@ class TestSend(_SendTest):
         sent = self.smtp.send_message.call_args[0][0]
         self.assertEqual(sent["From"], "u@x.com")
 
+    def test_send_message_does_not_mutate_caller_message(self):
+        from email.message import EmailMessage
+
+        msg = EmailMessage()
+        msg["To"] = "bob@x"
+        msg["Subject"] = "t"
+        msg.set_content("body")
+
+        self.app.send_message(msg, save_to_sent=False)
+        self.assertIsNone(msg.get("From"))
+
+    def test_send_message_twice_does_not_duplicate_from(self):
+        from email.message import EmailMessage
+
+        msg = EmailMessage()
+        msg["To"] = "bob@x"
+        msg["Subject"] = "t"
+        msg.set_content("body")
+
+        self.app.send_message(msg, save_to_sent=False)
+        self.app.send_message(msg, save_to_sent=False)
+
+        sent = self.smtp.send_message.call_args[0][0]
+        self.assertEqual(sent.get_all("From"), ["u@x.com"])
+
 
 class TestReply(_SendTest):
     def test_reply_preserves_threading(self):
