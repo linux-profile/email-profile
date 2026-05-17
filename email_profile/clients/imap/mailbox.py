@@ -186,8 +186,9 @@ class MailBox:
 
         Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete +
         ``UID EXPUNGE`` (RFC 4315) when the server does not advertise MOVE.
-        Only ``imaplib.IMAP4.error`` is treated as the missing-MOVE signal —
-        network/auth/quota errors propagate.
+        ``imaplib.IMAP4.error`` and ``IMAPError`` (raised by ``Status.state``
+        on tagged ``NO``/``BAD`` responses) are treated as the missing-MOVE
+        signal — network/auth/quota errors propagate.
         """
         from email_profile.core.errors import IMAPError
 
@@ -195,12 +196,12 @@ class MailBox:
         uid = _uid_of(target)
         try:
             Status.state(self._client.uid("MOVE", uid, destination))
-        except imaplib.IMAP4.error:
+        except (imaplib.IMAP4.error, IMAPError):
             Status.state(self._client.uid("COPY", uid, destination))
             Status.state(self._client.uid("STORE", uid, "+FLAGS", "\\Deleted"))
             try:
                 Status.state(self._client.uid("EXPUNGE", uid))
-            except imaplib.IMAP4.error as exc:
+            except (imaplib.IMAP4.error, IMAPError) as exc:
                 raise IMAPError(
                     "Server lacks MOVE and UIDPLUS; message was copied and "
                     "flagged \\Deleted but not expunged."

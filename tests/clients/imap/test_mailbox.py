@@ -136,3 +136,39 @@ class TestMailBoxMove(TestCase):
         self.fake.uid.side_effect = side
         with self.assertRaises(IMAPError):
             self.app.inbox.move("42", "Archive")
+
+    def test_falls_back_when_server_responds_no_to_move(self):
+        """Server signals missing MOVE via tagged ``NO`` — not an exception.
+
+        ``Status.state`` translates ``("NO", ...)`` into ``IMAPError``;
+        the fallback must catch it so the COPY+STORE+UID EXPUNGE path runs.
+        """
+
+        def side(command, *args):
+            cmd = command.upper()
+            if cmd == "MOVE":
+                return ("NO", [b"MOVE not supported"])
+            return ("OK", [b"Done"])
+
+        self.fake.uid.side_effect = side
+        self.app.inbox.move("42", "Archive")
+        calls = [c.args[0] for c in self.fake.uid.call_args_list]
+        self.assertIn("COPY", calls)
+        self.assertIn("STORE", calls)
+        self.assertIn("EXPUNGE", calls)
+        self.fake.expunge.assert_not_called()
+
+    def test_raises_when_server_responds_no_to_uid_expunge(self):
+        """Server lacks UIDPLUS and replies ``NO`` to UID EXPUNGE."""
+
+        def side(command, *args):
+            cmd = command.upper()
+            if cmd == "MOVE":
+                return ("NO", [b"MOVE not supported"])
+            if cmd == "EXPUNGE":
+                return ("NO", [b"UIDPLUS not supported"])
+            return ("OK", [b"Done"])
+
+        self.fake.uid.side_effect = side
+        with self.assertRaises(IMAPError):
+            self.app.inbox.move("42", "Archive")
