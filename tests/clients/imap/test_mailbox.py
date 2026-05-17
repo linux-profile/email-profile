@@ -1,7 +1,9 @@
+import imaplib
 from unittest import TestCase
 from unittest.mock import patch
 
 from email_profile import Email, Message, Q, Query
+from email_profile.core.errors import IMAPError
 from tests.conftest import SAMPLE_RFC822, make_fake_client
 
 
@@ -81,3 +83,56 @@ class TestMailBoxAppend(TestCase):
     def test_returns_none_without_uidplus(self):
         self.fake.append.return_value = ("OK", [b"APPEND completed"])
         self.assertIsNone(self.app.inbox.append(SAMPLE_RFC822))
+
+
+class TestMailBoxMove(TestCase):
+    def setUp(self):
+        self.fake = make_fake_client()
+        self._patcher = patch(
+            "email_profile.clients.imap.client.imaplib.IMAP4_SSL",
+            return_value=self.fake,
+        )
+        self._patcher.start()
+        self.app = Email("imap.x", "u", "p").connect()
+
+    def tearDown(self):
+        self.app.close()
+        self._patcher.stop()
+
+    def test_uses_move_when_supported(self):
+        self.app.inbox.move("42", "Archive")
+        calls = [c.args[0] for c in self.fake.uid.call_args_list]
+        self.assertIn("MOVE", calls)
+        self.assertNotIn("COPY", calls)
+        self.fake.expunge.assert_not_called()
+
+    def test_falls_back_to_copy_uid_expunge(self):
+        def side(command, *args):
+            cmd = command.upper()
+            if cmd == "MOVE":
+                raise imaplib.IMAP4.error("MOVE not supported")
+            return ("OK", [b"Done"])
+
+        self.fake.uid.side_effect = side
+        self.app.inbox.move("42", "Archive")
+        calls = [c.args[0] for c in self.fake.uid.call_args_list]
+        self.assertIn("COPY", calls)
+        self.assertIn("STORE", calls)
+        self.assertIn("EXPUNGE", calls)
+        self.fake.expunge.assert_not_called()
+
+    def test_propagates_non_imap_errors(self):
+        self.fake.uid.side_effect = ConnectionResetError("network drop")
+        with self.assertRaises(ConnectionResetError):
+            self.app.inbox.move("42", "Archive")
+
+    def test_raises_when_uidplus_missing(self):
+        def side(command, *args):
+            cmd = command.upper()
+            if cmd in {"MOVE", "EXPUNGE"}:
+                raise imaplib.IMAP4.error("not supported")
+            return ("OK", [b"Done"])
+
+        self.fake.uid.side_effect = side
+        with self.assertRaises(IMAPError):
+            self.app.inbox.move("42", "Archive")
