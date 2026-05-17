@@ -119,13 +119,13 @@ class MailBox:
         from email_profile.serializers.email import Message
 
         if isinstance(message, Message):
-            raw = message.file.encode("utf-8")
+            raw = message.file
             if date is None:
                 date = message.date
         elif isinstance(message, str):
             raw = message.encode("utf-8")
-        elif isinstance(message, bytes):
-            raw = message
+        elif isinstance(message, (bytes, bytearray)):
+            raw = bytes(message)
         else:
             raise TypeError(
                 "append expects Message, bytes or str — "

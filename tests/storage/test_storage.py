@@ -10,7 +10,7 @@ def _raw(
     message_id: str = "<test@x>",
     uid: str = "1",
     mailbox: str = "INBOX",
-    file_content: str = "raw content",
+    file_content: bytes = b"raw content",
 ) -> RawSerializer:
     return RawSerializer(
         message_id=message_id, uid=uid, mailbox=mailbox, file=file_content
@@ -47,17 +47,23 @@ class TestStorageRaw(TestCase):
         result = self.storage.get("<test@x>")
         self.assertIsNotNone(result)
         self.assertEqual(result.message_id, "<test@x>")
-        self.assertEqual(result.file, "raw content")
+        self.assertEqual(result.file, b"raw content")
+
+    def test_binary_payload_round_trips_verbatim(self):
+        payload = bytes(range(256))
+        self.storage.save(_raw("<bin@x>", file_content=payload))
+        result = self.storage.get("<bin@x>")
+        self.assertEqual(result.file, payload)
 
     def test_get_returns_none_for_missing(self):
         result = self.storage.get("nonexistent")
         self.assertIsNone(result)
 
     def test_save_upserts(self):
-        self.storage.save(_raw("<x@x>", file_content="v1"))
-        self.storage.save(_raw("<x@x>", file_content="v2"))
+        self.storage.save(_raw("<x@x>", file_content=b"v1"))
+        self.storage.save(_raw("<x@x>", file_content=b"v2"))
         result = self.storage.get("<x@x>")
-        self.assertEqual(result.file, "v2")
+        self.assertEqual(result.file, b"v2")
 
     def test_ids(self):
         self.storage.save(_raw("<a@x>"))
