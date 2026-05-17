@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
+from typing import Optional
 
 from email_profile.providers import resolve_imap_host
 
@@ -29,15 +30,25 @@ class EmailFactories:
     """Build :class:`Credentials` without the user spelling out a hostname."""
 
     @classmethod
-    def from_address(cls, address: str, password: str) -> Credentials:
-        """Auto-discover the IMAP host from the email address."""
+    def from_address(
+        cls,
+        address: str,
+        password: str,
+        *,
+        port: Optional[int] = None,
+        ssl: Optional[bool] = None,
+    ) -> Credentials:
+        """Auto-discover the IMAP host from the email address.
+
+        ``port`` and ``ssl`` override the discovered values when given.
+        """
         host = resolve_imap_host(address)
         return Credentials(
             server=host.host,
             user=address,
             password=password,
-            port=host.port,
-            ssl=host.ssl,
+            port=host.port if port is None else port,
+            ssl=host.ssl if ssl is None else ssl,
         )
 
     @classmethod
@@ -47,6 +58,9 @@ class EmailFactories:
         user_var: str = "EMAIL_USERNAME",
         password_var: str = "EMAIL_PASSWORD",
         load_dotenv: bool = True,
+        *,
+        port: Optional[int] = None,
+        ssl: Optional[bool] = None,
     ) -> Credentials:
         """Read credentials from env vars (or `.env`)."""
         if load_dotenv:
@@ -66,6 +80,12 @@ class EmailFactories:
 
         server = os.environ.get(server_var)
         if server:
-            return Credentials(server=server, user=user, password=password)
+            return Credentials(
+                server=server,
+                user=user,
+                password=password,
+                port=993 if port is None else port,
+                ssl=True if ssl is None else ssl,
+            )
 
-        return cls.from_address(user, password)
+        return cls.from_address(user, password, port=port, ssl=ssl)
