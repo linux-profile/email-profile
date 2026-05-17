@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import copy
 import logging
 from typing import TYPE_CHECKING, Optional, Union
 
@@ -79,6 +80,7 @@ class Sender:
     ) -> None:
         """Send a pre-built EmailMessage."""
         if not message.get("From"):
+            message = copy.deepcopy(message)
             message["From"] = self._session.user
 
         to = message.get("To", "")
