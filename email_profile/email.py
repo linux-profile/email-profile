@@ -42,8 +42,8 @@ class Email:
         server: Optional[str] = None,
         user: Optional[str] = None,
         password: Optional[str] = None,
-        port: int = 993,
-        ssl: bool = True,
+        port: Optional[int] = None,
+        ssl: Optional[bool] = None,
         storage: Optional[StorageABC] = None,
     ) -> None:
         connection = self._resolve(server, user, password, port, ssl)
@@ -77,17 +77,21 @@ class Email:
         server: Optional[str],
         user: Optional[str],
         password: Optional[str],
-        port: int,
-        ssl: bool,
+        port: Optional[int],
+        ssl: Optional[bool],
     ) -> Credentials:
         if server is None and user is None and password is None:
-            return EmailFactories.from_env()
+            return EmailFactories.from_env(port=port, ssl=ssl)
 
         if password is None and user is not None and server and "@" in server:
-            return EmailFactories.from_address(server, user)
+            return EmailFactories.from_address(
+                server, user, port=port, ssl=ssl
+            )
 
         if server is None and user is not None and "@" in user and password:
-            return EmailFactories.from_address(user, password)
+            return EmailFactories.from_address(
+                user, password, port=port, ssl=ssl
+            )
 
         if server is None or user is None or password is None:
             raise TypeError(
@@ -97,7 +101,11 @@ class Email:
             )
 
         return Credentials(
-            server=server, user=user, password=password, port=port, ssl=ssl
+            server=server,
+            user=user,
+            password=password,
+            port=993 if port is None else port,
+            ssl=True if ssl is None else ssl,
         )
 
     @property
