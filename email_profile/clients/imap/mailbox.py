@@ -184,17 +184,27 @@ class MailBox:
     def move(self, target: UIDLike, destination: str) -> None:
         """Move a message into another mailbox.
 
-        Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete + expunge
-        when the server does not advertise the MOVE extension.
+        Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete +
+        ``UID EXPUNGE`` (RFC 4315) when the server does not advertise MOVE.
+        Only ``imaplib.IMAP4.error`` is treated as the missing-MOVE signal —
+        network/auth/quota errors propagate.
         """
+        from email_profile.core.errors import IMAPError
+
         Status.state(self._client.select(_quote(self.name)))
         uid = _uid_of(target)
         try:
             Status.state(self._client.uid("MOVE", uid, destination))
-        except Exception:
+        except imaplib.IMAP4.error:
             Status.state(self._client.uid("COPY", uid, destination))
             Status.state(self._client.uid("STORE", uid, "+FLAGS", "\\Deleted"))
-            Status.state(self._client.expunge())
+            try:
+                Status.state(self._client.uid("EXPUNGE", uid))
+            except imaplib.IMAP4.error as exc:
+                raise IMAPError(
+                    "Server lacks MOVE and UIDPLUS; message was copied and "
+                    "flagged \\Deleted but not expunged."
+                ) from exc
 
     def create(self) -> None:
         """Create this mailbox on the server."""

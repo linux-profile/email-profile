@@ -79,12 +79,14 @@ class TestCopyMove(_WriteTest):
         self.assertEqual(call.args, ("MOVE", "42", "Archive"))
 
     def test_move_falls_back_to_copy_delete(self):
+        import imaplib
+
         calls = []
 
         def fake_uid(command, *args):
             calls.append((command, args))
             if command.upper() == "MOVE":
-                raise Exception("MOVE not supported")
+                raise imaplib.IMAP4.error("MOVE not supported")
             return ("OK", [b"Done"])
 
         self.fake.uid.side_effect = fake_uid
@@ -94,7 +96,8 @@ class TestCopyMove(_WriteTest):
         self.assertIn("MOVE", commands)
         self.assertIn("COPY", commands)
         self.assertIn("STORE", commands)
-        self.fake.expunge.assert_called_once()
+        self.assertIn("EXPUNGE", commands)
+        self.fake.expunge.assert_not_called()
 
 
 class TestMailboxAdmin(_WriteTest):
