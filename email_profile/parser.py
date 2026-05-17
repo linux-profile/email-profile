@@ -213,11 +213,15 @@ def parse_rfc822(raw_message: bytes) -> ParsedBody:
             if not filename:
                 continue
 
+            safe_name = Path(_decode_header(filename).replace("\\", "/")).name
+            if not safe_name or safe_name in (".", ".."):
+                continue
+
             payload = part.get_payload(decode=True) or b""
 
             body.attachments.append(
                 Attachment(
-                    file_name=_decode_header(filename),
+                    file_name=safe_name,
                     content_type=content_type,
                     content=(
                         payload

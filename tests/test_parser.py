@@ -42,6 +42,32 @@ class TestAttachments(TestCase):
         )
 
 
+class TestAttachmentPathTraversal(TestCase):
+    def _msg(self, filename: str) -> bytes:
+        return (
+            b"From: a@x\r\nTo: b@x\r\nSubject: t\r\n"
+            b'Content-Type: multipart/mixed; boundary="B"\r\n\r\n'
+            b"--B\r\nContent-Type: text/plain\r\n\r\nbody\r\n"
+            b"--B\r\nContent-Disposition: attachment; "
+            b'filename="' + filename.encode() + b'"\r\n\r\n'
+            b"payload\r\n--B--\r\n"
+        )
+
+    def test_unix_traversal_stripped(self):
+        atts = parse_rfc822(self._msg("../../etc/passwd")).attachments
+        self.assertEqual(len(atts), 1)
+        self.assertEqual(atts[0].file_name, "passwd")
+
+    def test_windows_traversal_stripped(self):
+        atts = parse_rfc822(
+            self._msg("..\\\\..\\\\windows\\\\evil.exe")
+        ).attachments
+        self.assertEqual(atts[0].file_name, "evil.exe")
+
+    def test_pure_traversal_dropped(self):
+        self.assertEqual(parse_rfc822(self._msg("../..")).attachments, [])
+
+
 class TestNamedHeaders(TestCase):
     def test_named_headers_extracted(self):
         raw = (
