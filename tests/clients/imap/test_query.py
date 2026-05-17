@@ -59,3 +59,32 @@ class TestQ(TestCase):
         expr = (Query(subject="a") & Q.unseen()).mount()
         self.assertIn("(SUBJECT", expr)
         self.assertIn("(UNSEEN)", expr)
+
+
+class TestOrNotArity(TestCase):
+    def test_or_groups_multi_clause_operands(self):
+        expr = (
+            Query(subject="x", unseen=True) | Query(from_who="a@b")
+        ).mount()
+        self.assertEqual(expr, 'OR ((SUBJECT "x") (UNSEEN)) (FROM "a@b")')
+
+    def test_invert_groups_multi_clause(self):
+        expr = (~Query(subject="x", unseen=True)).mount()
+        self.assertEqual(expr, 'NOT ((SUBJECT "x") (UNSEEN))')
+
+    def test_exclude_groups_multi_clause(self):
+        expr = (
+            Query(subject="report")
+            .exclude(from_who="spam@x", unseen=True)
+            .mount()
+        )
+        self.assertIn('NOT ((FROM "spam@x") (UNSEEN))', expr)
+        self.assertIn('(SUBJECT "report")', expr)
+
+    def test_or_method_groups_multi_clause(self):
+        expr = Query(subject="a").or_(from_who="b@x", unseen=True).mount()
+        self.assertEqual(expr, 'OR (SUBJECT "a") ((FROM "b@x") (UNSEEN))')
+
+    def test_or_keeps_single_clause_unwrapped(self):
+        expr = (Q.subject("a") | Q.subject("b")).mount()
+        self.assertEqual(expr, 'OR (SUBJECT "a") (SUBJECT "b")')
