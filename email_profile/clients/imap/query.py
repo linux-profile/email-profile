@@ -25,6 +25,38 @@ def _imap_date(value: date) -> str:
     return value.strftime("%d-%b-%Y")
 
 
+def _is_balanced(expr: str) -> bool:
+    depth = 0
+    in_str = False
+    for ch in expr:
+        if ch == '"':
+            in_str = not in_str
+            continue
+        if in_str:
+            continue
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth < 0:
+                return False
+    return depth == 0
+
+
+def _group(expr: str) -> str:
+    """Wrap a possibly multi-clause IMAP expression as one search-key."""
+    expr = expr.strip()
+    if not expr:
+        return "ALL"
+    if (
+        expr.startswith("(")
+        and expr.endswith(")")
+        and _is_balanced(expr[1:-1])
+    ):
+        return expr
+    return f"({expr})"
+
+
 class _Expr:
     """Internal composable IMAP search expression."""
 
@@ -48,10 +80,10 @@ class _Expr:
 
     def __or__(self, other: QueryLike) -> _Expr:
         right = _to_expr(other)._expr
-        return _Expr(f"OR {self._expr} {right}".strip())
+        return _Expr(f"OR {_group(self._expr)} {_group(right)}")
 
     def __invert__(self) -> _Expr:
-        return _Expr(f"NOT {self._expr}")
+        return _Expr(f"NOT {_group(self._expr)}")
 
     def __repr__(self) -> str:
         return f"_Expr({self._expr!r})"
