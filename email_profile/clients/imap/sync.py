@@ -192,7 +192,7 @@ class Sync:
                 uid=entry.uid,
                 mailbox=mailbox.name,
                 flags=entry.flags,
-                file=entry.text(),
+                file=entry.raw(),
             )
 
             try:

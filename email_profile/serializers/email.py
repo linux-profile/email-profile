@@ -30,7 +30,7 @@ class Message(BaseModel):
     reply_to: Optional[str] = None
 
     subject: Optional[str] = None
-    file: str
+    file: bytes
     body_text_plain: str = ""
     body_text_html: str = ""
     content_type: Optional[str] = None
@@ -66,7 +66,7 @@ class Message(BaseModel):
             bcc=parsed.bcc,
             reply_to=parsed.reply_to,
             subject=parsed.subject,
-            file=raw.decode("utf-8", errors="replace"),
+            file=raw,
             body_text_plain=parsed.body_text_plain,
             body_text_html=parsed.body_text_html,
             content_type=parsed.content_type,
