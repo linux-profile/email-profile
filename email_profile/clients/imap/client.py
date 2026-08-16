@@ -27,7 +27,7 @@ class ImapClient:
         self.password = password
         self.port = port
         self.ssl = ssl
-        self.client: Optional[imaplib.IMAP4_SSL] = None
+        self.client: Optional[imaplib.IMAP4] = None
         self.mailboxes: dict[str, MailBox] = {}
 
     @property
@@ -36,7 +36,10 @@ class ImapClient:
 
     def connect(self) -> ImapClient:
         try:
-            client = imaplib.IMAP4_SSL(self.server)
+            if self.ssl:
+                client = imaplib.IMAP4_SSL(self.server, self.port)
+            else:
+                client = imaplib.IMAP4(self.server, self.port)
             client.login(user=self.user, password=self.password)
         except Exception as error:
             raise ConnectionFailure() from error

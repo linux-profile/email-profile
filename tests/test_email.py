@@ -186,6 +186,31 @@ class TestPublicProperties(TestCase):
         self.assertFalse(app.is_connected)
 
 
+class TestAutoDiscoveryOverrides(TestCase):
+    def test_kwargs_override_discovered_port_and_ssl(self):
+        from email_profile.core.types import IMAPHost
+
+        with patch(
+            "email_profile.core.credentials.resolve_imap_host",
+            return_value=IMAPHost("imap.gmail.com", port=993, ssl=True),
+        ):
+            app = Email("u@gmail.com", "pw", port=2143, ssl=False)
+            self.assertEqual(app.port, 2143)
+            self.assertFalse(app.ssl)
+            self.assertEqual(app.server, "imap.gmail.com")
+
+    def test_no_override_keeps_discovered_values(self):
+        from email_profile.core.types import IMAPHost
+
+        with patch(
+            "email_profile.core.credentials.resolve_imap_host",
+            return_value=IMAPHost("imap.gmail.com", port=993, ssl=True),
+        ):
+            app = Email("u@gmail.com", "pw")
+            self.assertEqual(app.port, 993)
+            self.assertTrue(app.ssl)
+
+
 class TestConstructorOverloads(TestCase):
     def test_three_positional_args_explicit(self):
         app = Email("imap.x.com", "u", "pw")

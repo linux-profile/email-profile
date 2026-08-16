@@ -21,10 +21,23 @@ class TestFromRaw(TestCase):
 class TestRawSerializer(TestCase):
     def test_creates_from_fields(self):
         raw = RawSerializer(
-            message_id="<abc@x>", uid="1", mailbox="INBOX", file="raw content"
+            message_id="<abc@x>", uid="1", mailbox="INBOX", file=b"raw content"
         )
         self.assertEqual(raw.message_id, "<abc@x>")
-        self.assertEqual(raw.file, "raw content")
+        self.assertEqual(raw.file, b"raw content")
+
+    def test_str_input_coerced_to_bytes_latin1(self):
+        raw = RawSerializer(
+            message_id="<x>", uid="1", mailbox="INBOX", file="hello"
+        )
+        self.assertEqual(raw.file, b"hello")
+
+    def test_bytes_preserved_verbatim(self):
+        payload = bytes(range(256))
+        raw = RawSerializer(
+            message_id="<x>", uid="1", mailbox="INBOX", file=payload
+        )
+        self.assertEqual(raw.file, payload)
 
 
 class TestRawModel(TestCase):

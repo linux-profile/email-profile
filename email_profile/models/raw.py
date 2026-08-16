@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from sqlalchemy import Column, String, Text, UniqueConstraint
+from sqlalchemy import Column, LargeBinary, String, UniqueConstraint
 
 from email_profile.storage.db import Base
 
 
 class RawModel(Base):
-    """Complete RFC822 source (with attachments in base64)."""
+    """Complete RFC822 source stored verbatim as bytes."""
 
     __tablename__ = "raw"
     __table_args__ = (
@@ -19,4 +19,4 @@ class RawModel(Base):
     mailbox = Column(String, primary_key=True)
     message_id = Column(String, nullable=False, index=True)
     flags = Column(String, nullable=False, default="")
-    file = Column(Text)
+    file = Column(LargeBinary)
