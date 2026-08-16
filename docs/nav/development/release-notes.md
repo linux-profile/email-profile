@@ -6,6 +6,7 @@ August 4, 2026
 
 ## v1.0.1
 
+- [📦 PyPI - Build 1.0.1](https://github.com/linux-profile/email-profile/releases/tag/v1.0.1)
 - [📌 v1.0.1: Bug fixes, security patches, and test coverage](https://github.com/linux-profile/email-profile/issues/85)
 - [⚠️ Fix open Dependabot security alerts (idna, pymdown-extensions)](https://github.com/linux-profile/email-profile/issues/83)
 - [🪲 Email() port/ssl kwargs silently ignored when auto-discovery is used](https://github.com/linux-profile/email-profile/issues/69)
