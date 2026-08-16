@@ -1,6 +1,6 @@
 [project]
 name = "email-profile"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   { name="Fernando Celmer", email="email@fernandocelmer.com" },
 ]
@@ -72,7 +72,7 @@ Changelog = "https://linux-profile.github.io/email-profile/nav/development/relea
 
 [tool.poetry]
 name = "email-profile"
-version = "1.0.0"
+version = "1.0.1"
 description = "The simplest way to work with email in Python. Read, search, send, sync, backup and restore — IMAP + SMTP in one library."
 authors = ["Fernando Celmer <email@fernandocelmer.com>"]
 readme = "README.md"
