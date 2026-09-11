@@ -4,10 +4,17 @@ from __future__ import annotations
 
 
 class ConnectionFailure(Exception):
-    """Raised when the IMAP login fails."""
+    """Raised when the IMAP connection or login fails."""
 
-    def __init__(self) -> None:
-        super().__init__("Failed to connect to email server.")
+    def __init__(
+        self,
+        server: str | None = None,
+        port: int | None = None,
+        cause: BaseException | None = None,
+    ) -> None:
+        where = f" {server}:{port}" if server else ""
+        why = f" ({type(cause).__name__}: {cause})" if cause else ""
+        super().__init__(f"Failed to connect to email server{where}.{why}")
 
 
 class NotConnected(RuntimeError):

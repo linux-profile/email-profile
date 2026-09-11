@@ -42,7 +42,7 @@ class ImapClient:
                 client = imaplib.IMAP4(self.server, self.port)
             client.login(user=self.user, password=self.password)
         except Exception as error:
-            raise ConnectionFailure() from error
+            raise ConnectionFailure(self.server, self.port, error) from error
 
         self.client = client
         self.mailboxes = {
