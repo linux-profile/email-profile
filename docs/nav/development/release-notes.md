@@ -1,8 +1,15 @@
 # Release
 
-August 4, 2026
+September 11, 2026
 
 ---
+
+## v1.1.0
+
+- [📦 PyPI - Build 1.1.0](https://github.com/linux-profile/email-profile/releases/tag/v1.1.0)
+- [📌 v1.1.0: MCP server, Claude Code plugin and security hardening](https://github.com/linux-profile/email-profile/issues/92)
+- [⚙️ Add optional MCP server (email-profile[mcp])](https://github.com/linux-profile/email-profile/issues/88)
+- [⚠️ Bump mkdocs-material to 9.7.7 (CVE-2026-73295, DOM XSS in search)](https://github.com/linux-profile/email-profile/issues/90)
 
 ## v1.0.1
 
