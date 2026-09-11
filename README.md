@@ -251,7 +251,10 @@ email-profile-mcp --allow-send    # + send, reply, forward
 - **Credentials never pass through the model.** They come from the
   environment or `.env`; no tool accepts a password.
 - **Bodies are truncated** (4000 chars by default) and attachment bytes never
-  cross the wire — `save_attachment` writes to disk and returns the path.
+  cross the wire — `save_attachment` writes only under
+  `EMAIL_MCP_ATTACHMENTS_DIR` and returns the path.
+- **One message per call.** `uid` accepts a single id; IMAP ranges like
+  `1:*` are refused, and search strings are escaped before reaching the server.
 
 ### Connect a client
 
@@ -343,6 +346,7 @@ guidance as skills under [skills/](skills/).
 | `--max-chars` | `EMAIL_MCP_MAX_CHARS` | `4000` |
 | — | `EMAIL_MCP_LIMIT` | `20` |
 | — | `EMAIL_MCP_DEFAULT_MAILBOX` | `INBOX` |
+| — | `EMAIL_MCP_ATTACHMENTS_DIR` | `.` — the only place `save_attachment` writes |
 | `--http --host --port` | — | stdio |
 
 Full reference: [MCP Server docs](https://linux-profile.github.io/email-profile/nav/advanced/mcp-server/).

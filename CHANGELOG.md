@@ -25,5 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Built-in mailbox shortcuts (inbox, sent, trash, drafts, spam, archive)
 - DNS SRV and MX record-based server auto-detection
 - Environment variable configuration with `.env` support
+- Optional MCP server (`pip install email-profile[mcp]`, `email-profile-mcp`) with 14 tools and 4 prompts; send and delete opt-in via `--allow-send` / `--allow-delete`
+- Claude Code plugin manifests and six skills (`skills/`)
+
+### Security
+- IMAP search strings escape `"` and `\` per RFC 3501 quoted-string rules
 
 [Unreleased]: https://github.com/linux-profile/email-profile/compare/main...develop
