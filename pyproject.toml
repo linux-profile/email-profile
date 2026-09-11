@@ -41,6 +41,8 @@ keywords = [
   "progress",
   "sqlite",
   "migration",
+  "mcp",
+  "model-context-protocol",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -62,6 +64,12 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
 ]
+
+[project.optional-dependencies]
+mcp = ["mcp>=2.0"]
+
+[project.scripts]
+email-profile-mcp = "email_profile.mcp.server:main"
 
 [project.urls]
 Homepage = "https://github.com/linux-profile/email-profile"
@@ -107,6 +115,8 @@ keywords = [
   "progress",
   "sqlite",
   "migration",
+  "mcp",
+  "model-context-protocol",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -136,6 +146,13 @@ sqlalchemy = "^2.0"
 dnspython = "^2.6"
 python-dotenv = "^1.2.2"
 rich = "^14.0"
+mcp = {version = ">=2.0", optional = true}
+
+[tool.poetry.extras]
+mcp = ["mcp"]
+
+[tool.poetry.scripts]
+email-profile-mcp = "email_profile.mcp.server:main"
 
 [tool.poetry.group.dev.dependencies]
 build = "^1.2"
