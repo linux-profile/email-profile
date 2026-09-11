@@ -29,6 +29,10 @@ That's it. No server configuration needed — email-profile auto-discovers your 
 
 ---
 
+**Contents** — [Install](#install) · [Why](#why-email-profile) · [Quick Start](#quick-start) · [MCP Server](#mcp-server) · [Features](#features) · [Providers](#supported-providers) · [Environment](#environment-variables)
+
+---
+
 ## Install
 
 ```bash
@@ -217,6 +221,126 @@ with Email.from_env() as app:
     app.sync()
 ```
 
+## MCP Server
+
+The same account, as tools for an AI client. Install the extra, point Claude
+Code, Claude Desktop or Cursor at it, and ask:
+
+> *"What came in today that needs an answer?"*
+> *"Find the invoice Alice sent last month and save the PDF."*
+> *"Draft a reply saying Thursday works — show me before you send."*
+
+```bash
+pip install "email-profile[mcp]"
+email-profile-mcp                 # read-only
+email-profile-mcp --allow-send    # + send, reply, forward
+```
+
+### Safety model
+
+- **Read-only by default.** `send_email`, `reply_message` and `forward_message`
+  exist only with `--allow-send`; `delete_message` only with `--allow-delete`.
+- **Irreversible tools are annotated destructive**, so clients that support
+  it ask you before calling them.
+- **Credentials never pass through the model.** They come from the
+  environment or `.env`; no tool accepts a password.
+- **Bodies are truncated** (4000 chars by default) and attachment bytes never
+  cross the wire — `save_attachment` writes to disk and returns the path.
+
+### Connect a client
+
+<details open>
+<summary><b>Claude Code</b></summary>
+
+```bash
+claude mcp add email \
+  --env EMAIL_USERNAME=you@gmail.com --env EMAIL_PASSWORD=app-password \
+  -- uvx --from "email-profile[mcp]" email-profile-mcp --allow-send
+```
+
+Or install the repository as a plugin — the server plus six skills that
+keep the model from sending before you approve:
+
+```bash
+claude plugin marketplace add linux-profile/email-profile
+claude plugin install email-profile@email-profile
+```
+</details>
+
+<details>
+<summary><b>Claude Desktop</b></summary>
+
+`~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "email": {
+      "command": "uvx",
+      "args": ["--from", "email-profile[mcp]", "email-profile-mcp", "--allow-send"],
+      "env": { "EMAIL_USERNAME": "you@gmail.com", "EMAIL_PASSWORD": "app-password" }
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>Cursor</b></summary>
+
+Same shape in `.cursor/mcp.json` — copy [examples/cursor.json](examples/cursor.json).
+</details>
+
+<details>
+<summary><b>From Python</b></summary>
+
+```python
+from email_profile import Email
+from email_profile.mcp import Settings, build
+
+server = build(
+    Settings(allow_send=True),
+    email_factory=lambda: Email("imap.example.com", "user", "pw"),
+)
+server.run()                              # stdio
+server.run(transport="streamable-http")   # or HTTP
+```
+</details>
+
+### Tools
+
+| Tool | Hint | What it does |
+|---|---|---|
+| `list_mailboxes` | read-only | Server-side folder names |
+| `search_messages` | read-only | Filter one mailbox by sender, subject, text, dates, flags — headers only, newest first, paginated |
+| `read_message` | read-only | Headers, body and attachment metadata for one `(mailbox, uid)` |
+| `list_attachments` | read-only | Name, type and size of each attachment |
+| `save_attachment` | reversible | Write one attachment to disk |
+| `mark_seen` / `mark_unseen` | reversible | Read state |
+| `flag_message` / `unflag_message` | reversible | Star |
+| `move_message` | reversible | Move to another mailbox |
+| `send_email` | destructive | New message over SMTP — `--allow-send` |
+| `reply_message` | destructive | Reply keeping thread headers — `--allow-send` |
+| `forward_message` | destructive | Forward with attachments — `--allow-send` |
+| `delete_message` | destructive | Flag, or expunge with `expunge=true` — `--allow-delete` |
+
+Four prompts put the tools in the order a task needs: `triage_inbox`,
+`find_message`, `draft_reply`, `summarize_thread`. The plugin ships the same
+guidance as skills under [skills/](skills/).
+
+### Options
+
+| Flag | Env | Default |
+|---|---|---|
+| `--allow-send` | `EMAIL_MCP_ALLOW_SEND` | off |
+| `--allow-delete` | `EMAIL_MCP_ALLOW_DELETE` | off |
+| `--max-chars` | `EMAIL_MCP_MAX_CHARS` | `4000` |
+| — | `EMAIL_MCP_LIMIT` | `20` |
+| — | `EMAIL_MCP_DEFAULT_MAILBOX` | `INBOX` |
+| `--http --host --port` | — | stdio |
+
+Full reference: [MCP Server docs](https://linux-profile.github.io/email-profile/nav/advanced/mcp-server/).
+
 ## Features
 
 | Feature | Description |
@@ -232,8 +356,8 @@ with Email.from_env() as app:
 | **Storage** | Pluggable storage backend (SQLite default) |
 | **Flags** | Read/unread, flag, delete, move, copy operations |
 | **Context Manager** | `with Email(...) as app:` for automatic cleanup |
-| **MCP Server** | 14 tools + 4 prompts for Claude Code, Claude Desktop, Cursor; send/delete opt-in |
-| **Plugin** | Claude Code plugin with six skills that gate sending behind approval |
+| **MCP Server** | 14 tools + 4 prompts for Claude Code, Claude Desktop, Cursor — read-only until you opt in |
+| **Plugin** | Claude Code plugin with skills that gate sending behind your approval |
 
 ## Supported Providers
 
@@ -267,90 +391,23 @@ Auto-discovery works out of the box. Just use your email and password — no ser
 
 Any server with DNS SRV or MX records is also detected automatically.
 
-## MCP Server
-
-Expose the account to any MCP client — Claude Desktop, Claude Code, Cursor — as
-tools the model can call: search, read, flag, move, and (when allowed) send.
-
-```bash
-pip install email-profile[mcp]
-email-profile-mcp --allow-send
-```
-
-### Claude Code
-
-```bash
-claude mcp add email \
-  --env EMAIL_USERNAME=you@gmail.com --env EMAIL_PASSWORD=app-password \
-  -- uvx --from "email-profile[mcp]" email-profile-mcp --allow-send
-```
-
-### Claude Desktop
-
-`~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "email": {
-      "command": "uvx",
-      "args": ["--from", "email-profile[mcp]", "email-profile-mcp", "--allow-send"],
-      "env": { "EMAIL_USERNAME": "you@gmail.com", "EMAIL_PASSWORD": "app-password" }
-    }
-  }
-}
-```
-
-Cursor uses the same shape in `.cursor/mcp.json` — see [examples/](examples/).
-
-### Claude Code plugin
-
-The repository is also a plugin: the server plus six skills that keep the
-model from sending before you approve.
-
-```bash
-claude plugin marketplace add linux-profile/email-profile
-claude plugin install email-profile@email-profile
-```
-
-### Tools
-
-| Tool | What it does |
-|---|---|
-| `list_mailboxes` | Server-side folder names |
-| `search_messages` | Filter one mailbox; headers only, newest first, paginated |
-| `read_message` | Headers, body (truncated) and attachment metadata |
-| `list_attachments` / `save_attachment` | Attachment metadata; write one to disk |
-| `mark_seen` / `mark_unseen` / `flag_message` / `unflag_message` | Flags |
-| `move_message` | Move to another mailbox |
-| `send_email` / `reply_message` / `forward_message` | SMTP — needs `--allow-send` |
-| `delete_message` | Flag or expunge — needs `--allow-delete` |
-
-Sending and deleting are off by default and marked destructive, so clients
-that support it ask the human first. Credentials come from the environment
-only; no tool accepts a password.
-
-Prompts `triage_inbox`, `find_message`, `draft_reply` and `summarize_thread`
-put the tools in the order a task needs.
-
-### Options
-
-| Flag | Env | Default |
-|---|---|---|
-| `--allow-send` | `EMAIL_MCP_ALLOW_SEND` | off |
-| `--allow-delete` | `EMAIL_MCP_ALLOW_DELETE` | off |
-| `--max-chars` | `EMAIL_MCP_MAX_CHARS` | 4000 |
-| — | `EMAIL_MCP_LIMIT` | 20 |
-| — | `EMAIL_MCP_DEFAULT_MAILBOX` | `INBOX` |
-| `--http --host --port` | — | stdio |
-
 ## Environment Variables
 
 ```env
 EMAIL_USERNAME=user@example.com
 EMAIL_PASSWORD=app_password
-EMAIL_SERVER=imap.example.com  # optional, auto-discovered
+EMAIL_SERVER=imap.example.com   # optional, auto-discovered
+
+EMAIL_MCP_ALLOW_SEND=false      # MCP server only
+EMAIL_MCP_ALLOW_DELETE=false
 ```
+
+Gmail, Outlook and iCloud require an [app password](https://support.google.com/accounts/answer/185833), not the account password.
+
+## Contributing
+
+Issues and pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Security reports: [SECURITY.md](SECURITY.md).
 
 ## License
 
