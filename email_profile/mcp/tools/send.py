@@ -8,6 +8,7 @@ from pydantic import Field
 
 from email_profile.mcp.annotations import SENDS
 from email_profile.mcp.config import Settings
+from email_profile.mcp.params import Mailbox, Uid
 from email_profile.mcp.results import Outcome
 from email_profile.mcp.session import Session
 
@@ -45,21 +46,22 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
         there is no draft step and no undo. `body` is plain text; pass
         `html` as well for a rich version.
         """
-        session.email.send(
-            to=split(to),
-            subject=subject,
-            body=body,
-            html=html,
-            cc=split(cc) or None,
-            bcc=split(bcc) or None,
-            reply_to=reply_to,
-        )
+        with session.lock:
+            session.email.send(
+                to=split(to),
+                subject=subject,
+                body=body,
+                html=html,
+                cc=split(cc) or None,
+                bcc=split(bcc) or None,
+                reply_to=reply_to,
+            )
         return Outcome(action="send", detail=", ".join(split(to)))
 
     @mcp.tool(annotations=SENDS)
     def reply_message(
-        mailbox: str,
-        uid: str,
+        mailbox: Mailbox,
+        uid: Uid,
         body: str,
         reply_all: Annotated[
             bool, Field(description="Also reply to every To/Cc address.")
@@ -70,20 +72,22 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
         Subject, recipients and In-Reply-To come from the original; only
         `body` is yours. Confirm the text with the user first.
         """
-        original = session.fetch(mailbox, uid)
-        session.email.reply(original, body, reply_all=reply_all)
+        with session.lock:
+            original = session.fetch(mailbox, uid)
+            session.email.reply(original, body, reply_all=reply_all)
         return Outcome(action="reply", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=SENDS)
     def forward_message(
-        mailbox: str,
-        uid: str,
+        mailbox: Mailbox,
+        uid: Uid,
         to: Recipients,
         body: str = "",
     ) -> Outcome:
         """Forward a message, attachments included. Irreversible."""
-        original = session.fetch(mailbox, uid)
-        session.email.forward(original, to=split(to), body=body)
+        with session.lock:
+            original = session.fetch(mailbox, uid)
+            session.email.forward(original, to=split(to), body=body)
         return Outcome(
             action="forward",
             mailbox=mailbox,

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 from typing import TYPE_CHECKING, Callable, Optional
 
 from email_profile.clients.imap.query import Q
@@ -23,29 +24,38 @@ EmailFactory = Callable[[], "Email"]
 
 
 class Session:
-    """Connects on first use and reconnects when the link drops."""
+    """Connects on first use and reconnects when the link drops.
+
+    Tools run on worker threads and ``imaplib`` is not thread-safe, so
+    every tool body runs under ``lock``: connect-or-reconnect and the
+    IMAP commands that follow are serialized.
+    """
 
     def __init__(self, factory: EmailFactory) -> None:
         self._factory = factory
         self._email: Optional[Email] = None
+        self.lock = threading.RLock()
 
     @property
     def email(self) -> Email:
-        if self._email is None:
-            self._email = self._factory()
-        if not self._email.is_connected:
-            self._email.connect()
-        return self._email
+        with self.lock:
+            if self._email is None:
+                self._email = self._factory()
+            if not self._email.is_connected:
+                self._email.connect()
+            return self._email
 
     def fetch(
         self, mailbox: str, uid: str, mode: FetchMode = "full"
     ) -> Message:
         """One message by uid, or a ``ToolError`` the model can act on."""
-        where = self.email.mailbox(mailbox).where(Q.uid(uid))
-        for msg in where.messages(mode=mode, chunk_size=1):
-            return msg
+        with self.lock:
+            where = self.email.mailbox(mailbox).where(Q.uid(uid))
+            for msg in where.messages(mode=mode, chunk_size=1):
+                return msg
         raise ToolError(f"No message with uid={uid!r} in {mailbox!r}.")
 
     def close(self) -> None:
-        if self._email is not None and self._email.is_connected:
-            self._email.close()
+        with self.lock:
+            if self._email is not None and self._email.is_connected:
+                self._email.close()

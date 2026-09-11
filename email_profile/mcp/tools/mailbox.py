@@ -10,6 +10,7 @@ from pydantic import Field
 from email_profile.clients.imap.query import Q
 from email_profile.mcp.annotations import READ_ONLY
 from email_profile.mcp.config import MAX_LIMIT, Settings
+from email_profile.mcp.params import Mailbox
 from email_profile.mcp.results import MessageSummary, SearchPage
 from email_profile.mcp.session import Session
 
@@ -22,11 +23,12 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
         Use the exact names returned here as `mailbox` in other tools —
         Gmail, for instance, calls Sent `[Gmail]/Sent Mail`.
         """
-        return session.email.mailboxes()
+        with session.lock:
+            return session.email.mailboxes()
 
     @mcp.tool(annotations=READ_ONLY)
     def search_messages(
-        mailbox: str = settings.default_mailbox,
+        mailbox: Mailbox = settings.default_mailbox,
         text: Optional[str] = None,
         subject: Optional[str] = None,
         sender: Annotated[
@@ -68,16 +70,19 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
         if before:
             kwargs["before"] = before
 
-        folder = session.email.mailbox(mailbox)
-        uids = list(reversed(folder.where(**kwargs).uids()))
-        page = uids[offset : offset + limit]
+        with session.lock:
+            folder = session.email.mailbox(mailbox)
+            uids = list(reversed(folder.where(**kwargs).uids()))
+            page = uids[offset : offset + limit]
 
-        rows: list[MessageSummary] = []
-        if page:
-            fetched = folder.where(Q.uid_set(page)).messages(mode="headers")
-            rows = [MessageSummary.of(m) for m in fetched]
-            order = {uid: i for i, uid in enumerate(page)}
-            rows.sort(key=lambda r: order.get(r.uid, len(page)))
+            rows: list[MessageSummary] = []
+            if page:
+                fetched = folder.where(Q.uid_set(page)).messages(
+                    mode="headers"
+                )
+                rows = [MessageSummary.of(m) for m in fetched]
+                order = {uid: i for i, uid in enumerate(page)}
+                rows.sort(key=lambda r: order.get(r.uid, len(page)))
 
         end = offset + len(page)
         return SearchPage(
