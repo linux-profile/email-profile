@@ -1,4 +1,6 @@
-# email-profile
+<p align="center">
+  <img src="https://raw.githubusercontent.com/linux-profile/email-profile/develop/docs/assets/cover.png" alt="email-profile — Email for Python, without the boilerplate. MCP included." width="100%">
+</p>
 
 [![PyPI](https://img.shields.io/pypi/v/email-profile)](https://pypi.org/project/email-profile/)
 [![Python](https://img.shields.io/pypi/pyversions/email-profile)](https://pypi.org/project/email-profile/)
