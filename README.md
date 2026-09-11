@@ -1,14 +1,21 @@
-# email-profile
+<p align="center">
+  <img src="https://raw.githubusercontent.com/linux-profile/email-profile/develop/docs/assets/cover.png" alt="email-profile — Email for Python, without the boilerplate. MCP included." width="100%">
+</p>
 
-[![PyPI](https://img.shields.io/pypi/v/email-profile)](https://pypi.org/project/email-profile/)
-[![Python](https://img.shields.io/pypi/pyversions/email-profile)](https://pypi.org/project/email-profile/)
-[![Tests](https://img.shields.io/github/actions/workflow/status/linux-profile/email-profile/test.yml?branch=develop&label=tests)](https://github.com/linux-profile/email-profile/actions)
-[![License](https://img.shields.io/github/license/linux-profile/email-profile)](LICENSE)
-[![Downloads](https://img.shields.io/pypi/dm/email-profile)](https://pypi.org/project/email-profile/)
+<h1 align="center">email-profile</h1>
+
+<p align="center">
+  <a href="https://pypi.org/project/email-profile/"><img src="https://img.shields.io/pypi/v/email-profile" alt="PyPI"></a>
+  <a href="https://pypi.org/project/email-profile/"><img src="https://img.shields.io/pypi/pyversions/email-profile" alt="Python"></a>
+  <a href="https://github.com/linux-profile/email-profile/actions"><img src="https://img.shields.io/github/actions/workflow/status/linux-profile/email-profile/test.yml?branch=develop&label=tests" alt="Tests"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/linux-profile/email-profile" alt="License"></a>
+  <a href="https://pypi.org/project/email-profile/"><img src="https://img.shields.io/pypi/dm/email-profile" alt="Downloads"></a>
+</p>
 
 The simplest way to work with email in Python. No boilerplate, no low-level IMAP commands, no headaches.
 
 Just connect, read, search, send, backup, and restore — with one class.
+Or hand the same account to Claude, Cursor or any MCP client and let the model do it.
 
 ```python
 from email_profile import Email
@@ -28,10 +35,15 @@ That's it. No server configuration needed — email-profile auto-discovers your 
 
 ---
 
+**Contents** — [Install](#install) · [Why](#why-email-profile) · [Quick Start](#quick-start) · [MCP Server](#mcp-server) · [Features](#features) · [Providers](#supported-providers) · [Environment](#environment-variables)
+
+---
+
 ## Install
 
 ```bash
-pip install email-profile
+pip install email-profile          # library
+pip install email-profile[mcp]     # + MCP server for AI clients
 ```
 
 ## Why email-profile?
@@ -44,8 +56,9 @@ Most Python email libraries make you deal with `imaplib` directly, parse raw byt
 - Write `app.inbox.where(Q.unseen()).first()` instead of raw IMAP search commands
 - Write `app.sync()` instead of building your own backup system
 - Write `app.send(to="...", subject="...", body="...")` instead of constructing MIME messages
+- Run `email-profile-mcp` and ask Claude "what needs an answer today?" instead of writing an agent
 
-It combines IMAP + SMTP + storage + sync in a single library. No other Python package does this.
+It combines IMAP + SMTP + storage + sync + MCP in a single library. No other Python package does this.
 
 ## Quick Start
 
@@ -214,6 +227,130 @@ with Email.from_env() as app:
     app.sync()
 ```
 
+## MCP Server
+
+The same account, as tools for an AI client. Install the extra, point Claude
+Code, Claude Desktop or Cursor at it, and ask:
+
+> *"What came in today that needs an answer?"*
+> *"Find the invoice Alice sent last month and save the PDF."*
+> *"Draft a reply saying Thursday works — show me before you send."*
+
+```bash
+pip install "email-profile[mcp]"
+email-profile-mcp                 # read-only
+email-profile-mcp --allow-send    # + send, reply, forward
+```
+
+### Safety model
+
+- **Read-only by default.** `send_email`, `reply_message` and `forward_message`
+  exist only with `--allow-send`; `delete_message` only with `--allow-delete`.
+- **Irreversible tools are annotated destructive**, so clients that support
+  it ask you before calling them.
+- **Credentials never pass through the model.** They come from the
+  environment or `.env`; no tool accepts a password.
+- **Bodies are truncated** (4000 chars by default) and attachment bytes never
+  cross the wire — `save_attachment` writes only under
+  `EMAIL_MCP_ATTACHMENTS_DIR` and returns the path.
+- **One message per call.** `uid` accepts a single id; IMAP ranges like
+  `1:*` are refused, and search strings are escaped before reaching the server.
+
+### Connect a client
+
+<details open>
+<summary><b>Claude Code</b></summary>
+
+```bash
+claude mcp add email \
+  --env EMAIL_USERNAME=you@gmail.com --env EMAIL_PASSWORD=app-password \
+  -- uvx --from "email-profile[mcp]" email-profile-mcp --allow-send
+```
+
+Or install the repository as a plugin — the server plus six skills that
+keep the model from sending before you approve:
+
+```bash
+claude plugin marketplace add linux-profile/email-profile
+claude plugin install email-profile@email-profile
+```
+</details>
+
+<details>
+<summary><b>Claude Desktop</b></summary>
+
+`~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "email": {
+      "command": "uvx",
+      "args": ["--from", "email-profile[mcp]", "email-profile-mcp", "--allow-send"],
+      "env": { "EMAIL_USERNAME": "you@gmail.com", "EMAIL_PASSWORD": "app-password" }
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>Cursor</b></summary>
+
+Same shape in `.cursor/mcp.json` — copy [examples/cursor.json](examples/cursor.json).
+</details>
+
+<details>
+<summary><b>From Python</b></summary>
+
+```python
+from email_profile import Email
+from email_profile.mcp import Settings, build
+
+server = build(
+    Settings(allow_send=True),
+    email_factory=lambda: Email("imap.example.com", "user", "pw"),
+)
+server.run()                              # stdio
+server.run(transport="streamable-http")   # or HTTP
+```
+</details>
+
+### Tools
+
+| Tool | Hint | What it does |
+|---|---|---|
+| `list_mailboxes` | read-only | Server-side folder names |
+| `search_messages` | read-only | Filter one mailbox by sender, subject, text, dates, flags — headers only, newest first, paginated |
+| `read_message` | read-only | Headers, body and attachment metadata for one `(mailbox, uid)` |
+| `list_attachments` | read-only | Name, type and size of each attachment |
+| `save_attachment` | reversible | Write one attachment to disk |
+| `mark_seen` / `mark_unseen` | reversible | Read state |
+| `flag_message` / `unflag_message` | reversible | Star |
+| `move_message` | reversible | Move to another mailbox |
+| `send_email` | destructive | New message over SMTP — `--allow-send` |
+| `reply_message` | destructive | Reply keeping thread headers — `--allow-send` |
+| `forward_message` | destructive | Forward with attachments — `--allow-send` |
+| `delete_message` | destructive | Flag, or expunge with `expunge=true` — `--allow-delete` |
+
+Four prompts put the tools in the order a task needs: `triage_inbox`,
+`find_message`, `draft_reply`, `summarize_thread`. The plugin ships the same
+guidance as skills under [skills/](skills/).
+
+### Options
+
+| Flag | Env | Default |
+|---|---|---|
+| `--allow-send` | `EMAIL_MCP_ALLOW_SEND` | off |
+| `--allow-delete` | `EMAIL_MCP_ALLOW_DELETE` | off |
+| `--max-chars` | `EMAIL_MCP_MAX_CHARS` | `4000` |
+| — | `EMAIL_MCP_LIMIT` | `20` |
+| — | `EMAIL_MCP_DEFAULT_MAILBOX` | `INBOX` |
+| — | `EMAIL_MCP_ATTACHMENTS_DIR` | `.` — the only place `save_attachment` writes |
+| `--http --host --port` | — | stdio |
+
+Full reference: [MCP Server docs](https://linux-profile.github.io/email-profile/nav/advanced/mcp-server/).
+
 ## Features
 
 | Feature | Description |
@@ -229,6 +366,8 @@ with Email.from_env() as app:
 | **Storage** | Pluggable storage backend (SQLite default) |
 | **Flags** | Read/unread, flag, delete, move, copy operations |
 | **Context Manager** | `with Email(...) as app:` for automatic cleanup |
+| **MCP Server** | 14 tools + 4 prompts for Claude Code, Claude Desktop, Cursor — read-only until you opt in |
+| **Plugin** | Claude Code plugin with skills that gate sending behind your approval |
 
 ## Supported Providers
 
@@ -267,8 +406,18 @@ Any server with DNS SRV or MX records is also detected automatically.
 ```env
 EMAIL_USERNAME=user@example.com
 EMAIL_PASSWORD=app_password
-EMAIL_SERVER=imap.example.com  # optional, auto-discovered
+EMAIL_SERVER=imap.example.com   # optional, auto-discovered
+
+EMAIL_MCP_ALLOW_SEND=false      # MCP server only
+EMAIL_MCP_ALLOW_DELETE=false
 ```
+
+Gmail, Outlook and iCloud require an [app password](https://support.google.com/accounts/answer/185833), not the account password.
+
+## Contributing
+
+Issues and pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Security reports: [SECURITY.md](SECURITY.md).
 
 ## License
 

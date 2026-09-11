@@ -13,6 +13,10 @@ inputs:
     description: Dependencies groups to install (e.g., dev,code-quality)
     required: false
     default: ""
+  install-extras:
+    description: Package extras to install (e.g., mcp)
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -49,4 +53,8 @@ runs:
       if: inputs.install-deps != ''
       shell: bash
       run: |
-        poetry install --with ${{ inputs.install-deps }} --no-interaction --no-ansi
+        EXTRAS=""
+        if [ -n "${{ inputs.install-extras }}" ]; then
+          EXTRAS="--extras ${{ inputs.install-extras }}"
+        fi
+        poetry install --with ${{ inputs.install-deps }} $EXTRAS --no-interaction --no-ansi

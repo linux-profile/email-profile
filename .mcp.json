@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "email": {
+      "command": "uvx",
+      "args": ["--from", "email-profile[mcp]", "email-profile-mcp"],
+      "env": {
+        "EMAIL_USERNAME": "${EMAIL_USERNAME}",
+        "EMAIL_PASSWORD": "${EMAIL_PASSWORD}",
+        "EMAIL_SERVER": "${EMAIL_SERVER}",
+        "EMAIL_MCP_ALLOW_SEND": "${EMAIL_MCP_ALLOW_SEND:-false}",
+        "EMAIL_MCP_ALLOW_DELETE": "${EMAIL_MCP_ALLOW_DELETE:-false}"
+      }
+    }
+  }
+}

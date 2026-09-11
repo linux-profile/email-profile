@@ -18,7 +18,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 def _ascii(value: str) -> str:
-    return value.encode("ASCII", "ignore").decode()
+    """ASCII-only, with ``\\`` and ``"`` escaped per RFC 3501 quoted-string."""
+    text = value.encode("ASCII", "ignore").decode()
+    return text.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def _imap_date(value: date) -> str:

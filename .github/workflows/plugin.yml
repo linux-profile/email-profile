@@ -1,0 +1,36 @@
+name: 🔌 Plugin
+
+on:
+  pull_request:
+    branches: ["master", "develop"]
+  push:
+    branches: ["master", "develop"]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Skills match the server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Poetry
+        uses: ./.github/actions/setup-poetry
+        with:
+          python-version: "3.13"
+          install-deps: dev
+          install-extras: mcp
+
+      - name: 🔍 Validate the manifests
+        run: |
+          for f in .mcp.json .app.json server.json \
+                   .claude-plugin/plugin.json .claude-plugin/marketplace.json \
+                   .agents/plugins/marketplace.json .codex-plugin/plugin.json \
+                   examples/claude-desktop.json examples/cursor.json; do
+            python3 -c "import json; json.load(open('$f'))" && echo "ok $f"
+          done
+
+      - name: 📐 Compare the skills against the tools
+        run: poetry run python scripts/check_skills.py
