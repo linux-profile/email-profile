@@ -251,3 +251,9 @@ def test_tools_serialize_on_the_session_lock(app):
     for t in threads:
         t.join()
     assert len(calls) == 1
+
+
+def test_library_errors_surface_as_tool_errors(server, fake_client):
+    fake_client.list.return_value = ("OK", [b'(\\HasNoChildren) "/" "INBOX"'])
+    with pytest.raises(Exception, match="Unknown mailbox: 'Nope'"):
+        asyncio.run(server.call_tool("search_messages", {"mailbox": "Nope"}))
