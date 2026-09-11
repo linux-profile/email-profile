@@ -1,0 +1,20 @@
+{
+  "name": "email-profile-development",
+  "interface": {
+    "displayName": "email-profile Development"
+  },
+  "plugins": [
+    {
+      "name": "email-profile",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

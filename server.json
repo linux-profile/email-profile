@@ -1,0 +1,32 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.linux-profile/email-profile",
+  "title": "email-profile",
+  "description": "Read, search, organize and send email from one IMAP/SMTP account.",
+  "version": "1.0.0",
+  "websiteUrl": "https://linux-profile.github.io/email-profile/nav/advanced/mcp-server/",
+  "repository": {
+    "url": "https://github.com/linux-profile/email-profile",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "email-profile[mcp]",
+      "version": "1.0.0",
+      "runtimeHint": "uvx",
+      "transport": { "type": "stdio" },
+      "packageArguments": [
+        { "type": "positional", "value": "email-profile-mcp" }
+      ],
+      "environmentVariables": [
+        { "name": "EMAIL_USERNAME", "description": "Account address.", "isRequired": true, "isSecret": false },
+        { "name": "EMAIL_PASSWORD", "description": "Password or app password.", "isRequired": true, "isSecret": true },
+        { "name": "EMAIL_SERVER", "description": "IMAP host; auto-discovered when omitted.", "isRequired": false, "isSecret": false },
+        { "name": "EMAIL_MCP_ALLOW_SEND", "description": "true exposes send, reply and forward.", "isRequired": false, "isSecret": false },
+        { "name": "EMAIL_MCP_ALLOW_DELETE", "description": "true exposes delete_message.", "isRequired": false, "isSecret": false }
+      ]
+    }
+  ]
+}

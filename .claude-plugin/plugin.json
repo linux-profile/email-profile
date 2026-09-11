@@ -1,0 +1,28 @@
+{
+  "name": "email-profile",
+  "displayName": "email-profile",
+  "version": "1.0.0",
+  "description": "Read, search, organize and send email from your AI client — one IMAP/SMTP account, exposed as MCP tools with skills that keep the model from sending before you approve.",
+  "author": {
+    "name": "Fernando Celmer",
+    "url": "https://github.com/linux-profile"
+  },
+  "homepage": "https://linux-profile.github.io/email-profile/",
+  "repository": "https://github.com/linux-profile/email-profile",
+  "license": "MIT",
+  "keywords": [
+    "email",
+    "imap",
+    "smtp",
+    "inbox",
+    "gmail",
+    "outlook",
+    "mcp",
+    "model-context-protocol",
+    "claude-code",
+    "codex",
+    "cursor"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}
