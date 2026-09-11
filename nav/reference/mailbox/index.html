@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -924,6 +924,8 @@
       
         
       
+        
+      
     
     
     
@@ -1150,6 +1152,34 @@
     
   
     Lazy Search (Where)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
   
 
     
@@ -3018,7 +3048,7 @@
   <span class="md-ellipsis">
     
   
-    Release Notes
+    Changelog
   
 
     
@@ -3565,7 +3595,18 @@
 <span class="normal">210</span>
 <span class="normal">211</span>
 <span class="normal">212</span>
-<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-56"><span class="k">class</span><span class="w"> </span><span class="nc">MailBox</span><span class="p">:</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-56"><span class="k">class</span><span class="w"> </span><span class="nc">MailBox</span><span class="p">:</span>
 </span><span id="__span-0-57"><span class="w">    </span><span class="sd">&quot;&quot;&quot;One IMAP mailbox addressed by its server-side name.&quot;&quot;&quot;</span>
 </span><span id="__span-0-58">
 </span><span id="__span-0-59">    <span class="n">PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
@@ -3631,13 +3672,13 @@
 </span><span id="__span-0-119">        <span class="kn">from</span><span class="w"> </span><span class="nn">email_profile.serializers.email</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span>
 </span><span id="__span-0-120">
 </span><span id="__span-0-121">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">Message</span><span class="p">):</span>
-</span><span id="__span-0-122">            <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+</span><span id="__span-0-122">            <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">file</span>
 </span><span id="__span-0-123">            <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-124">                <span class="n">date</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">date</span>
 </span><span id="__span-0-125">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 </span><span id="__span-0-126">            <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-</span><span id="__span-0-127">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
-</span><span id="__span-0-128">            <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span>
+</span><span id="__span-0-127">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+</span><span id="__span-0-128">            <span class="n">raw</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-0-129">        <span class="k">else</span><span class="p">:</span>
 </span><span id="__span-0-130">            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
 </span><span id="__span-0-131">                <span class="s2">&quot;append expects Message, bytes or str — &quot;</span>
@@ -3696,33 +3737,44 @@
 </span><span id="__span-0-184">    <span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">UIDLike</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-185"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Move a message into another mailbox.</span>
 </span><span id="__span-0-186">
-</span><span id="__span-0-187"><span class="sd">        Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete + expunge</span>
-</span><span id="__span-0-188"><span class="sd">        when the server does not advertise the MOVE extension.</span>
-</span><span id="__span-0-189"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="__span-0-190">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
-</span><span id="__span-0-191">        <span class="n">uid</span> <span class="o">=</span> <span class="n">_uid_of</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-</span><span id="__span-0-192">        <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-0-193">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;MOVE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
-</span><span id="__span-0-194">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span id="__span-0-195">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;COPY&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
-</span><span id="__span-0-196">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;STORE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="s2">&quot;+FLAGS&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">Deleted&quot;</span><span class="p">))</span>
-</span><span id="__span-0-197">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">expunge</span><span class="p">())</span>
-</span><span id="__span-0-198">
-</span><span id="__span-0-199">    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-200"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create this mailbox on the server.&quot;&quot;&quot;</span>
-</span><span id="__span-0-201">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
-</span><span id="__span-0-202">
-</span><span id="__span-0-203">    <span class="k">def</span><span class="w"> </span><span class="nf">delete_mailbox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-204"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete this mailbox from the server.&quot;&quot;&quot;</span>
-</span><span id="__span-0-205">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
-</span><span id="__span-0-206">
-</span><span id="__span-0-207">    <span class="k">def</span><span class="w"> </span><span class="nf">rename_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-208"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Rename this mailbox. Updates ``self.name`` in place.&quot;&quot;&quot;</span>
-</span><span id="__span-0-209">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">_quote</span><span class="p">(</span><span class="n">new_name</span><span class="p">)))</span>
-</span><span id="__span-0-210">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
-</span><span id="__span-0-211">
-</span><span id="__span-0-212">    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-0-213">        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MailBox(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">, flags=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="si">}</span><span class="s2">)&quot;</span>
+</span><span id="__span-0-187"><span class="sd">        Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete +</span>
+</span><span id="__span-0-188"><span class="sd">        ``UID EXPUNGE`` (RFC 4315) when the server does not advertise MOVE.</span>
+</span><span id="__span-0-189"><span class="sd">        ``imaplib.IMAP4.error`` and ``IMAPError`` (raised by ``Status.state``</span>
+</span><span id="__span-0-190"><span class="sd">        on tagged ``NO``/``BAD`` responses) are treated as the missing-MOVE</span>
+</span><span id="__span-0-191"><span class="sd">        signal — network/auth/quota errors propagate.</span>
+</span><span id="__span-0-192"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-193">        <span class="kn">from</span><span class="w"> </span><span class="nn">email_profile.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">IMAPError</span>
+</span><span id="__span-0-194">
+</span><span id="__span-0-195">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
+</span><span id="__span-0-196">        <span class="n">uid</span> <span class="o">=</span> <span class="n">_uid_of</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+</span><span id="__span-0-197">        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-0-198">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;MOVE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+</span><span id="__span-0-199">        <span class="k">except</span> <span class="p">(</span><span class="n">imaplib</span><span class="o">.</span><span class="n">IMAP4</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">IMAPError</span><span class="p">):</span>
+</span><span id="__span-0-200">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;COPY&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+</span><span id="__span-0-201">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;STORE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="s2">&quot;+FLAGS&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">Deleted&quot;</span><span class="p">))</span>
+</span><span id="__span-0-202">            <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-0-203">                <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;EXPUNGE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">))</span>
+</span><span id="__span-0-204">            <span class="k">except</span> <span class="p">(</span><span class="n">imaplib</span><span class="o">.</span><span class="n">IMAP4</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">IMAPError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+</span><span id="__span-0-205">                <span class="k">raise</span> <span class="n">IMAPError</span><span class="p">(</span>
+</span><span id="__span-0-206">                    <span class="s2">&quot;Server lacks MOVE and UIDPLUS; message was copied and &quot;</span>
+</span><span id="__span-0-207">                    <span class="s2">&quot;flagged </span><span class="se">\\</span><span class="s2">Deleted but not expunged.&quot;</span>
+</span><span id="__span-0-208">                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+</span><span id="__span-0-209">
+</span><span id="__span-0-210">    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-211"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create this mailbox on the server.&quot;&quot;&quot;</span>
+</span><span id="__span-0-212">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
+</span><span id="__span-0-213">
+</span><span id="__span-0-214">    <span class="k">def</span><span class="w"> </span><span class="nf">delete_mailbox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-215"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete this mailbox from the server.&quot;&quot;&quot;</span>
+</span><span id="__span-0-216">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
+</span><span id="__span-0-217">
+</span><span id="__span-0-218">    <span class="k">def</span><span class="w"> </span><span class="nf">rename_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-219"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Rename this mailbox. Updates ``self.name`` in place.&quot;&quot;&quot;</span>
+</span><span id="__span-0-220">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">_quote</span><span class="p">(</span><span class="n">new_name</span><span class="p">)))</span>
+</span><span id="__span-0-221">        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
+</span><span id="__span-0-222">
+</span><span id="__span-0-223">    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-224">        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MailBox(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">, flags=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="si">}</span><span class="s2">)&quot;</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -3876,9 +3928,9 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/mailbox.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">212</span>
-<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-212"><span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-0-213">    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MailBox(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">, flags=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="si">}</span><span class="s2">)&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-223"><span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-224">    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;MailBox(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">, flags=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="si">}</span><span class="s2">)&quot;</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3953,13 +4005,13 @@
 </span><span id="__span-0-119">    <span class="kn">from</span><span class="w"> </span><span class="nn">email_profile.serializers.email</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span>
 </span><span id="__span-0-120">
 </span><span id="__span-0-121">    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">Message</span><span class="p">):</span>
-</span><span id="__span-0-122">        <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+</span><span id="__span-0-122">        <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">file</span>
 </span><span id="__span-0-123">        <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-124">            <span class="n">date</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">date</span>
 </span><span id="__span-0-125">    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 </span><span id="__span-0-126">        <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-</span><span id="__span-0-127">    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
-</span><span id="__span-0-128">        <span class="n">raw</span> <span class="o">=</span> <span class="n">message</span>
+</span><span id="__span-0-127">    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+</span><span id="__span-0-128">        <span class="n">raw</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-0-129">    <span class="k">else</span><span class="p">:</span>
 </span><span id="__span-0-130">        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
 </span><span id="__span-0-131">            <span class="s2">&quot;append expects Message, bytes or str — &quot;</span>
@@ -4025,11 +4077,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/mailbox.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-199"><span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-200"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create this mailbox on the server.&quot;&quot;&quot;</span>
-</span><span id="__span-0-201">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-210"><span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-211"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create this mailbox on the server.&quot;&quot;&quot;</span>
+</span><span id="__span-0-212">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4083,11 +4135,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/mailbox.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-203"><span class="k">def</span><span class="w"> </span><span class="nf">delete_mailbox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-204"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete this mailbox from the server.&quot;&quot;&quot;</span>
-</span><span id="__span-0-205">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-214"><span class="k">def</span><span class="w"> </span><span class="nf">delete_mailbox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-215"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete this mailbox from the server.&quot;&quot;&quot;</span>
+</span><span id="__span-0-216">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4275,8 +4327,11 @@
     <div class="doc doc-contents ">
 
         <p>Move a message into another mailbox.</p>
-<p>Prefers <code>UID MOVE</code> (RFC 6851). Falls back to copy + delete + expunge
-when the server does not advertise the MOVE extension.</p>
+<p>Prefers <code>UID MOVE</code> (RFC 6851). Falls back to copy + delete +
+<code>UID EXPUNGE</code> (RFC 4315) when the server does not advertise MOVE.
+<code>imaplib.IMAP4.error</code> and <code>IMAPError</code> (raised by <code>Status.state</code>
+on tagged <code>NO</code>/<code>BAD</code> responses) are treated as the missing-MOVE
+signal — network/auth/quota errors propagate.</p>
 
 
             <details class="quote">
@@ -4294,20 +4349,42 @@ when the server does not advertise the MOVE extension.</p>
 <span class="normal">194</span>
 <span class="normal">195</span>
 <span class="normal">196</span>
-<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-184"><span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">UIDLike</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-184"><span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">UIDLike</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-185"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Move a message into another mailbox.</span>
 </span><span id="__span-0-186">
-</span><span id="__span-0-187"><span class="sd">    Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete + expunge</span>
-</span><span id="__span-0-188"><span class="sd">    when the server does not advertise the MOVE extension.</span>
-</span><span id="__span-0-189"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-190">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
-</span><span id="__span-0-191">    <span class="n">uid</span> <span class="o">=</span> <span class="n">_uid_of</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-</span><span id="__span-0-192">    <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-0-193">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;MOVE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
-</span><span id="__span-0-194">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-</span><span id="__span-0-195">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;COPY&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
-</span><span id="__span-0-196">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;STORE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="s2">&quot;+FLAGS&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">Deleted&quot;</span><span class="p">))</span>
-</span><span id="__span-0-197">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">expunge</span><span class="p">())</span>
+</span><span id="__span-0-187"><span class="sd">    Prefers ``UID MOVE`` (RFC 6851). Falls back to copy + delete +</span>
+</span><span id="__span-0-188"><span class="sd">    ``UID EXPUNGE`` (RFC 4315) when the server does not advertise MOVE.</span>
+</span><span id="__span-0-189"><span class="sd">    ``imaplib.IMAP4.error`` and ``IMAPError`` (raised by ``Status.state``</span>
+</span><span id="__span-0-190"><span class="sd">    on tagged ``NO``/``BAD`` responses) are treated as the missing-MOVE</span>
+</span><span id="__span-0-191"><span class="sd">    signal — network/auth/quota errors propagate.</span>
+</span><span id="__span-0-192"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-193">    <span class="kn">from</span><span class="w"> </span><span class="nn">email_profile.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">IMAPError</span>
+</span><span id="__span-0-194">
+</span><span id="__span-0-195">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
+</span><span id="__span-0-196">    <span class="n">uid</span> <span class="o">=</span> <span class="n">_uid_of</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+</span><span id="__span-0-197">    <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-0-198">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;MOVE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+</span><span id="__span-0-199">    <span class="k">except</span> <span class="p">(</span><span class="n">imaplib</span><span class="o">.</span><span class="n">IMAP4</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">IMAPError</span><span class="p">):</span>
+</span><span id="__span-0-200">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;COPY&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">destination</span><span class="p">))</span>
+</span><span id="__span-0-201">        <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;STORE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="s2">&quot;+FLAGS&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">Deleted&quot;</span><span class="p">))</span>
+</span><span id="__span-0-202">        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-0-203">            <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">uid</span><span class="p">(</span><span class="s2">&quot;EXPUNGE&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">))</span>
+</span><span id="__span-0-204">        <span class="k">except</span> <span class="p">(</span><span class="n">imaplib</span><span class="o">.</span><span class="n">IMAP4</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">IMAPError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+</span><span id="__span-0-205">            <span class="k">raise</span> <span class="n">IMAPError</span><span class="p">(</span>
+</span><span id="__span-0-206">                <span class="s2">&quot;Server lacks MOVE and UIDPLUS; message was copied and &quot;</span>
+</span><span id="__span-0-207">                <span class="s2">&quot;flagged </span><span class="se">\\</span><span class="s2">Deleted but not expunged.&quot;</span>
+</span><span id="__span-0-208">            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4330,13 +4407,13 @@ when the server does not advertise the MOVE extension.</p>
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/mailbox.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-207"><span class="k">def</span><span class="w"> </span><span class="nf">rename_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-208"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Rename this mailbox. Updates ``self.name`` in place.&quot;&quot;&quot;</span>
-</span><span id="__span-0-209">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">_quote</span><span class="p">(</span><span class="n">new_name</span><span class="p">)))</span>
-</span><span id="__span-0-210">    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-218"><span class="k">def</span><span class="w"> </span><span class="nf">rename_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-219"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Rename this mailbox. Updates ``self.name`` in place.&quot;&quot;&quot;</span>
+</span><span id="__span-0-220">    <span class="n">Status</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">_quote</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">_quote</span><span class="p">(</span><span class="n">new_name</span><span class="p">)))</span>
+</span><span id="__span-0-221">    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4551,7 +4628,7 @@ when the server does not advertise the MOVE extension.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.tooltips", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

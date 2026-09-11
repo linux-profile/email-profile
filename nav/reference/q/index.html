@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -924,6 +924,8 @@
       
         
       
+        
+      
     
     
     
@@ -1150,6 +1152,34 @@
     
   
     Lazy Search (Where)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
   
 
     
@@ -3018,7 +3048,7 @@
   <span class="md-ellipsis">
     
   
-    Release Notes
+    Changelog
   
 
     
@@ -3408,41 +3438,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -3493,92 +3489,126 @@
 <span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
-<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-66"><span class="k">class</span><span class="w"> </span><span class="nc">Q</span><span class="p">:</span>
-</span><span id="__span-0-67"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Composable query expressions for IMAP search.&quot;&quot;&quot;</span>
-</span><span id="__span-0-68">
-</span><span id="__span-0-69">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-70">    <span class="k">def</span><span class="w"> </span><span class="nf">subject</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-71">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(SUBJECT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
-</span><span id="__span-0-72">
-</span><span id="__span-0-73">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-74">    <span class="k">def</span><span class="w"> </span><span class="nf">from_</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-75">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(FROM &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
-</span><span id="__span-0-76">
-</span><span id="__span-0-77">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-78">    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-79">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TO &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
-</span><span id="__span-0-80">
-</span><span id="__span-0-81">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-82">    <span class="k">def</span><span class="w"> </span><span class="nf">cc</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-83">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(CC &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
-</span><span id="__span-0-84">
-</span><span id="__span-0-85">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-86">    <span class="k">def</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-87">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(BODY &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
-</span><span id="__span-0-88">
-</span><span id="__span-0-89">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-90">    <span class="k">def</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-91">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TEXT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
-</span><span id="__span-0-92">
-</span><span id="__span-0-93">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-94">    <span class="k">def</span><span class="w"> </span><span class="nf">since</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-95">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SINCE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-96">
-</span><span id="__span-0-97">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-98">    <span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-99">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(BEFORE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-100">
-</span><span id="__span-0-101">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-102">    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-103">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(ON </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-104">
-</span><span id="__span-0-105">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-106">    <span class="k">def</span><span class="w"> </span><span class="nf">larger</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-107">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(LARGER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-108">
-</span><span id="__span-0-109">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-110">    <span class="k">def</span><span class="w"> </span><span class="nf">smaller</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-111">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SMALLER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-112">
-</span><span id="__span-0-113">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-114">    <span class="k">def</span><span class="w"> </span><span class="nf">unseen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-115">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNSEEN)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-116">
-</span><span id="__span-0-117">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-118">    <span class="k">def</span><span class="w"> </span><span class="nf">seen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-119">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(SEEN)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-120">
-</span><span id="__span-0-121">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-122">    <span class="k">def</span><span class="w"> </span><span class="nf">answered</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-123">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(ANSWERED)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-124">
-</span><span id="__span-0-125">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-126">    <span class="k">def</span><span class="w"> </span><span class="nf">flagged</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-127">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(FLAGGED)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-128">
-</span><span id="__span-0-129">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-130">    <span class="k">def</span><span class="w"> </span><span class="nf">deleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-131">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(DELETED)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-132">
-</span><span id="__span-0-133">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-134">    <span class="k">def</span><span class="w"> </span><span class="nf">undeleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-135">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNDELETED)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-136">
-</span><span id="__span-0-137">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-138">    <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-139">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;ALL&quot;</span><span class="p">)</span>
-</span><span id="__span-0-140">
-</span><span id="__span-0-141">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-142">    <span class="k">def</span><span class="w"> </span><span class="nf">uid</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-143">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-144">
-</span><span id="__span-0-145">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-146">    <span class="k">def</span><span class="w"> </span><span class="nf">uid_set</span><span class="p">(</span><span class="n">uids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-147">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-148">
-</span><span id="__span-0-149">    <span class="nd">@staticmethod</span>
-</span><span id="__span-0-150">    <span class="k">def</span><span class="w"> </span><span class="nf">header</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-151">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(HEADER </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-100"><span class="k">class</span><span class="w"> </span><span class="nc">Q</span><span class="p">:</span>
+</span><span id="__span-0-101"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Composable query expressions for IMAP search.&quot;&quot;&quot;</span>
+</span><span id="__span-0-102">
+</span><span id="__span-0-103">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-104">    <span class="k">def</span><span class="w"> </span><span class="nf">subject</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-105">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(SUBJECT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+</span><span id="__span-0-106">
+</span><span id="__span-0-107">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-108">    <span class="k">def</span><span class="w"> </span><span class="nf">from_</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-109">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(FROM &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+</span><span id="__span-0-110">
+</span><span id="__span-0-111">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-112">    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-113">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TO &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+</span><span id="__span-0-114">
+</span><span id="__span-0-115">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-116">    <span class="k">def</span><span class="w"> </span><span class="nf">cc</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-117">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(CC &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+</span><span id="__span-0-118">
+</span><span id="__span-0-119">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-120">    <span class="k">def</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-121">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(BODY &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+</span><span id="__span-0-122">
+</span><span id="__span-0-123">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-124">    <span class="k">def</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-125">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TEXT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+</span><span id="__span-0-126">
+</span><span id="__span-0-127">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-128">    <span class="k">def</span><span class="w"> </span><span class="nf">since</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-129">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SINCE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-130">
+</span><span id="__span-0-131">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-132">    <span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-133">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(BEFORE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-134">
+</span><span id="__span-0-135">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-136">    <span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-137">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(ON </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-138">
+</span><span id="__span-0-139">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-140">    <span class="k">def</span><span class="w"> </span><span class="nf">larger</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-141">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(LARGER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-142">
+</span><span id="__span-0-143">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-144">    <span class="k">def</span><span class="w"> </span><span class="nf">smaller</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-145">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SMALLER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-146">
+</span><span id="__span-0-147">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-148">    <span class="k">def</span><span class="w"> </span><span class="nf">unseen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-149">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNSEEN)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-150">
+</span><span id="__span-0-151">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-152">    <span class="k">def</span><span class="w"> </span><span class="nf">seen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-153">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(SEEN)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-154">
+</span><span id="__span-0-155">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-156">    <span class="k">def</span><span class="w"> </span><span class="nf">answered</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-157">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(ANSWERED)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-158">
+</span><span id="__span-0-159">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-160">    <span class="k">def</span><span class="w"> </span><span class="nf">flagged</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-161">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(FLAGGED)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-162">
+</span><span id="__span-0-163">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-164">    <span class="k">def</span><span class="w"> </span><span class="nf">deleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-165">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(DELETED)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-166">
+</span><span id="__span-0-167">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-168">    <span class="k">def</span><span class="w"> </span><span class="nf">undeleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-169">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNDELETED)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-170">
+</span><span id="__span-0-171">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-172">    <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-173">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;ALL&quot;</span><span class="p">)</span>
+</span><span id="__span-0-174">
+</span><span id="__span-0-175">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-176">    <span class="k">def</span><span class="w"> </span><span class="nf">uid</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-177">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-178">
+</span><span id="__span-0-179">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-180">    <span class="k">def</span><span class="w"> </span><span class="nf">uid_set</span><span class="p">(</span><span class="n">uids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-181">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-182">
+</span><span id="__span-0-183">    <span class="nd">@staticmethod</span>
+</span><span id="__span-0-184">    <span class="k">def</span><span class="w"> </span><span class="nf">header</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-185">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(HEADER </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -3612,11 +3642,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-137"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-138"><span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-139">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;ALL&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-171"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-172"><span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-173">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;ALL&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3641,11 +3671,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-121"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-122"><span class="k">def</span><span class="w"> </span><span class="nf">answered</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-123">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(ANSWERED)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-155"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-156"><span class="k">def</span><span class="w"> </span><span class="nf">answered</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-157">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(ANSWERED)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3670,11 +3700,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-97"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-98"><span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-99">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(BEFORE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-131"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-132"><span class="k">def</span><span class="w"> </span><span class="nf">before</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-133">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(BEFORE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3699,11 +3729,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-85"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-86"><span class="k">def</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-87">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(BODY &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-119"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-120"><span class="k">def</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-121">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(BODY &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3728,11 +3758,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-81"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-82"><span class="k">def</span><span class="w"> </span><span class="nf">cc</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-83">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(CC &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-115"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-116"><span class="k">def</span><span class="w"> </span><span class="nf">cc</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-117">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(CC &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3757,11 +3787,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-129"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-130"><span class="k">def</span><span class="w"> </span><span class="nf">deleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-131">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(DELETED)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-163"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-164"><span class="k">def</span><span class="w"> </span><span class="nf">deleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-165">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(DELETED)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3786,11 +3816,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-125"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-126"><span class="k">def</span><span class="w"> </span><span class="nf">flagged</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-127">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(FLAGGED)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-159"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-160"><span class="k">def</span><span class="w"> </span><span class="nf">flagged</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-161">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(FLAGGED)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3815,11 +3845,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-73"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-74"><span class="k">def</span><span class="w"> </span><span class="nf">from_</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-75">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(FROM &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-107"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-108"><span class="k">def</span><span class="w"> </span><span class="nf">from_</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-109">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(FROM &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3844,11 +3874,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-149"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-150"><span class="k">def</span><span class="w"> </span><span class="nf">header</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-151">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(HEADER </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-183"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-184"><span class="k">def</span><span class="w"> </span><span class="nf">header</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-185">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(HEADER </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3873,11 +3903,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-105"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-106"><span class="k">def</span><span class="w"> </span><span class="nf">larger</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-107">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(LARGER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-139"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-140"><span class="k">def</span><span class="w"> </span><span class="nf">larger</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-141">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(LARGER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3902,11 +3932,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-101"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-102"><span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-103">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(ON </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-135"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-136"><span class="k">def</span><span class="w"> </span><span class="nf">on</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-137">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(ON </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3931,11 +3961,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-117"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-118"><span class="k">def</span><span class="w"> </span><span class="nf">seen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-119">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(SEEN)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-151"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-152"><span class="k">def</span><span class="w"> </span><span class="nf">seen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-153">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(SEEN)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3960,11 +3990,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-93"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-94"><span class="k">def</span><span class="w"> </span><span class="nf">since</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-95">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SINCE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-127"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-128"><span class="k">def</span><span class="w"> </span><span class="nf">since</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-129">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SINCE </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3989,11 +4019,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-109"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-110"><span class="k">def</span><span class="w"> </span><span class="nf">smaller</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-111">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SMALLER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-143"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-144"><span class="k">def</span><span class="w"> </span><span class="nf">smaller</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-145">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(SMALLER </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4018,11 +4048,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-69"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-70"><span class="k">def</span><span class="w"> </span><span class="nf">subject</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-71">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(SUBJECT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-103"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-104"><span class="k">def</span><span class="w"> </span><span class="nf">subject</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-105">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(SUBJECT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4047,11 +4077,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-89"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-90"><span class="k">def</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-91">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TEXT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-123"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-124"><span class="k">def</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-125">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TEXT &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4076,11 +4106,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-77"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-78"><span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-79">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TO &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-111"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-112"><span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-113">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(TO &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4105,11 +4135,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-141"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-142"><span class="k">def</span><span class="w"> </span><span class="nf">uid</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-143">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-175"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-176"><span class="k">def</span><span class="w"> </span><span class="nf">uid</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-177">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4134,11 +4164,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-145"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-146"><span class="k">def</span><span class="w"> </span><span class="nf">uid_set</span><span class="p">(</span><span class="n">uids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-147">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-179"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-180"><span class="k">def</span><span class="w"> </span><span class="nf">uid_set</span><span class="p">(</span><span class="n">uids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-181">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UID </span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4163,11 +4193,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-133"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-134"><span class="k">def</span><span class="w"> </span><span class="nf">undeleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-135">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNDELETED)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-167"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-168"><span class="k">def</span><span class="w"> </span><span class="nf">undeleted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-169">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNDELETED)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4192,11 +4222,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-113"><span class="nd">@staticmethod</span>
-</span><span id="__span-0-114"><span class="k">def</span><span class="w"> </span><span class="nf">unseen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-115">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNSEEN)&quot;</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-147"><span class="nd">@staticmethod</span>
+</span><span id="__span-0-148"><span class="k">def</span><span class="w"> </span><span class="nf">unseen</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-149">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="s2">&quot;(UNSEEN)&quot;</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4312,7 +4342,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.tooltips", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

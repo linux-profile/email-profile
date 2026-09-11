@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -924,6 +924,8 @@
       
         
       
+        
+      
     
     
     
@@ -1150,6 +1152,34 @@
     
   
     Lazy Search (Where)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
   
 
     
@@ -3095,7 +3125,7 @@
   <span class="md-ellipsis">
     
   
-    Release Notes
+    Changelog
   
 
     
@@ -3573,41 +3603,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">188</span>
 <span class="normal">189</span>
 <span class="normal">190</span>
 <span class="normal">191</span>
@@ -3698,132 +3694,166 @@
 <span class="normal">276</span>
 <span class="normal">277</span>
 <span class="normal">278</span>
-<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-154"><span class="k">class</span><span class="w"> </span><span class="nc">Query</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-0-155"><span class="w">    </span><span class="sd">&quot;&quot;&quot;IMAP search query builder.</span>
-</span><span id="__span-0-156">
-</span><span id="__span-0-157"><span class="sd">    Use kwargs for simple queries::</span>
-</span><span id="__span-0-158">
-</span><span id="__span-0-159"><span class="sd">        Query(subject=&quot;hello&quot;, unseen=True)</span>
-</span><span id="__span-0-160">
-</span><span id="__span-0-161"><span class="sd">    Use ``Query.where`` for composable expressions::</span>
-</span><span id="__span-0-162">
-</span><span id="__span-0-163"><span class="sd">        Query.where.subject(&quot;hello&quot;) &amp; Query.where.unseen()</span>
-</span><span id="__span-0-164">
-</span><span id="__span-0-165"><span class="sd">    Chain with ``.exclude()`` and ``.or_()``::</span>
-</span><span id="__span-0-166">
-</span><span id="__span-0-167"><span class="sd">        Query(subject=&quot;report&quot;).exclude(from_=&quot;spam&quot;).or_(subject=&quot;urgent&quot;)</span>
-</span><span id="__span-0-168"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-169">
-</span><span id="__span-0-170">    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">populate_by_name</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-171">
-</span><span id="__span-0-172">    <span class="n">since</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-173">    <span class="n">before</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-174">    <span class="n">on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-175">    <span class="n">sent_since</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-176">    <span class="n">sent_before</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-177">
-</span><span id="__span-0-178">    <span class="n">subject</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-179">    <span class="n">from_who</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;from&quot;</span><span class="p">)</span>
-</span><span id="__span-0-180">    <span class="n">to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-181">    <span class="n">cc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-182">    <span class="n">bcc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-183">
-</span><span id="__span-0-184">    <span class="n">body</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-185">    <span class="n">text</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-186">    <span class="n">keyword</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-187">
-</span><span id="__span-0-188">    <span class="n">larger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-189">    <span class="n">smaller</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-188"><span class="k">class</span><span class="w"> </span><span class="nc">Query</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-0-189"><span class="w">    </span><span class="sd">&quot;&quot;&quot;IMAP search query builder.</span>
 </span><span id="__span-0-190">
-</span><span id="__span-0-191">    <span class="n">seen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-192">    <span class="n">answered</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-193">    <span class="n">flagged</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-194">    <span class="n">deleted</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-195">    <span class="n">draft</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-191"><span class="sd">    Use kwargs for simple queries::</span>
+</span><span id="__span-0-192">
+</span><span id="__span-0-193"><span class="sd">        Query(subject=&quot;hello&quot;, unseen=True)</span>
+</span><span id="__span-0-194">
+</span><span id="__span-0-195"><span class="sd">    Use ``Query.where`` for composable expressions::</span>
 </span><span id="__span-0-196">
-</span><span id="__span-0-197">    <span class="n">unseen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-197"><span class="sd">        Query.where.subject(&quot;hello&quot;) &amp; Query.where.unseen()</span>
 </span><span id="__span-0-198">
-</span><span id="__span-0-199">    <span class="k">def</span><span class="w"> </span><span class="nf">_date_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span id="__span-0-200">        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-201">            <span class="p">(</span><span class="s2">&quot;SINCE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">since</span><span class="p">),</span>
-</span><span id="__span-0-202">            <span class="p">(</span><span class="s2">&quot;BEFORE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">before</span><span class="p">),</span>
-</span><span id="__span-0-203">            <span class="p">(</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on</span><span class="p">),</span>
-</span><span id="__span-0-204">            <span class="p">(</span><span class="s2">&quot;SENTSINCE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_since</span><span class="p">),</span>
-</span><span id="__span-0-205">            <span class="p">(</span><span class="s2">&quot;SENTBEFORE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_before</span><span class="p">),</span>
-</span><span id="__span-0-206">        <span class="p">)</span>
-</span><span id="__span-0-207">        <span class="k">return</span> <span class="p">[</span>
-</span><span id="__span-0-208">            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">value</span>
-</span><span id="__span-0-209">        <span class="p">]</span>
-</span><span id="__span-0-210">
-</span><span id="__span-0-211">    <span class="k">def</span><span class="w"> </span><span class="nf">_string_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span id="__span-0-212">        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-213">            <span class="p">(</span><span class="s2">&quot;SUBJECT&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">),</span>
-</span><span id="__span-0-214">            <span class="p">(</span><span class="s2">&quot;FROM&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_who</span><span class="p">),</span>
-</span><span id="__span-0-215">            <span class="p">(</span><span class="s2">&quot;TO&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">),</span>
-</span><span id="__span-0-216">            <span class="p">(</span><span class="s2">&quot;CC&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cc</span><span class="p">),</span>
-</span><span id="__span-0-217">            <span class="p">(</span><span class="s2">&quot;BCC&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcc</span><span class="p">),</span>
-</span><span id="__span-0-218">            <span class="p">(</span><span class="s2">&quot;BODY&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">),</span>
-</span><span id="__span-0-219">            <span class="p">(</span><span class="s2">&quot;TEXT&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">),</span>
-</span><span id="__span-0-220">            <span class="p">(</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="p">),</span>
-</span><span id="__span-0-221">        <span class="p">)</span>
-</span><span id="__span-0-222">        <span class="k">return</span> <span class="p">[</span>
-</span><span id="__span-0-223">            <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">value</span>
-</span><span id="__span-0-224">        <span class="p">]</span>
-</span><span id="__span-0-225">
-</span><span id="__span-0-226">    <span class="k">def</span><span class="w"> </span><span class="nf">_size_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span id="__span-0-227">        <span class="n">fields</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;LARGER&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">larger</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;SMALLER&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smaller</span><span class="p">))</span>
-</span><span id="__span-0-228">        <span class="k">return</span> <span class="p">[</span>
-</span><span id="__span-0-229">            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-</span><span id="__span-0-230">        <span class="p">]</span>
-</span><span id="__span-0-231">
-</span><span id="__span-0-232">    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-</span><span id="__span-0-233">    <span class="k">def</span><span class="w"> </span><span class="nf">_check_seen_unseen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Query</span><span class="p">:</span>
-</span><span id="__span-0-234">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seen</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">unseen</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="__span-0-235">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot set both seen=True and unseen=True.&quot;</span><span class="p">)</span>
-</span><span id="__span-0-236">        <span class="k">return</span> <span class="bp">self</span>
-</span><span id="__span-0-237">
-</span><span id="__span-0-238">    <span class="k">def</span><span class="w"> </span><span class="nf">_flag_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span id="__span-0-239">        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-240">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="p">,</span> <span class="s2">&quot;SEEN&quot;</span><span class="p">),</span>
-</span><span id="__span-0-241">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">answered</span><span class="p">,</span> <span class="s2">&quot;ANSWERED&quot;</span><span class="p">),</span>
-</span><span id="__span-0-242">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flagged</span><span class="p">,</span> <span class="s2">&quot;FLAGGED&quot;</span><span class="p">),</span>
-</span><span id="__span-0-243">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deleted</span><span class="p">,</span> <span class="s2">&quot;DELETED&quot;</span><span class="p">),</span>
-</span><span id="__span-0-244">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">draft</span><span class="p">,</span> <span class="s2">&quot;DRAFT&quot;</span><span class="p">),</span>
-</span><span id="__span-0-245">        <span class="p">)</span>
-</span><span id="__span-0-246">        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="__span-0-247">        <span class="k">for</span> <span class="n">flag</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-</span><span id="__span-0-248">            <span class="k">if</span> <span class="n">flag</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="__span-0-249">                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-250">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unseen</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="__span-0-251">            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;(UNSEEN)&quot;</span><span class="p">)</span>
-</span><span id="__span-0-252">        <span class="k">return</span> <span class="n">parts</span>
-</span><span id="__span-0-253">
-</span><span id="__span-0-254">    <span class="k">def</span><span class="w"> </span><span class="nf">_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span id="__span-0-255">        <span class="k">return</span> <span class="p">(</span>
-</span><span id="__span-0-256">            <span class="bp">self</span><span class="o">.</span><span class="n">_date_clauses</span><span class="p">()</span>
-</span><span id="__span-0-257">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string_clauses</span><span class="p">()</span>
-</span><span id="__span-0-258">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size_clauses</span><span class="p">()</span>
-</span><span id="__span-0-259">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flag_clauses</span><span class="p">()</span>
-</span><span id="__span-0-260">        <span class="p">)</span>
-</span><span id="__span-0-261">
-</span><span id="__span-0-262">    <span class="k">def</span><span class="w"> </span><span class="nf">mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-0-263">        <span class="n">parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clauses</span><span class="p">()</span>
-</span><span id="__span-0-264">        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="k">if</span> <span class="n">parts</span> <span class="k">else</span> <span class="s2">&quot;ALL&quot;</span>
+</span><span id="__span-0-199"><span class="sd">    Chain with ``.exclude()`` and ``.or_()``::</span>
+</span><span id="__span-0-200">
+</span><span id="__span-0-201"><span class="sd">        Query(subject=&quot;report&quot;).exclude(from_=&quot;spam&quot;).or_(subject=&quot;urgent&quot;)</span>
+</span><span id="__span-0-202"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-203">
+</span><span id="__span-0-204">    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">populate_by_name</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-205">
+</span><span id="__span-0-206">    <span class="n">since</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-207">    <span class="n">before</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-208">    <span class="n">on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-209">    <span class="n">sent_since</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-210">    <span class="n">sent_before</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-211">
+</span><span id="__span-0-212">    <span class="n">subject</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-213">    <span class="n">from_who</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;from&quot;</span><span class="p">)</span>
+</span><span id="__span-0-214">    <span class="n">to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-215">    <span class="n">cc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-216">    <span class="n">bcc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-217">
+</span><span id="__span-0-218">    <span class="n">body</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-219">    <span class="n">text</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-220">    <span class="n">keyword</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-221">
+</span><span id="__span-0-222">    <span class="n">larger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-223">    <span class="n">smaller</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-224">
+</span><span id="__span-0-225">    <span class="n">seen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-226">    <span class="n">answered</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-227">    <span class="n">flagged</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-228">    <span class="n">deleted</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-229">    <span class="n">draft</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-230">
+</span><span id="__span-0-231">    <span class="n">unseen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-232">
+</span><span id="__span-0-233">    <span class="k">def</span><span class="w"> </span><span class="nf">_date_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-234">        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-235">            <span class="p">(</span><span class="s2">&quot;SINCE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">since</span><span class="p">),</span>
+</span><span id="__span-0-236">            <span class="p">(</span><span class="s2">&quot;BEFORE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">before</span><span class="p">),</span>
+</span><span id="__span-0-237">            <span class="p">(</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on</span><span class="p">),</span>
+</span><span id="__span-0-238">            <span class="p">(</span><span class="s2">&quot;SENTSINCE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_since</span><span class="p">),</span>
+</span><span id="__span-0-239">            <span class="p">(</span><span class="s2">&quot;SENTBEFORE&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_before</span><span class="p">),</span>
+</span><span id="__span-0-240">        <span class="p">)</span>
+</span><span id="__span-0-241">        <span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-0-242">            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">_imap_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">value</span>
+</span><span id="__span-0-243">        <span class="p">]</span>
+</span><span id="__span-0-244">
+</span><span id="__span-0-245">    <span class="k">def</span><span class="w"> </span><span class="nf">_string_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-246">        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-247">            <span class="p">(</span><span class="s2">&quot;SUBJECT&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">),</span>
+</span><span id="__span-0-248">            <span class="p">(</span><span class="s2">&quot;FROM&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_who</span><span class="p">),</span>
+</span><span id="__span-0-249">            <span class="p">(</span><span class="s2">&quot;TO&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">),</span>
+</span><span id="__span-0-250">            <span class="p">(</span><span class="s2">&quot;CC&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cc</span><span class="p">),</span>
+</span><span id="__span-0-251">            <span class="p">(</span><span class="s2">&quot;BCC&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcc</span><span class="p">),</span>
+</span><span id="__span-0-252">            <span class="p">(</span><span class="s2">&quot;BODY&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">),</span>
+</span><span id="__span-0-253">            <span class="p">(</span><span class="s2">&quot;TEXT&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">),</span>
+</span><span id="__span-0-254">            <span class="p">(</span><span class="s2">&quot;KEYWORD&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="p">),</span>
+</span><span id="__span-0-255">        <span class="p">)</span>
+</span><span id="__span-0-256">        <span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-0-257">            <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> &quot;</span><span class="si">{</span><span class="n">_ascii</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;)&#39;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">value</span>
+</span><span id="__span-0-258">        <span class="p">]</span>
+</span><span id="__span-0-259">
+</span><span id="__span-0-260">    <span class="k">def</span><span class="w"> </span><span class="nf">_size_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-261">        <span class="n">fields</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;LARGER&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">larger</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;SMALLER&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smaller</span><span class="p">))</span>
+</span><span id="__span-0-262">        <span class="k">return</span> <span class="p">[</span>
+</span><span id="__span-0-263">            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span><span id="__span-0-264">        <span class="p">]</span>
 </span><span id="__span-0-265">
-</span><span id="__span-0-266">    <span class="k">def</span><span class="w"> </span><span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-267">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
-</span><span id="__span-0-268">
-</span><span id="__span-0-269">    <span class="k">def</span><span class="w"> </span><span class="nf">or_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-270">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
+</span><span id="__span-0-266">    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+</span><span id="__span-0-267">    <span class="k">def</span><span class="w"> </span><span class="nf">_check_seen_unseen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Query</span><span class="p">:</span>
+</span><span id="__span-0-268">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seen</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">unseen</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="__span-0-269">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot set both seen=True and unseen=True.&quot;</span><span class="p">)</span>
+</span><span id="__span-0-270">        <span class="k">return</span> <span class="bp">self</span>
 </span><span id="__span-0-271">
-</span><span id="__span-0-272">    <span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-273">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="__span-0-274">
-</span><span id="__span-0-275">    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-276">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="__span-0-277">
-</span><span id="__span-0-278">    <span class="k">def</span><span class="w"> </span><span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-279">        <span class="k">return</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
+</span><span id="__span-0-272">    <span class="k">def</span><span class="w"> </span><span class="nf">_flag_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-273">        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-274">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="p">,</span> <span class="s2">&quot;SEEN&quot;</span><span class="p">),</span>
+</span><span id="__span-0-275">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">answered</span><span class="p">,</span> <span class="s2">&quot;ANSWERED&quot;</span><span class="p">),</span>
+</span><span id="__span-0-276">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flagged</span><span class="p">,</span> <span class="s2">&quot;FLAGGED&quot;</span><span class="p">),</span>
+</span><span id="__span-0-277">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deleted</span><span class="p">,</span> <span class="s2">&quot;DELETED&quot;</span><span class="p">),</span>
+</span><span id="__span-0-278">            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">draft</span><span class="p">,</span> <span class="s2">&quot;DRAFT&quot;</span><span class="p">),</span>
+</span><span id="__span-0-279">        <span class="p">)</span>
+</span><span id="__span-0-280">        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-0-281">        <span class="k">for</span> <span class="n">flag</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+</span><span id="__span-0-282">            <span class="k">if</span> <span class="n">flag</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="__span-0-283">                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-284">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unseen</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="__span-0-285">            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;(UNSEEN)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-286">        <span class="k">return</span> <span class="n">parts</span>
+</span><span id="__span-0-287">
+</span><span id="__span-0-288">    <span class="k">def</span><span class="w"> </span><span class="nf">_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="__span-0-289">        <span class="k">return</span> <span class="p">(</span>
+</span><span id="__span-0-290">            <span class="bp">self</span><span class="o">.</span><span class="n">_date_clauses</span><span class="p">()</span>
+</span><span id="__span-0-291">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string_clauses</span><span class="p">()</span>
+</span><span id="__span-0-292">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_size_clauses</span><span class="p">()</span>
+</span><span id="__span-0-293">            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flag_clauses</span><span class="p">()</span>
+</span><span id="__span-0-294">        <span class="p">)</span>
+</span><span id="__span-0-295">
+</span><span id="__span-0-296">    <span class="k">def</span><span class="w"> </span><span class="nf">mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-297">        <span class="n">parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clauses</span><span class="p">()</span>
+</span><span id="__span-0-298">        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="k">if</span> <span class="n">parts</span> <span class="k">else</span> <span class="s2">&quot;ALL&quot;</span>
+</span><span id="__span-0-299">
+</span><span id="__span-0-300">    <span class="k">def</span><span class="w"> </span><span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-301">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
+</span><span id="__span-0-302">
+</span><span id="__span-0-303">    <span class="k">def</span><span class="w"> </span><span class="nf">or_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-304">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
+</span><span id="__span-0-305">
+</span><span id="__span-0-306">    <span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-307">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="__span-0-308">
+</span><span id="__span-0-309">    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-310">        <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="__span-0-311">
+</span><span id="__span-0-312">    <span class="k">def</span><span class="w"> </span><span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-313">        <span class="k">return</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -4315,9 +4345,9 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">272</span>
-<span class="normal">273</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-272"><span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-273">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">306</span>
+<span class="normal">307</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-306"><span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-307">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4338,9 +4368,9 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">278</span>
-<span class="normal">279</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-278"><span class="k">def</span><span class="w"> </span><span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-279">    <span class="k">return</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">312</span>
+<span class="normal">313</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-312"><span class="k">def</span><span class="w"> </span><span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-313">    <span class="k">return</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4361,9 +4391,9 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">275</span>
-<span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-275"><span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-276">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">309</span>
+<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-309"><span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">QueryLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-310">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_to_expr</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4384,9 +4414,9 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-266"><span class="k">def</span><span class="w"> </span><span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-267">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">300</span>
+<span class="normal">301</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-300"><span class="k">def</span><span class="w"> </span><span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-301">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4407,11 +4437,11 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-262"><span class="k">def</span><span class="w"> </span><span class="nf">mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-0-263">    <span class="n">parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clauses</span><span class="p">()</span>
-</span><span id="__span-0-264">    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="k">if</span> <span class="n">parts</span> <span class="k">else</span> <span class="s2">&quot;ALL&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-296"><span class="k">def</span><span class="w"> </span><span class="nf">mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-297">    <span class="n">parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clauses</span><span class="p">()</span>
+</span><span id="__span-0-298">    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="k">if</span> <span class="n">parts</span> <span class="k">else</span> <span class="s2">&quot;ALL&quot;</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4432,9 +4462,9 @@
 
             <details class="quote">
               <summary>Source code in <code>email_profile/clients/imap/query.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
-<span class="normal">270</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-269"><span class="k">def</span><span class="w"> </span><span class="nf">or_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
-</span><span id="__span-0-270">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">303</span>
+<span class="normal">304</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-303"><span class="k">def</span><span class="w"> </span><span class="nf">or_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Expr</span><span class="p">:</span>
+</span><span id="__span-0-304">    <span class="k">return</span> <span class="n">_Expr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span> <span class="o">|</span> <span class="n">_Expr</span><span class="p">(</span><span class="n">Query</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mount</span><span class="p">())</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4550,7 +4580,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.tooltips", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -924,6 +924,8 @@
       
         
       
+        
+      
     
     
     
@@ -1150,6 +1152,34 @@
     
   
     Lazy Search (Where)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server
   
 
     
@@ -3042,7 +3072,7 @@
   <span class="md-ellipsis">
     
   
-    Release Notes
+    Changelog
   
 
     
@@ -3566,7 +3596,7 @@
 </span><span id="__span-0-30">    <span class="n">reply_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 </span><span id="__span-0-31">
 </span><span id="__span-0-32">    <span class="n">subject</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-33">    <span class="n">file</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-0-33">    <span class="n">file</span><span class="p">:</span> <span class="nb">bytes</span>
 </span><span id="__span-0-34">    <span class="n">body_text_plain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </span><span id="__span-0-35">    <span class="n">body_text_html</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </span><span id="__span-0-36">    <span class="n">content_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3602,7 +3632,7 @@
 </span><span id="__span-0-66">            <span class="n">bcc</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">bcc</span><span class="p">,</span>
 </span><span id="__span-0-67">            <span class="n">reply_to</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">reply_to</span><span class="p">,</span>
 </span><span id="__span-0-68">            <span class="n">subject</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
-</span><span id="__span-0-69">            <span class="n">file</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">),</span>
+</span><span id="__span-0-69">            <span class="n">file</span><span class="o">=</span><span class="n">raw</span><span class="p">,</span>
 </span><span id="__span-0-70">            <span class="n">body_text_plain</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">body_text_plain</span><span class="p">,</span>
 </span><span id="__span-0-71">            <span class="n">body_text_html</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">body_text_html</span><span class="p">,</span>
 </span><span id="__span-0-72">            <span class="n">content_type</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">content_type</span><span class="p">,</span>
@@ -4179,7 +4209,7 @@
 </span><span id="__span-0-66">        <span class="n">bcc</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">bcc</span><span class="p">,</span>
 </span><span id="__span-0-67">        <span class="n">reply_to</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">reply_to</span><span class="p">,</span>
 </span><span id="__span-0-68">        <span class="n">subject</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
-</span><span id="__span-0-69">        <span class="n">file</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">),</span>
+</span><span id="__span-0-69">        <span class="n">file</span><span class="o">=</span><span class="n">raw</span><span class="p">,</span>
 </span><span id="__span-0-70">        <span class="n">body_text_plain</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">body_text_plain</span><span class="p">,</span>
 </span><span id="__span-0-71">        <span class="n">body_text_html</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">body_text_html</span><span class="p">,</span>
 </span><span id="__span-0-72">        <span class="n">content_type</span><span class="o">=</span><span class="n">parsed</span><span class="o">.</span><span class="n">content_type</span><span class="p">,</span>
@@ -4305,7 +4335,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.tooltips", "navigation.footer", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "navigation.indexes", "search.share", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
