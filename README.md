@@ -9,6 +9,7 @@
 The simplest way to work with email in Python. No boilerplate, no low-level IMAP commands, no headaches.
 
 Just connect, read, search, send, backup, and restore — with one class.
+Or hand the same account to Claude, Cursor or any MCP client and let the model do it.
 
 ```python
 from email_profile import Email
@@ -31,7 +32,8 @@ That's it. No server configuration needed — email-profile auto-discovers your 
 ## Install
 
 ```bash
-pip install email-profile
+pip install email-profile          # library
+pip install email-profile[mcp]     # + MCP server for AI clients
 ```
 
 ## Why email-profile?
@@ -44,8 +46,9 @@ Most Python email libraries make you deal with `imaplib` directly, parse raw byt
 - Write `app.inbox.where(Q.unseen()).first()` instead of raw IMAP search commands
 - Write `app.sync()` instead of building your own backup system
 - Write `app.send(to="...", subject="...", body="...")` instead of constructing MIME messages
+- Run `email-profile-mcp` and ask Claude "what needs an answer today?" instead of writing an agent
 
-It combines IMAP + SMTP + storage + sync in a single library. No other Python package does this.
+It combines IMAP + SMTP + storage + sync + MCP in a single library. No other Python package does this.
 
 ## Quick Start
 
@@ -229,6 +232,8 @@ with Email.from_env() as app:
 | **Storage** | Pluggable storage backend (SQLite default) |
 | **Flags** | Read/unread, flag, delete, move, copy operations |
 | **Context Manager** | `with Email(...) as app:` for automatic cleanup |
+| **MCP Server** | 14 tools + 4 prompts for Claude Code, Claude Desktop, Cursor; send/delete opt-in |
+| **Plugin** | Claude Code plugin with six skills that gate sending behind approval |
 
 ## Supported Providers
 
