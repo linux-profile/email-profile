@@ -169,3 +169,85 @@ def test_session_connects_lazily(app):
     call(server, "list_mailboxes")
     call(server, "list_mailboxes")
     assert calls == [1]
+
+
+def test_uid_rejects_sequence_sets(server):
+    with pytest.raises(Exception, match="uid"):
+        asyncio.run(
+            server.call_tool("mark_seen", {"mailbox": "INBOX", "uid": "1:*"})
+        )
+
+
+def test_delete_rejects_uid_list(server, fake_client):
+    with pytest.raises(Exception, match="uid"):
+        asyncio.run(
+            server.call_tool(
+                "delete_message",
+                {"mailbox": "INBOX", "uid": "1,2", "expunge": True},
+            )
+        )
+    fake_client.expunge.assert_not_called()
+
+
+def test_search_escapes_quotes(server, fake_client):
+    call(server, "search_messages", subject='foo" UNSEEN "')
+    searches = [
+        " ".join(map(str, c.args))
+        for c in fake_client.uid.call_args_list
+        if c.args[0] == "search"
+    ]
+    assert any('SUBJECT "foo\\" UNSEEN \\""' in s for s in searches)
+
+
+def test_save_attachment_refuses_paths_outside_root(app, tmp_path):
+    from email_profile.mcp import Settings, build
+
+    server = build(
+        Settings(attachments_dir=str(tmp_path)), email_factory=lambda: app
+    )
+    for directory in ("..", "/etc", "../../x"):
+        with pytest.raises(Exception, match="outside the attachments root"):
+            asyncio.run(
+                server.call_tool(
+                    "save_attachment",
+                    {
+                        "mailbox": "INBOX",
+                        "uid": "1",
+                        "file_name": "a.pdf",
+                        "directory": directory,
+                    },
+                )
+            )
+
+
+def test_confine_allows_subdirectories(tmp_path):
+    from email_profile.mcp.tools.message import _confine
+
+    assert (
+        _confine(str(tmp_path), "inbox/2026")
+        == (tmp_path / "inbox" / "2026").resolve()
+    )
+    assert _confine(str(tmp_path), ".") == tmp_path.resolve()
+
+
+def test_tools_serialize_on_the_session_lock(app):
+    import threading
+
+    from email_profile.mcp import Settings, build
+
+    calls = []
+
+    def factory():
+        calls.append(threading.get_ident())
+        return app
+
+    server = build(Settings(), email_factory=factory)
+    threads = [
+        threading.Thread(target=call, args=(server, "list_mailboxes"))
+        for _ in range(8)
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert len(calls) == 1

@@ -81,8 +81,17 @@ def test_settings_from_env(monkeypatch):
     monkeypatch.setenv("EMAIL_MCP_ALLOW_SEND", "true")
     monkeypatch.setenv("EMAIL_MCP_MAX_CHARS", "77")
     monkeypatch.setenv("EMAIL_MCP_DEFAULT_MAILBOX", "Work")
+    monkeypatch.setenv("EMAIL_MCP_LIMIT", "50")
+    monkeypatch.setenv("EMAIL_MCP_ATTACHMENTS_DIR", "/tmp/att")
     settings = settings_from_args(parse_args([]))
     assert settings.allow_send is True
     assert settings.allow_delete is False
     assert settings.max_chars == 77
     assert settings.default_mailbox == "Work"
+    assert settings.limit == 50
+    assert settings.attachments_dir == "/tmp/att"
+
+
+def test_settings_limit_is_clamped(monkeypatch):
+    monkeypatch.setenv("EMAIL_MCP_LIMIT", "9999")
+    assert settings_from_args(parse_args([])).limit == 200
