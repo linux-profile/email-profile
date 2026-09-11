@@ -118,6 +118,7 @@ nav:
       - nav/advanced/parser.md
       - nav/advanced/retry.md
       - nav/advanced/lazy-search.md
+      - nav/advanced/mcp-server.md
     - Concepts:
       - nav/concepts/message.md
       - nav/concepts/auto-discovery.md
