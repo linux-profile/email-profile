@@ -262,6 +262,83 @@ Auto-discovery works out of the box. Just use your email and password — no ser
 
 Any server with DNS SRV or MX records is also detected automatically.
 
+## MCP Server
+
+Expose the account to any MCP client — Claude Desktop, Claude Code, Cursor — as
+tools the model can call: search, read, flag, move, and (when allowed) send.
+
+```bash
+pip install email-profile[mcp]
+email-profile-mcp --allow-send
+```
+
+### Claude Code
+
+```bash
+claude mcp add email \
+  --env EMAIL_USERNAME=you@gmail.com --env EMAIL_PASSWORD=app-password \
+  -- uvx --from "email-profile[mcp]" email-profile-mcp --allow-send
+```
+
+### Claude Desktop
+
+`~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "email": {
+      "command": "uvx",
+      "args": ["--from", "email-profile[mcp]", "email-profile-mcp", "--allow-send"],
+      "env": { "EMAIL_USERNAME": "you@gmail.com", "EMAIL_PASSWORD": "app-password" }
+    }
+  }
+}
+```
+
+Cursor uses the same shape in `.cursor/mcp.json` — see [examples/](examples/).
+
+### Claude Code plugin
+
+The repository is also a plugin: the server plus six skills that keep the
+model from sending before you approve.
+
+```bash
+claude plugin marketplace add linux-profile/email-profile
+claude plugin install email-profile@email-profile
+```
+
+### Tools
+
+| Tool | What it does |
+|---|---|
+| `list_mailboxes` | Server-side folder names |
+| `search_messages` | Filter one mailbox; headers only, newest first, paginated |
+| `read_message` | Headers, body (truncated) and attachment metadata |
+| `list_attachments` / `save_attachment` | Attachment metadata; write one to disk |
+| `mark_seen` / `mark_unseen` / `flag_message` / `unflag_message` | Flags |
+| `move_message` | Move to another mailbox |
+| `send_email` / `reply_message` / `forward_message` | SMTP — needs `--allow-send` |
+| `delete_message` | Flag or expunge — needs `--allow-delete` |
+
+Sending and deleting are off by default and marked destructive, so clients
+that support it ask the human first. Credentials come from the environment
+only; no tool accepts a password.
+
+Prompts `triage_inbox`, `find_message`, `draft_reply` and `summarize_thread`
+put the tools in the order a task needs.
+
+### Options
+
+| Flag | Env | Default |
+|---|---|---|
+| `--allow-send` | `EMAIL_MCP_ALLOW_SEND` | off |
+| `--allow-delete` | `EMAIL_MCP_ALLOW_DELETE` | off |
+| `--max-chars` | `EMAIL_MCP_MAX_CHARS` | 4000 |
+| — | `EMAIL_MCP_LIMIT` | 20 |
+| — | `EMAIL_MCP_DEFAULT_MAILBOX` | `INBOX` |
+| `--http --host --port` | — | stdio |
+
 ## Environment Variables
 
 ```env
