@@ -2,11 +2,15 @@
   <img src="https://raw.githubusercontent.com/linux-profile/email-profile/develop/docs/assets/cover.png" alt="email-profile — Email for Python, without the boilerplate. MCP included." width="100%">
 </p>
 
-[![PyPI](https://img.shields.io/pypi/v/email-profile)](https://pypi.org/project/email-profile/)
-[![Python](https://img.shields.io/pypi/pyversions/email-profile)](https://pypi.org/project/email-profile/)
-[![Tests](https://img.shields.io/github/actions/workflow/status/linux-profile/email-profile/test.yml?branch=develop&label=tests)](https://github.com/linux-profile/email-profile/actions)
-[![License](https://img.shields.io/github/license/linux-profile/email-profile)](LICENSE)
-[![Downloads](https://img.shields.io/pypi/dm/email-profile)](https://pypi.org/project/email-profile/)
+<h1 align="center">email-profile</h1>
+
+<p align="center">
+  <a href="https://pypi.org/project/email-profile/"><img src="https://img.shields.io/pypi/v/email-profile" alt="PyPI"></a>
+  <a href="https://pypi.org/project/email-profile/"><img src="https://img.shields.io/pypi/pyversions/email-profile" alt="Python"></a>
+  <a href="https://github.com/linux-profile/email-profile/actions"><img src="https://img.shields.io/github/actions/workflow/status/linux-profile/email-profile/test.yml?branch=develop&label=tests" alt="Tests"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/linux-profile/email-profile" alt="License"></a>
+  <a href="https://pypi.org/project/email-profile/"><img src="https://img.shields.io/pypi/dm/email-profile" alt="Downloads"></a>
+</p>
 
 The simplest way to work with email in Python. No boilerplate, no low-level IMAP commands, no headaches.
 
