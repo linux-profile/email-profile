@@ -1,0 +1,15 @@
+{
+  "name": "email-profile",
+  "description": "Email from Claude Code: triage the inbox, find and read messages, draft replies you approve before they go, file and flag.",
+  "owner": {
+    "name": "Fernando Celmer",
+    "url": "https://github.com/linux-profile"
+  },
+  "plugins": [
+    {
+      "name": "email-profile",
+      "source": "./",
+      "description": "Read, search, organize and send email from one IMAP/SMTP account."
+    }
+  ]
+}

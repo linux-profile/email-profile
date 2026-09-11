@@ -1,0 +1,43 @@
+{
+  "name": "email-profile",
+  "version": "1.0.0",
+  "description": "Read, search, organize and send email from one IMAP/SMTP account.",
+  "author": {
+    "name": "Fernando Celmer",
+    "url": "https://github.com/linux-profile"
+  },
+  "homepage": "https://linux-profile.github.io/email-profile/",
+  "repository": "https://github.com/linux-profile/email-profile",
+  "license": "MIT",
+  "keywords": [
+    "email",
+    "imap",
+    "smtp",
+    "inbox",
+    "gmail",
+    "outlook",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "email-profile",
+    "shortDescription": "Your inbox, as tools",
+    "longDescription": "email-profile connects one IMAP/SMTP account to your AI client. Triage what is new, find a message by sender, subject or period, read it with attachments listed, flag and file it, and draft replies that are shown to you before anything is sent. Sending and deleting stay off until the operator turns them on. Works with Gmail, Outlook, iCloud, Yahoo and any IMAP server, with the host discovered from the address.",
+    "developerName": "Fernando Celmer",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://linux-profile.github.io/email-profile/",
+    "privacyPolicyURL": "https://github.com/linux-profile/email-profile/blob/master/SECURITY.md",
+    "termsOfServiceURL": "https://github.com/linux-profile/email-profile/blob/master/LICENSE",
+    "defaultPrompt": [
+      "What is new in my inbox that needs an answer?",
+      "Find the last email from my accountant about invoices.",
+      "Draft a reply to the latest message from Alice."
+    ],
+    "brandColor": "#2563EB"
+  }
+}
