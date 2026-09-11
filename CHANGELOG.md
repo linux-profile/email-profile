@@ -8,11 +8,6 @@
 - [📌 v1.1.0: MCP server, Claude Code plugin and security hardening](https://github.com/linux-profile/email-profile/issues/92)
 - [⚙️ Add optional MCP server (email-profile[mcp])](https://github.com/linux-profile/email-profile/issues/88)
 - [⚠️ Bump mkdocs-material to 9.7.7 (CVE-2026-73295, DOM XSS in search)](https://github.com/linux-profile/email-profile/issues/90)
-- [⚠️ IMAP search strings do not escape quotes and backslashes](https://github.com/linux-profile/email-profile/issues/94)
-- [⚠️ MCP: uid parameters accept IMAP sequence sets](https://github.com/linux-profile/email-profile/issues/95)
-- [⚠️ MCP: save_attachment writes to any directory](https://github.com/linux-profile/email-profile/issues/96)
-- [🪲 MCP: IMAP session shared across tool threads without a lock](https://github.com/linux-profile/email-profile/issues/97)
-- [🪲 MCP: EMAIL_MCP_LIMIT read but never applied](https://github.com/linux-profile/email-profile/issues/98)
 
 **Full Changelog**: https://github.com/linux-profile/email-profile/compare/v1.0.1...v1.1.0
 
