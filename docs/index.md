@@ -1,5 +1,9 @@
 # Welcome to email-profile
 
+<p align="center">
+  <img src="assets/cover.png" alt="email-profile — Email for Python, without the boilerplate. MCP included." width="100%">
+</p>
+
 <div align="center">
   <a aria-label="Documentation" href="https://linux-profile.github.io/email-profile/">Documentation</a>
   &nbsp;•&nbsp;
@@ -14,11 +18,11 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/email-profile?style=flat-square)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/email-profile?style=flat-square)
 
-A Python library for email management. Connect to any IMAP/SMTP server, read and send emails, sync your mailbox to a local database, and restore backups — all with a single, unified API.
+A Python library for email management. Connect to any IMAP/SMTP server, read and send emails, sync your mailbox to a local database, and restore backups — all with a single, unified API. Or hand the same account to Claude, Cursor or any MCP client with the built-in [MCP server](nav/advanced/mcp-server.md).
 
 {* ./docs_src/quickstart.py *}
 
-Start with the basics [here](nav/tutorial/install.md).
+Start with the basics [here](nav/tutorial/install.md), or go straight to the [MCP server](nav/advanced/mcp-server.md).
 
 ## Features
 
@@ -36,6 +40,8 @@ Start with the basics [here](nav/tutorial/install.md).
 | **Storage** | Pluggable storage backend (SQLite default) |
 | **Flags** | Read/unread, flag, delete, move, copy operations |
 | **Context Manager** | `with Email(...) as app:` for automatic cleanup |
+| **MCP Server** | 14 tools + 4 prompts for Claude Code, Claude Desktop, Cursor — read-only until you opt in |
+| **Plugin** | Claude Code plugin with skills that gate sending behind your approval |
 
 ## Getting Help
 

@@ -84,7 +84,15 @@ a fresh `search_messages` call.
 
 Bodies come back truncated; when `truncated` is `true` the model is told
 to read again with a larger `max_chars`. Attachment bytes never cross the
-wire.
+wire, and `save_attachment` writes only under `EMAIL_MCP_ATTACHMENTS_DIR`.
+
+`uid` is one id — digits only. IMAP sequence sets (`1:*`, `1,2`) are
+refused so a single approved call never touches more than one message.
+Search filters are escaped per RFC 3501 before they reach the server.
+
+Tools run one at a time on the IMAP connection: the server holds a lock
+around every command, so a client that pipelines calls gets them
+serialized rather than interleaved on one socket.
 
 ## Prompts
 
@@ -104,6 +112,7 @@ wire.
 | `--max-chars` | `EMAIL_MCP_MAX_CHARS` | `4000` |
 | — | `EMAIL_MCP_LIMIT` | `20` |
 | — | `EMAIL_MCP_DEFAULT_MAILBOX` | `INBOX` |
+| — | `EMAIL_MCP_ATTACHMENTS_DIR` | `.` — the only place `save_attachment` writes |
 | `--http --host --port` | — | stdio |
 
 `--http` serves streamable HTTP for clients that connect over the network.
