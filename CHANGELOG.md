@@ -1,82 +1,71 @@
 # Changelog
 
-All notable changes to this project are documented here. The format is based on
-[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to
-[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## v1.1.0
 
-This file is the single source of release notes; the documentation site renders it as-is.
+### What's Changed
 
-## [Unreleased]
+- [📦 PyPI - Build 1.1.0](https://github.com/linux-profile/email-profile/releases/tag/v1.1.0)
+- [📌 v1.1.0: MCP server, Claude Code plugin and security hardening](https://github.com/linux-profile/email-profile/issues/92)
+- [⚙️ Add optional MCP server (email-profile[mcp])](https://github.com/linux-profile/email-profile/issues/88)
+- [⚠️ Bump mkdocs-material to 9.7.7 (CVE-2026-73295, DOM XSS in search)](https://github.com/linux-profile/email-profile/issues/90)
 
-## [1.1.0] — 2026-09-11
+**Full Changelog**: https://github.com/linux-profile/email-profile/compare/v1.0.1...v1.1.0
 
-Tracking: [#92](https://github.com/linux-profile/email-profile/issues/92)
+## v1.0.1
 
-### Added
-- Optional MCP server — `pip install email-profile[mcp]`, `email-profile-mcp` — with 14 tools and 4 prompts for Claude Code, Claude Desktop and Cursor; sending and deleting are opt-in via `--allow-send` / `--allow-delete` ([#88](https://github.com/linux-profile/email-profile/issues/88))
-- Claude Code plugin: `.mcp.json`, plugin manifests and six skills under `skills/` ([#88](https://github.com/linux-profile/email-profile/issues/88))
-- `EMAIL_MCP_*` settings: `ALLOW_SEND`, `ALLOW_DELETE`, `MAX_CHARS`, `LIMIT`, `DEFAULT_MAILBOX`, `ATTACHMENTS_DIR`
+*2026-08-16*
 
-### Security
-- IMAP search strings now escape `"` and `\` per RFC 3501 quoted-string rules ([#88](https://github.com/linux-profile/email-profile/issues/88))
-- MCP: `uid` accepts a single id only (sequence sets refused), `save_attachment` is confined to `EMAIL_MCP_ATTACHMENTS_DIR`, and IMAP access is serialized across tool threads ([#88](https://github.com/linux-profile/email-profile/issues/88))
-- Bump `mkdocs-material` to 9.7.7 — CVE-2026-73295, DOM XSS in docs search ([#90](https://github.com/linux-profile/email-profile/issues/90))
+### What's Changed
 
-## [1.0.1] — 2026-08-16
+- [📦 PyPI - Build 1.0.1](https://github.com/linux-profile/email-profile/releases/tag/v1.0.1)
+- [📌 v1.0.1: Bug fixes, security patches, and test coverage](https://github.com/linux-profile/email-profile/issues/85)
+- [⚠️ Fix open Dependabot security alerts (idna, pymdown-extensions)](https://github.com/linux-profile/email-profile/issues/83)
+- [🪲 Email() port/ssl kwargs silently ignored when auto-discovery is used](https://github.com/linux-profile/email-profile/issues/69)
+- [🪲 Sender.send_message mutates caller's EmailMessage by writing From header](https://github.com/linux-profile/email-profile/issues/68)
+- [🪲 MailBox.move fallback expunges every deleted message, not just the moved UID](https://github.com/linux-profile/email-profile/issues/67)
+- [🪲 Query OR/NOT produce wrong IMAP search when combining multi-clause Query objects](https://github.com/linux-profile/email-profile/issues/66)
+- [🪲 Backup/restore corrupts non-UTF8 RFC822 content (binary attachments lost)](https://github.com/linux-profile/email-profile/issues/65)
+- [🪲 IMAP connect ignores port and ssl flag — non-default ports cannot connect](https://github.com/linux-profile/email-profile/issues/64)
+- [❤️ Sync and Restore modules have zero test coverage](https://github.com/linux-profile/email-profile/issues/38)
+- [❤️ SMTP host resolution (resolve_smtp_host) has no test coverage](https://github.com/linux-profile/email-profile/issues/37)
+- [⚠️ Path traversal vulnerability in attachment filename parsing](https://github.com/linux-profile/email-profile/issues/29)
 
-Tracking: [#85](https://github.com/linux-profile/email-profile/issues/85)
+**Full Changelog**: https://github.com/linux-profile/email-profile/compare/v1.0.0...v1.0.1
 
-### Fixed
-- `Email()` port/ssl kwargs silently ignored when auto-discovery is used ([#69](https://github.com/linux-profile/email-profile/issues/69))
-- `Sender.send_message` mutated the caller's `EmailMessage` by writing the From header ([#68](https://github.com/linux-profile/email-profile/issues/68))
-- `MailBox.move` fallback expunged every deleted message, not just the moved UID ([#67](https://github.com/linux-profile/email-profile/issues/67))
-- Query OR/NOT produced wrong IMAP search when combining multi-clause `Query` objects ([#66](https://github.com/linux-profile/email-profile/issues/66))
-- Backup/restore corrupted non-UTF8 RFC822 content; binary attachments were lost ([#65](https://github.com/linux-profile/email-profile/issues/65))
-- IMAP connect ignored port and ssl flag; non-default ports could not connect ([#64](https://github.com/linux-profile/email-profile/issues/64))
+## v1.0.0
 
-### Security
-- Path traversal in attachment filename parsing ([#29](https://github.com/linux-profile/email-profile/issues/29))
-- Bump `idna` and `pymdown-extensions` to patched versions ([#83](https://github.com/linux-profile/email-profile/issues/83))
+*2026-04-17*
 
-### Tests
-- Sync and Restore coverage ([#38](https://github.com/linux-profile/email-profile/issues/38))
-- `resolve_smtp_host` coverage ([#37](https://github.com/linux-profile/email-profile/issues/37))
+### What's Changed
 
-## [1.0.0] — 2026-04-17
+- ISSUE-2: Initial Documentation by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/3
+- ISSUE-4 by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/5
+- ⚙️ FEATURE-#6: API ergonomics overhaul (v1.0.0) by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/7
+- ⚙️ FEATURE-#9: Rename Where.refresh() to Where.clear_cache() by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/14
+- ⚙️ FEATURE-#10: Add Email public properties by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/15
+- ⚙️ FEATURE-#11: Move AppendedUID and IMAPHost to email_profile.types by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/17
+- ⚙️ FEATURE-#18: Add SMTP send + split Email into 6 classes by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/19
+- ⚙️ FEATURE-#23: Wire up EmailFactories.PROVIDER_HOSTS by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/24
+- ⚙️ FEATURE-#20: Dedupe Email.from_email / EmailFactories.from_address by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/25
+- ⚙️ FEATURE-#21: Rename factories.py to credentials.py by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/26
+- ⚙️ FEATURE-#22: Uniform naming across IMAP/SMTP clients by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/27
+- 🪲 BUG-#42: Include flags field in StorageSQLite.get() response by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/51
+- Lazily initialize storage to avoid creating email.db unnecessarily by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/57
+- Split validate_status into validate and check for clarity by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/61
+- 🪲 BUG-#34: Use try/finally to restore cache in last() and __getitem__ by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/54
+- 🪲 BUG-#32: Remove UID parser fallback that returns sequence number by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/52
+- Fix OOM on large backup restores by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/58
+- 🪲 BUG-#33: Auto-clear UID cache after iteration and warn on large caches by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/53
+- 🪲 BUG-#44: Try common charset fallbacks before using replacement characters by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/56
+- 🪲 BUG-#36: Fix race condition in SQLite save() by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/55
+- 🔒 SEC-#50: Clear password references on close and mask in repr by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/59
+- Add attachment size validation to SMTP client by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/62
+- ⚙️ FEATURE-#40: Use Optional[bool] for Query flags to remove ambiguity by @FernandoCelmer in https://github.com/linux-profile/email-profile/pull/60
 
-Tracking: [#6](https://github.com/linux-profile/email-profile/issues/6)
+**Full Changelog**: https://github.com/linux-profile/email-profile/compare/v0.4.0...v1.0.0
 
-### Added
-- Auto-discovery for 50+ email providers, plus DNS SRV and MX fallback
-- Unified `Email` class combining IMAP + SMTP
-- Composable query builder `Q` (AND, OR, NOT) and validated `Query` kwargs
-- Incremental `sync()` to SQLite and parallel `restore()` with duplicate detection
-- Rich progress bars with per-mailbox status
-- Send, reply and forward with HTML, attachments, CC/BCC ([#18](https://github.com/linux-profile/email-profile/issues/18))
-- IMAP write operations: mark_seen, delete, move, copy, expunge ([#12](https://github.com/linux-profile/email-profile/issues/12))
-- Pluggable storage backend (SQLite default)
-- Exponential backoff retry on transient failures
-- Built-in mailbox shortcuts (inbox, sent, trash, drafts, spam, archive)
-- Environment variable configuration with `.env` support
-- Slimmer public exports: essentials vs advanced ([#13](https://github.com/linux-profile/email-profile/issues/13))
+## v1.0.0.dev1
 
-### Fixed
-- Restore loaded all messages into memory, OOM on large backups ([#31](https://github.com/linux-profile/email-profile/issues/31))
-- UID parser fallback returned the sequence number instead of the UID ([#32](https://github.com/linux-profile/email-profile/issues/32))
-- UID cache in `Where` grew unbounded ([#33](https://github.com/linux-profile/email-profile/issues/33))
-- `last()` left the cache corrupt when an exception was raised ([#34](https://github.com/linux-profile/email-profile/issues/34))
-- Race in SQLite `save()` could duplicate records under concurrent sync ([#36](https://github.com/linux-profile/email-profile/issues/36))
-- `validate_status()` `raise_error` parameter had inconsistent behavior ([#39](https://github.com/linux-profile/email-profile/issues/39))
-- `Query(unseen=False)` was ambiguous; now `Optional[bool]` ([#40](https://github.com/linux-profile/email-profile/issues/40))
-- No attachment size validation in the SMTP client ([#41](https://github.com/linux-profile/email-profile/issues/41))
-- `StorageSQLite.get()` dropped the flags field on round-trip ([#42](https://github.com/linux-profile/email-profile/issues/42))
-- `Email()` created `email.db` even when sync/restore was never used ([#43](https://github.com/linux-profile/email-profile/issues/43))
-- Silent charset fallback with `errors='replace'` could corrupt content ([#44](https://github.com/linux-profile/email-profile/issues/44))
+*2026-04-16* — pre-release with the same changes as v1.0.0.
 
-### Security
-- Password no longer kept as a plain Python string longer than needed ([#50](https://github.com/linux-profile/email-profile/issues/50))
-
-[Unreleased]: https://github.com/linux-profile/email-profile/compare/v1.1.0...develop
-[1.1.0]: https://github.com/linux-profile/email-profile/releases/tag/v1.1.0
-[1.0.1]: https://github.com/linux-profile/email-profile/releases/tag/v1.0.1
-[1.0.0]: https://github.com/linux-profile/email-profile/releases/tag/v1.0.0
+**Full Changelog**: https://github.com/linux-profile/email-profile/compare/v0.4.0...v1.0.0.dev1
