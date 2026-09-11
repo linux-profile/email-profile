@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "email": {
+      "command": "uvx",
+      "args": ["--from", "email-profile[mcp]", "email-profile-mcp"],
+      "env": {
+        "EMAIL_USERNAME": "you@gmail.com",
+        "EMAIL_PASSWORD": "app-password"
+      }
+    }
+  }
+}
