@@ -9,7 +9,7 @@ from typing import Optional
 from mcp.server.mcpserver import MCPServer
 
 from email_profile.mcp import prompts
-from email_profile.mcp.config import Settings
+from email_profile.mcp.config import MAX_LIMIT, Settings
 from email_profile.mcp.session import EmailFactory, Session
 from email_profile.mcp.tools import mailbox, message, send
 
@@ -102,7 +102,9 @@ def settings_from_args(args: argparse.Namespace) -> Settings:
         allow_send=env.allow_send or args.allow_send,
         allow_delete=env.allow_delete or args.allow_delete,
         max_chars=env.max_chars if args.max_chars is None else args.max_chars,
+        limit=min(env.limit, MAX_LIMIT),
         default_mailbox=env.default_mailbox,
+        attachments_dir=env.attachments_dir,
     )
 
 

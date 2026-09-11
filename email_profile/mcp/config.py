@@ -24,7 +24,8 @@ class Settings:
 
     ``allow_send`` exposes the SMTP tools; ``allow_delete`` exposes
     ``delete_message``. Both default to off so a misconfigured client
-    can only read.
+    can only read. ``attachments_dir`` is the only place
+    ``save_attachment`` may write.
     """
 
     allow_send: bool = False
@@ -32,6 +33,7 @@ class Settings:
     max_chars: int = DEFAULT_MAX_CHARS
     limit: int = DEFAULT_LIMIT
     default_mailbox: str = "INBOX"
+    attachments_dir: str = "."
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -41,4 +43,5 @@ class Settings:
             max_chars=int(os.getenv("EMAIL_MCP_MAX_CHARS", DEFAULT_MAX_CHARS)),
             limit=int(os.getenv("EMAIL_MCP_LIMIT", DEFAULT_LIMIT)),
             default_mailbox=os.getenv("EMAIL_MCP_DEFAULT_MAILBOX", "INBOX"),
+            attachments_dir=os.getenv("EMAIL_MCP_ATTACHMENTS_DIR", "."),
         )

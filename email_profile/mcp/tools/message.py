@@ -2,14 +2,28 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Annotated, Any, Optional
 
 from pydantic import Field
 
 from email_profile.mcp.annotations import DESTRUCTIVE, READ_ONLY, REVERSIBLE
 from email_profile.mcp.config import Settings
+from email_profile.mcp.params import Mailbox, Uid
 from email_profile.mcp.results import AttachmentInfo, MessageDetail, Outcome
 from email_profile.mcp.session import Session, ToolError
+
+
+def _confine(root: str, directory: str) -> Path:
+    """``root/directory`` resolved, or a ``ToolError`` when it escapes."""
+    base = Path(root).resolve()
+    target = (base / directory).resolve()
+    if target != base and base not in target.parents:
+        raise ToolError(
+            f"directory={directory!r} is outside the attachments root; "
+            "use a relative path."
+        )
+    return target
 
 
 def register(mcp: Any, session: Session, settings: Settings) -> None:
@@ -22,8 +36,8 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
 def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
     @mcp.tool(annotations=READ_ONLY)
     def read_message(
-        mailbox: str,
-        uid: str,
+        mailbox: Mailbox,
+        uid: Uid,
         max_chars: Annotated[
             Optional[int],
             Field(
@@ -43,7 +57,7 @@ def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
         return MessageDetail.of_message(session.fetch(mailbox, uid), cap)
 
     @mcp.tool(annotations=READ_ONLY)
-    def list_attachments(mailbox: str, uid: str) -> list[AttachmentInfo]:
+    def list_attachments(mailbox: Mailbox, uid: Uid) -> list[AttachmentInfo]:
         """List attachments (name, type, size) of one message.
 
         Content is never returned; use `save_attachment` to write one to
@@ -55,18 +69,27 @@ def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
 
     @mcp.tool(annotations=REVERSIBLE)
     def save_attachment(
-        mailbox: str,
-        uid: str,
+        mailbox: Mailbox,
+        uid: Uid,
         file_name: str,
         directory: Annotated[
-            str, Field(description="Local directory; created if missing.")
+            str,
+            Field(
+                description="Subdirectory of the server's attachments "
+                "root; created if missing. Paths outside it are refused."
+            ),
         ] = ".",
     ) -> Outcome:
-        """Write one attachment to disk and return its path."""
+        """Write one attachment to disk and return its path.
+
+        Writes only under the operator's attachments root
+        (``EMAIL_MCP_ATTACHMENTS_DIR``, default: the working directory).
+        """
+        target = _confine(settings.attachments_dir, directory)
         msg = session.fetch(mailbox, uid)
         for attachment in msg.attachments:
             if attachment.file_name == file_name:
-                path = attachment.save(directory)
+                path = attachment.save(target)
                 return Outcome(
                     action="save_attachment",
                     mailbox=mailbox,
@@ -81,37 +104,44 @@ def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
 
 def _register_flags(mcp: Any, session: Session) -> None:
     @mcp.tool(annotations=REVERSIBLE)
-    def mark_seen(mailbox: str, uid: str) -> Outcome:
+    def mark_seen(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Mark a message as read."""
-        session.email.mailbox(mailbox).mark_seen(uid)
+        with session.lock:
+            session.email.mailbox(mailbox).mark_seen(uid)
         return Outcome(action="mark_seen", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
-    def mark_unseen(mailbox: str, uid: str) -> Outcome:
+    def mark_unseen(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Mark a message as unread."""
-        session.email.mailbox(mailbox).mark_unseen(uid)
+        with session.lock:
+            session.email.mailbox(mailbox).mark_unseen(uid)
         return Outcome(action="mark_unseen", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
-    def flag_message(mailbox: str, uid: str) -> Outcome:
+    def flag_message(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Flag (star) a message."""
-        session.email.mailbox(mailbox).flag(uid)
+        with session.lock:
+            session.email.mailbox(mailbox).flag(uid)
         return Outcome(action="flag", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
-    def unflag_message(mailbox: str, uid: str) -> Outcome:
+    def unflag_message(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Remove the flag (star) from a message."""
-        session.email.mailbox(mailbox).unflag(uid)
+        with session.lock:
+            session.email.mailbox(mailbox).unflag(uid)
         return Outcome(action="unflag", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
-    def move_message(mailbox: str, uid: str, destination: str) -> Outcome:
+    def move_message(
+        mailbox: Mailbox, uid: Uid, destination: Mailbox
+    ) -> Outcome:
         """Move a message to another mailbox.
 
         `destination` must be an exact name from `list_mailboxes`. The
         message gets a new uid there; search again to find it.
         """
-        session.email.mailbox(mailbox).move(uid, destination)
+        with session.lock:
+            session.email.mailbox(mailbox).move(uid, destination)
         return Outcome(
             action="move", mailbox=mailbox, uid=uid, detail=destination
         )
@@ -120,8 +150,8 @@ def _register_flags(mcp: Any, session: Session) -> None:
 def _register_delete(mcp: Any, session: Session) -> None:
     @mcp.tool(annotations=DESTRUCTIVE)
     def delete_message(
-        mailbox: str,
-        uid: str,
+        mailbox: Mailbox,
+        uid: Uid,
         expunge: Annotated[
             bool,
             Field(description="Remove now instead of only flagging."),
@@ -133,7 +163,8 @@ def _register_delete(mcp: Any, session: Session) -> None:
         expunged, and `undelete` on the library side can bring it back.
         Confirm with the user before calling with `expunge=true`.
         """
-        session.email.mailbox(mailbox).delete(uid, expunge=expunge)
+        with session.lock:
+            session.email.mailbox(mailbox).delete(uid, expunge=expunge)
         return Outcome(
             action="delete",
             mailbox=mailbox,
