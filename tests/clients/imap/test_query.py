@@ -88,3 +88,8 @@ class TestOrNotArity(TestCase):
     def test_or_keeps_single_clause_unwrapped(self):
         expr = (Q.subject("a") | Q.subject("b")).mount()
         self.assertEqual(expr, 'OR (SUBJECT "a") (SUBJECT "b")')
+
+
+def test_string_clauses_escape_quotes_and_backslashes():
+    assert Q.subject('a"b\\c').mount() == '(SUBJECT "a\\"b\\\\c")'
+    assert Query(from_who='x" OR "y').mount() == '(FROM "x\\" OR \\"y")'
