@@ -147,3 +147,4 @@ dmypy.json
 # Others
 */html
 */json
+.DS_Store
