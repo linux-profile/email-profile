@@ -12,11 +12,12 @@ from email_profile.mcp.annotations import READ_ONLY
 from email_profile.mcp.config import MAX_LIMIT, Settings
 from email_profile.mcp.params import Mailbox
 from email_profile.mcp.results import MessageSummary, SearchPage
-from email_profile.mcp.session import Session
+from email_profile.mcp.session import Session, guarded
 
 
 def register(mcp: Any, session: Session, settings: Settings) -> None:
     @mcp.tool(annotations=READ_ONLY)
+    @guarded
     def list_mailboxes() -> list[str]:
         """List every mailbox (folder) on the server, by server-side name.
 
@@ -27,6 +28,7 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
             return session.email.mailboxes()
 
     @mcp.tool(annotations=READ_ONLY)
+    @guarded
     def search_messages(
         mailbox: Mailbox = settings.default_mailbox,
         text: Optional[str] = None,

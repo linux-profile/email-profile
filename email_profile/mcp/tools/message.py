@@ -11,7 +11,7 @@ from email_profile.mcp.annotations import DESTRUCTIVE, READ_ONLY, REVERSIBLE
 from email_profile.mcp.config import Settings
 from email_profile.mcp.params import Mailbox, Uid
 from email_profile.mcp.results import AttachmentInfo, MessageDetail, Outcome
-from email_profile.mcp.session import Session, ToolError
+from email_profile.mcp.session import Session, ToolError, guarded
 
 
 def _confine(root: str, directory: str) -> Path:
@@ -35,6 +35,7 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
 
 def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
     @mcp.tool(annotations=READ_ONLY)
+    @guarded
     def read_message(
         mailbox: Mailbox,
         uid: Uid,
@@ -57,6 +58,7 @@ def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
         return MessageDetail.of_message(session.fetch(mailbox, uid), cap)
 
     @mcp.tool(annotations=READ_ONLY)
+    @guarded
     def list_attachments(mailbox: Mailbox, uid: Uid) -> list[AttachmentInfo]:
         """List attachments (name, type, size) of one message.
 
@@ -68,6 +70,7 @@ def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
         ).attachment_list
 
     @mcp.tool(annotations=REVERSIBLE)
+    @guarded
     def save_attachment(
         mailbox: Mailbox,
         uid: Uid,
@@ -104,6 +107,7 @@ def _register_read(mcp: Any, session: Session, settings: Settings) -> None:
 
 def _register_flags(mcp: Any, session: Session) -> None:
     @mcp.tool(annotations=REVERSIBLE)
+    @guarded
     def mark_seen(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Mark a message as read."""
         with session.lock:
@@ -111,6 +115,7 @@ def _register_flags(mcp: Any, session: Session) -> None:
         return Outcome(action="mark_seen", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
+    @guarded
     def mark_unseen(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Mark a message as unread."""
         with session.lock:
@@ -118,6 +123,7 @@ def _register_flags(mcp: Any, session: Session) -> None:
         return Outcome(action="mark_unseen", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
+    @guarded
     def flag_message(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Flag (star) a message."""
         with session.lock:
@@ -125,6 +131,7 @@ def _register_flags(mcp: Any, session: Session) -> None:
         return Outcome(action="flag", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
+    @guarded
     def unflag_message(mailbox: Mailbox, uid: Uid) -> Outcome:
         """Remove the flag (star) from a message."""
         with session.lock:
@@ -132,6 +139,7 @@ def _register_flags(mcp: Any, session: Session) -> None:
         return Outcome(action="unflag", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=REVERSIBLE)
+    @guarded
     def move_message(
         mailbox: Mailbox, uid: Uid, destination: Mailbox
     ) -> Outcome:
@@ -149,6 +157,7 @@ def _register_flags(mcp: Any, session: Session) -> None:
 
 def _register_delete(mcp: Any, session: Session) -> None:
     @mcp.tool(annotations=DESTRUCTIVE)
+    @guarded
     def delete_message(
         mailbox: Mailbox,
         uid: Uid,

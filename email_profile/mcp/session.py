@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import functools
 import threading
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
 
 from email_profile.clients.imap.query import Q
 
@@ -21,6 +22,27 @@ if TYPE_CHECKING:
     from email_profile.serializers.email import Message
 
 EmailFactory = Callable[[], "Email"]
+F = TypeVar("F", bound=Callable[..., Any])
+
+
+def guarded(fn: F) -> F:
+    """Turn any library failure into a ``ToolError`` the model can read.
+
+    ``MCPServer`` hides the message of an unexpected exception behind
+    "Error executing tool"; a ``ToolError`` reaches the client verbatim,
+    so a wrong mailbox name comes back with the list of valid ones.
+    """
+
+    @functools.wraps(fn)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        try:
+            return fn(*args, **kwargs)
+        except ToolError:
+            raise
+        except Exception as exc:
+            raise ToolError(f"{type(exc).__name__}: {exc}") from exc
+
+    return wrapper  # type: ignore[return-value]
 
 
 class Session:

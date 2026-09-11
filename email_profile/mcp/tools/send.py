@@ -10,7 +10,7 @@ from email_profile.mcp.annotations import SENDS
 from email_profile.mcp.config import Settings
 from email_profile.mcp.params import Mailbox, Uid
 from email_profile.mcp.results import Outcome
-from email_profile.mcp.session import Session
+from email_profile.mcp.session import Session, guarded
 
 Recipients = Annotated[
     Union[str, list[str]],
@@ -31,6 +31,7 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
         return
 
     @mcp.tool(annotations=SENDS)
+    @guarded
     def send_email(
         to: Recipients,
         subject: str,
@@ -59,6 +60,7 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
         return Outcome(action="send", detail=", ".join(split(to)))
 
     @mcp.tool(annotations=SENDS)
+    @guarded
     def reply_message(
         mailbox: Mailbox,
         uid: Uid,
@@ -78,6 +80,7 @@ def register(mcp: Any, session: Session, settings: Settings) -> None:
         return Outcome(action="reply", mailbox=mailbox, uid=uid)
 
     @mcp.tool(annotations=SENDS)
+    @guarded
     def forward_message(
         mailbox: Mailbox,
         uid: Uid,
