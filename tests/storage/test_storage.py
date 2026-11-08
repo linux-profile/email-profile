@@ -1,6 +1,8 @@
+import os
+import stat
 import tempfile
 from pathlib import Path
-from unittest import TestCase
+from unittest import TestCase, skipIf
 
 from email_profile import StorageSQLite as Storage
 from email_profile.serializers.raw import RawSerializer
@@ -76,3 +78,24 @@ class TestStorageRaw(TestCase):
         self.storage.save(_raw("<b@x>", uid="20", mailbox="Sent"))
         self.assertEqual(self.storage.uids("INBOX"), {"10"})
         self.assertEqual(self.storage.uids("Sent"), {"20"})
+
+
+@skipIf(os.name != "posix", "POSIX file modes only")
+class TestStoragePermissions(TestCase):
+    def test_new_database_is_owner_only(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "mail.db"
+            Storage(path)
+            self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o600)
+
+    def test_existing_database_is_tightened(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "mail.db"
+            path.touch(mode=0o644)
+            os.chmod(path, 0o644)
+            Storage(path)
+            self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o600)
+
+    def test_memory_database_is_skipped(self):
+        storage = Storage("sqlite:///:memory:")
+        self.assertEqual(storage.url, "sqlite:///:memory:")
