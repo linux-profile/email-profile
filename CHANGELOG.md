@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.2.0
 
 ### What's Changed
 
@@ -9,6 +9,8 @@
 - [⚠️ Restrict SQLite storage file permissions to 0600 and document plaintext storage](https://github.com/linux-profile/email-profile/issues/49)
 
 **Breaking:** Python 3.10 is no longer supported. Users on 3.10 stay on v1.1.0.
+
+**Full Changelog**: https://github.com/linux-profile/email-profile/compare/v1.1.0...v1.2.0
 
 ## v1.1.0
 
