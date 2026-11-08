@@ -11,7 +11,8 @@ requires-python = ">=3.10"
 dependencies = [
   "pydantic",
   "sqlalchemy",
-  "dnspython",
+  "dnspython>=2.6; python_version < '3.11'",
+  "dnspython>=2.9.0; python_version >= '3.11'",
   "python-dotenv",
   "rich",
 ]
@@ -143,7 +144,10 @@ classifiers = [
 python = ">=3.10"
 pydantic = "^2.7"
 sqlalchemy = "^2.0"
-dnspython = "^2.6"
+dnspython = [
+  {version = "^2.6", python = "<3.11"},
+  {version = "^2.9.0", python = ">=3.11"},
+]
 python-dotenv = "^1.2.2"
 rich = "^14.0"
 mcp = {version = ">=2.0", optional = true}
