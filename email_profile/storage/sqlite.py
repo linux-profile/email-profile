@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 from typing import Optional, Union
 
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+from sqlalchemy.engine import make_url
 
 from email_profile.core.abc import StorageABC
 from email_profile.models.raw import RawModel
@@ -21,8 +23,34 @@ class StorageSQLite(StorageABC):
 
     def __init__(self, url: Union[str, Path] = "./email.db") -> None:
         self.url = self._coerce_url(url)
+        self._restrict_file(self.url)
         self._engine, self._session_factory = make_session(self.url)
         Base.metadata.create_all(bind=self._engine)
+
+    @staticmethod
+    def _restrict_file(url: str) -> None:
+        """Create the database file owner-only (0600) before SQLite opens it.
+
+        Stored messages are plaintext RFC822 sources, so other local users
+        must not be able to read the file.
+        """
+        database = make_url(url).database
+        if (
+            not database
+            or database == ":memory:"
+            or database.startswith("file:")
+        ):
+            return
+
+        path = Path(database)
+        try:
+            fd = os.open(path, os.O_CREAT | os.O_RDWR, 0o600)
+            os.close(fd)
+            os.chmod(path, 0o600)
+        except OSError as error:
+            logger.warning(
+                "Could not restrict permissions on %s: %s", path, error
+            )
 
     @staticmethod
     def _coerce_url(value: Union[str, Path]) -> str:
