@@ -7,12 +7,11 @@ authors = [
 license = {file = "LICENSE"}
 description = "The simplest way to work with email in Python. Read, search, send, sync, backup and restore — IMAP + SMTP in one library."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
   "pydantic",
   "sqlalchemy",
-  "dnspython>=2.6; python_version < '3.11'",
-  "dnspython>=2.9.0; python_version >= '3.11'",
+  "dnspython>=2.9.0",
   "python-dotenv",
   "rich",
 ]
@@ -59,7 +58,6 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: System :: Archiving :: Backup",
   "Typing :: Typed",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -133,7 +131,6 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Topic :: System :: Archiving :: Backup",
   "Typing :: Typed",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
@@ -141,13 +138,10 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.10"
+python = ">=3.11"
 pydantic = "^2.7"
 sqlalchemy = "^2.0"
-dnspython = [
-  {version = "^2.6", python = "<3.11"},
-  {version = "^2.9.0", python = ">=3.11"},
-]
+dnspython = "^2.9.0"
 python-dotenv = "^1.2.2"
 rich = "^14.0"
 mcp = {version = ">=2.0", optional = true}
