@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### What's Changed
+
+- [⚠️ Drop Python 3.10 support (EOL) — requires Python 3.11+](https://github.com/linux-profile/email-profile/issues/102)
+- [⚠️ Patch Dependabot security alerts (dnspython, urllib3, PyJWT, opentelemetry-api, filelock, virtualenv)](https://github.com/linux-profile/email-profile/issues/99)
+- [⚠️ Restrict SQLite storage file permissions to 0600 and document plaintext storage](https://github.com/linux-profile/email-profile/issues/49)
+
+**Breaking:** Python 3.10 is no longer supported. Users on 3.10 stay on v1.1.0.
+
 ## v1.1.0
 
 ### What's Changed
