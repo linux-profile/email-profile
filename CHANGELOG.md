@@ -4,11 +4,11 @@
 
 ### What's Changed
 
-- [⚠️ Drop Python 3.10 support (EOL) — requires Python 3.11+](https://github.com/linux-profile/email-profile/issues/102)
-- [⚠️ Patch Dependabot security alerts (dnspython, urllib3, PyJWT, opentelemetry-api, filelock, virtualenv)](https://github.com/linux-profile/email-profile/issues/99)
-- [⚠️ Restrict SQLite storage file permissions to 0600 and document plaintext storage](https://github.com/linux-profile/email-profile/issues/49)
-
-**Breaking:** Python 3.10 is no longer supported. Users on 3.10 stay on v1.1.0.
+- [📦 PyPI - Build 1.2.0](https://github.com/linux-profile/email-profile/releases/tag/v1.2.0)
+- [📌 v1.2.0: Drop Python 3.10 and security patches](https://github.com/linux-profile/email-profile/issues/105)
+- [⚠️ Drop Python 3.10 support (EOL)](https://github.com/linux-profile/email-profile/issues/102)
+- [⚠️ Patch Dependabot security alerts](https://github.com/linux-profile/email-profile/issues/99)
+- [⚠️ Email content stored as plaintext in SQLite — no encryption for sensitive data](https://github.com/linux-profile/email-profile/issues/49)
 
 **Full Changelog**: https://github.com/linux-profile/email-profile/compare/v1.1.0...v1.2.0
 
